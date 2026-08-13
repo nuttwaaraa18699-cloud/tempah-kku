@@ -956,17 +956,17 @@ class Component extends DCLogic {
       reportOpen: st.reportOpen,
       openReport: () => this.setState({ reportOpen: true, reason: null, otherText: '' }),
       closeReport: () => this.setState({ reportOpen: false }),
-      sendReport: () => {
+      sendReport: async () => {
         if (!st.reason) { this.flash('กรุณาเลือกปัญหาที่พบก่อนส่งรายงาน'); return; }
         if (st.reason === 'อื่น ๆ' && !this.state.otherText.trim()) { this.flash('กรุณาระบุปัญหาอื่น ๆ ก่อนส่งรายงาน'); return; }
+        if (!window.SB) { this.flash('ระบบยังไม่ได้เชื่อมต่อฐานข้อมูล ส่งรายงานไม่ได้'); return; }
+        const { error } = await window.SB.from('reports').insert({
+          user_id: st.userId, place_id: place.id, lot_name: lot.n,
+          reason: st.reason, other_text: st.reason === 'อื่น ๆ' ? st.otherText.trim() : null
+        });
+        if (error) { this.flash('ส่งรายงานไม่สำเร็จ ลองใหม่อีกครั้ง'); return; }
         this.setState({ reportOpen: false });
         this.flash('ส่งรายงานแล้ว เจ้าหน้าที่จะตรวจสอบกล้องจุดนี้');
-        if (window.SB) {
-          window.SB.from('reports').insert({
-            user_id: st.userId, place_id: place.id, lot_name: lot.n,
-            reason: st.reason, other_text: st.reason === 'อื่น ๆ' ? st.otherText.trim() : null
-          });
-        }
       },
       reasons: this.REASONS.map(r => ({
         name: r, onPick: () => this.setState({ reason: r }),
