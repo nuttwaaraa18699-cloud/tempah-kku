@@ -628,11 +628,27 @@ class Component extends DCLogic {
         if (data && data.session && data.session.user && this.state.view !== 'reset') this.afterAuth(data.session.user);
       });
       window.SB.auth.onAuthStateChange((event) => {
-        if (event === 'PASSWORD_RECOVERY') this.setState({ view: 'reset', newPw: '', newPw2: '', err: '' });
+        if (event === 'PASSWORD_RECOVERY') this.navigate('reset', { newPw: '', newPw2: '', err: '' });
       });
     }
+    window.history.replaceState({ view: this.state.view }, '', '#' + this.state.view);
+    window.addEventListener('popstate', this.onPopState);
   }
-  componentWillUnmount() { clearInterval(this.timer); clearTimeout(this.tt); if (this.watch) navigator.geolocation.clearWatch(this.watch); }
+  componentWillUnmount() {
+    clearInterval(this.timer); clearTimeout(this.tt); if (this.watch) navigator.geolocation.clearWatch(this.watch);
+    window.removeEventListener('popstate', this.onPopState);
+  }
+
+  // Every in-app screen change also pushes a browser history entry, so the
+  // Android back gesture/button steps back through app screens first
+  // instead of leaving the site immediately.
+  navigate = (view, extra) => {
+    window.history.pushState({ view }, '', '#' + view);
+    this.setState(Object.assign({ view, menuOpen: false }, extra || {}));
+  };
+  onPopState = (e) => {
+    this.setState({ view: (e.state && e.state.view) || 'login', menuOpen: false });
+  };
 
   toggleGeo = () => {
     if (this.state.geoState === 'on' || this.state.geoState === 'asking') { this.stopGeo(); return; }
@@ -680,7 +696,7 @@ class Component extends DCLogic {
   slots(n, seed) {
     return Array.from({ length: n }).map((_, i) => ({ d: (((i * 37 + seed * 13) % 70) / 10).toFixed(1) + 's' }));
   }
-  go(view) { this.setState({ view, menuOpen: false }); }
+  go(view) { this.navigate(view); }
   flash(msg) { this.setState({ toast: msg }); clearTimeout(this.tt); this.tt = setTimeout(() => this.setState({ toast: '' }), 2600); }
 
   // Enter (desktop) or the keyboard's next/go/done key (mobile) moves to the
@@ -708,8 +724,8 @@ class Component extends DCLogic {
   };
 
   afterAuth = async (user) => {
-    this.setState({
-      view: 'home', user: user.email, userId: user.id,
+    this.navigate('home', {
+      user: user.email, userId: user.id,
       role: (user.user_metadata && user.user_metadata.role) || 'นักศึกษา',
       email: '', pw: '', err: '', geoAsk: this.state.geoState === 'idle'
     });
@@ -769,7 +785,7 @@ class Component extends DCLogic {
 
   doLogout = () => {
     if (window.SB) window.SB.auth.signOut();
-    this.setState({ view: 'login', email: '', pw: '', user: null, userId: null, favs: [], menuOpen: false });
+    this.navigate('login', { email: '', pw: '', user: null, userId: null, favs: [] });
   };
 
   card(p, i) {
@@ -785,7 +801,7 @@ class Component extends DCLogic {
       slots: this.slots(16, i + 1), carDelay: ((i % 5) * 1.4).toFixed(1) + 's',
       mapUrl: this.mapUrl(p),
       starColor: this.state.favs.indexOf(p.id) >= 0 ? '#E8A82B' : '#C9C6C2',
-      onOpen: () => this.setState({ view: 'place', placeId: p.id, lotIx: 0 }),
+      onOpen: () => this.navigate('place', { placeId: p.id, lotIx: 0 }),
       onStar: e => { if (e && e.stopPropagation) e.stopPropagation(); this.toggleFav(p.id); }
     });
   }
@@ -834,7 +850,7 @@ class Component extends DCLogic {
       forgotValue: st.forgotValue,
       onForgotValue: e => this.setState({ forgotValue: e.target.value }),
       onForgotKeyDown: this.keyAdvance(this.sendReset),
-      doGuest: () => this.setState({ view: 'home', user: null, userId: null, favs: [], err: '', geoAsk: this.state.geoState === 'idle' }),
+      doGuest: () => this.navigate('home', { user: null, userId: null, favs: [], err: '', geoAsk: this.state.geoState === 'idle' }),
       goRegister: () => this.go('register'), goForgot: () => this.go('forgot'), goLogin: () => this.go('login'),
       goHome: () => this.go('home'), goRestricted: () => this.go('restricted'), goFavs: () => this.go('favs'),
       logout: this.doLogout,
@@ -863,7 +879,7 @@ class Component extends DCLogic {
       nearestName: nearest.name, nearestDist: 'ห่างจากคุณ ' + this.distText(nearest),
       nearestFree: this.agg(nearest).free, nearBadgeFg: nSt.statusFg, nearBadgeBg: nSt.statusBg,
       nearestMapUrl: this.mapUrl(nearest),
-      openNearest: () => this.setState({ view: 'place', placeId: nearest.id, lotIx: 0 }),
+      openNearest: () => this.navigate('place', { placeId: nearest.id, lotIx: 0 }),
       chips: this.CATS.map(c => ({
         name: c, onPick: () => this.setState({ cat: c }),
         bg: st.cat === c ? accent : '#F5F3F0',
@@ -957,7 +973,7 @@ class Component extends DCLogic {
         border: st.reason === r ? accent : '#DCD9D5',
         bg: st.reason === r ? '#FBF1EE' : '#FAF9F8'
       })),
-      finish: () => { this.setState({ view: 'home' }); this.flash('ขอบคุณที่ช่วยยืนยันสถานะที่จอด'); }
+      finish: () => { this.navigate('home'); this.flash('ขอบคุณที่ช่วยยืนยันสถานะที่จอด'); }
     };
   }
 }
