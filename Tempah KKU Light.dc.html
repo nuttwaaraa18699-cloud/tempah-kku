@@ -501,7 +501,7 @@ class Component extends DCLogic {
     user: null, userId: null, role: 'นักศึกษา', favs: [], placeId: 'hs', lotIx: 0,
     reportOpen: false, reason: null, otherText: '', toast: '', tick: 0, prefs: [true, true, false], menuOpen: false,
     geo: null, geoState: 'idle', geoAsk: false, forgotValue: '', newPw: '', newPw2: '',
-    regName: '', regEmail: '', regPhone: '', regPw: '', regPlate: ''
+    regName: '', regEmail: '', regPw: '', regPlate: ''
   };
 
   ME = { lat: 16.4745, lng: 102.8235 };
@@ -721,7 +721,7 @@ class Component extends DCLogic {
     this.setState({ err: '' });
     const { data, error } = await window.SB.auth.signUp({
       email: s.regEmail.trim(), password: s.regPw,
-      options: { data: { name: s.regName.trim(), phone: s.regPhone.trim(), plate: s.regPlate.trim(), role: s.role } }
+      options: { data: { name: s.regName.trim(), plate: s.regPlate.trim(), role: s.role } }
     });
     if (error) { this.setState({ err: error.message }); return; }
     if (data.session) { this.afterAuth(data.user); }
@@ -901,7 +901,6 @@ class Component extends DCLogic {
       regFields: [
         { key: 'regName', label: 'ชื่อ–นามสกุล', ph: 'สมชาย ใจดี', type: 'text' },
         { key: 'regEmail', label: 'อีเมล', ph: 'you@example.com', type: 'text' },
-        { key: 'regPhone', label: 'เบอร์โทรศัพท์ (ไม่บังคับ)', ph: '08x-xxx-xxxx', type: 'text' },
         { key: 'regPw', label: 'รหัสผ่าน', ph: 'อย่างน้อย 8 ตัวอักษร', type: 'password' },
         { key: 'regPlate', label: 'ทะเบียนรถ (ไม่บังคับ)', ph: 'ขก 1234 ขอนแก่น', type: 'text' }
       ].map(f => ({
