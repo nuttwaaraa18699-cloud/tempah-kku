@@ -367,8 +367,8 @@ a{color:#A73B24;text-decoration:none}a:hover{color:#8c3020}
 
     <div style="padding:20px;border-radius:20px;background:#FFFFFF;border:1px solid #E6E3DF;box-shadow:0 4px 18px rgba(26,29,31,.07);display:flex;flex-direction:column;gap:13px">
       <div style="display:flex;flex-direction:column;gap:6px">
-        <span style="font-size:11.5px;font-weight:600;color:#515556">อีเมล หรือ เบอร์โทรศัพท์</span>
-        <input value="{{ email }}" onInput="{{ onEmail }}" placeholder="you@example.com หรือ 08x-xxx-xxxx" style="width:100%;background:#F5F3F0;border:1px solid #E6E3DF;border-radius:12px;padding:14px;font-size:15px;color:#1A1D1F;outline:none">
+        <span style="font-size:11.5px;font-weight:600;color:#515556">อีเมล</span>
+        <input value="{{ email }}" onInput="{{ onEmail }}" placeholder="you@example.com" style="width:100%;background:#F5F3F0;border:1px solid #E6E3DF;border-radius:12px;padding:14px;font-size:15px;color:#1A1D1F;outline:none">
       </div>
       <div style="display:flex;flex-direction:column;gap:6px">
         <span style="font-size:11.5px;font-weight:600;color:#515556">รหัสผ่าน</span>
@@ -421,15 +421,31 @@ a{color:#A73B24;text-decoration:none}a:hover{color:#8c3020}
   <div style="flex:1;display:flex;flex-direction:column;justify-content:center;gap:15px;padding:44px 22px 40px;animation:tpUp .3s ease both">
     <span onClick="{{ goLogin }}" style="font-size:12.5px;color:#515556;cursor:pointer;white-space:nowrap">← กลับ</span>
     <span style="font-size:clamp(22px,6vw,28px);font-weight:700;letter-spacing:-.5px;color:#1A1D1F">ลืมรหัสผ่าน</span>
-    <span style="font-size:13px;color:#515556;line-height:1.7;margin-top:-6px">{{ forgotHint }}</span>
+    <span style="font-size:13px;color:#515556;line-height:1.7;margin-top:-6px">กรอกอีเมลที่ลงทะเบียนไว้ ระบบจะส่งลิงก์ตั้งรหัสผ่านใหม่ให้ภายใน 5 นาที</span>
     <div style="padding:18px;border-radius:20px;background:#FFFFFF;border:1px solid #E6E3DF;box-shadow:0 4px 18px rgba(26,29,31,.07);display:flex;flex-direction:column;gap:12px">
-      <div style="display:flex;gap:8px">
-        <sc-for list="{{ forgotModes }}" as="fm" hint-placeholder-count="2">
-          <div onClick="{{ fm.onPick }}" style="flex:1;text-align:center;cursor:pointer;font-size:13px;font-weight:600;padding:12px 4px;border-radius:12px;white-space:nowrap;border:1px solid {{ fm.border }};color: {{ fm.color }};background: {{ fm.bg }}">{{ fm.name }}</div>
-        </sc-for>
+      <input value="{{ forgotValue }}" onInput="{{ onForgotValue }}" placeholder="you@example.com" style="width:100%;background:#F5F3F0;border:1px solid #E6E3DF;border-radius:12px;padding:14px;font-size:15px;color:#1A1D1F;outline:none">
+      <div onClick="{{ sendReset }}" style="text-align:center;cursor:pointer;background:#A73B24;color:#fff;font-size:16px;font-weight:700;padding:15px;border-radius:12px">ส่งลิงก์ตั้งรหัสใหม่</div>
+    </div>
+  </div>
+  </sc-if>
+
+  <sc-if value="{{ isReset }}" hint-placeholder-val="{{ false }}">
+  <div style="flex:1;display:flex;flex-direction:column;justify-content:center;gap:15px;padding:44px 22px 40px;animation:tpUp .3s ease both">
+    <span style="font-size:clamp(22px,6vw,28px);font-weight:700;letter-spacing:-.5px;color:#1A1D1F">ตั้งรหัสผ่านใหม่</span>
+    <span style="font-size:13px;color:#515556;line-height:1.7;margin-top:-6px">กรอกรหัสผ่านใหม่ของคุณ 2 ครั้งให้ตรงกัน</span>
+    <div style="padding:18px;border-radius:20px;background:#FFFFFF;border:1px solid #E6E3DF;box-shadow:0 4px 18px rgba(26,29,31,.07);display:flex;flex-direction:column;gap:12px">
+      <div style="display:flex;flex-direction:column;gap:6px">
+        <span style="font-size:11.5px;font-weight:600;color:#515556">รหัสผ่านใหม่</span>
+        <input value="{{ newPw }}" onInput="{{ onNewPw }}" type="password" placeholder="อย่างน้อย 8 ตัวอักษร" style="width:100%;background:#F5F3F0;border:1px solid #E6E3DF;border-radius:12px;padding:14px;font-size:15px;color:#1A1D1F;outline:none">
       </div>
-      <input value="{{ forgotValue }}" onInput="{{ onForgotValue }}" placeholder="{{ forgotPh }}" style="width:100%;background:#F5F3F0;border:1px solid #E6E3DF;border-radius:12px;padding:14px;font-size:15px;color:#1A1D1F;outline:none">
-      <div onClick="{{ sendReset }}" style="text-align:center;cursor:pointer;background:#A73B24;color:#fff;font-size:16px;font-weight:700;padding:15px;border-radius:12px">{{ forgotBtn }}</div>
+      <div style="display:flex;flex-direction:column;gap:6px">
+        <span style="font-size:11.5px;font-weight:600;color:#515556">ยืนยันรหัสผ่านใหม่</span>
+        <input value="{{ newPw2 }}" onInput="{{ onNewPw2 }}" type="password" placeholder="พิมพ์รหัสผ่านใหม่อีกครั้ง" style="width:100%;background:#F5F3F0;border:1px solid #E6E3DF;border-radius:12px;padding:14px;font-size:15px;color:#1A1D1F;outline:none">
+      </div>
+      <sc-if value="{{ err }}" hint-placeholder-val="{{ false }}">
+        <span style="font-size:12px;color:#C62828">{{ err }}</span>
+      </sc-if>
+      <div onClick="{{ submitNewPw }}" style="text-align:center;cursor:pointer;background:#A73B24;color:#fff;font-size:16px;font-weight:700;padding:15px;border-radius:12px">บันทึกรหัสผ่านใหม่</div>
     </div>
   </div>
   </sc-if>
@@ -484,7 +500,7 @@ class Component extends DCLogic {
     view: 'login', email: '', pw: '', err: '', query: '', cat: 'ทั้งหมด', sort: 'near',
     user: null, userId: null, role: 'นักศึกษา', favs: [], placeId: 'hs', lotIx: 0,
     reportOpen: false, reason: null, otherText: '', toast: '', tick: 0, prefs: [true, true, false], menuOpen: false,
-    geo: null, geoState: 'idle', geoAsk: false, forgotMode: 'อีเมล', forgotValue: '',
+    geo: null, geoState: 'idle', geoAsk: false, forgotValue: '', newPw: '', newPw2: '',
     regName: '', regEmail: '', regPhone: '', regPw: '', regPlate: ''
   };
 
@@ -609,7 +625,10 @@ class Component extends DCLogic {
     }, 3000);
     if (window.SB) {
       window.SB.auth.getSession().then(({ data }) => {
-        if (data && data.session && data.session.user) this.afterAuth(data.session.user);
+        if (data && data.session && data.session.user && this.state.view !== 'reset') this.afterAuth(data.session.user);
+      });
+      window.SB.auth.onAuthStateChange((event) => {
+        if (event === 'PASSWORD_RECOVERY') this.setState({ view: 'reset', newPw: '', newPw2: '', err: '' });
       });
     }
   }
@@ -711,12 +730,24 @@ class Component extends DCLogic {
 
   sendReset = async () => {
     const s = this.state;
-    if (s.forgotMode !== 'อีเมล') { this.flash('ตอนนี้รองรับเฉพาะรีเซ็ตผ่านอีเมล กรุณาเลือก "อีเมล"'); return; }
     if (!s.forgotValue.trim()) { this.flash('กรุณากรอกอีเมล'); return; }
     if (!window.SB) { this.flash('ระบบยังไม่ได้เชื่อมต่อฐานข้อมูล'); return; }
-    const { error } = await window.SB.auth.resetPasswordForEmail(s.forgotValue.trim());
+    const { error } = await window.SB.auth.resetPasswordForEmail(s.forgotValue.trim(), { redirectTo: window.location.origin });
     this.flash(error ? 'ส่งไม่สำเร็จ ลองใหม่อีกครั้ง' : 'ส่งลิงก์ตั้งรหัสผ่านใหม่แล้ว ตรวจสอบอีเมลของคุณ');
     this.go('login');
+  };
+
+  updatePassword = async () => {
+    const s = this.state;
+    if (!s.newPw || s.newPw.length < 8) { this.setState({ err: 'รหัสผ่านต้องมีอย่างน้อย 8 ตัวอักษร' }); return; }
+    if (s.newPw !== s.newPw2) { this.setState({ err: 'รหัสผ่านทั้งสองช่องไม่ตรงกัน' }); return; }
+    if (!window.SB) { this.setState({ err: 'ระบบยังไม่ได้เชื่อมต่อฐานข้อมูล' }); return; }
+    this.setState({ err: '' });
+    const { data, error } = await window.SB.auth.updateUser({ password: s.newPw });
+    if (error) { this.setState({ err: 'ลิงก์หมดอายุหรือใช้ไปแล้ว กรุณาขอลิงก์ใหม่' }); return; }
+    this.setState({ newPw: '', newPw2: '' });
+    this.flash('ตั้งรหัสผ่านใหม่สำเร็จ');
+    this.afterAuth(data.user);
   };
 
   doLogout = () => {
@@ -769,6 +800,7 @@ class Component extends DCLogic {
       imgRef: el => { if (el && el.dataset.src && el.getAttribute('src') !== el.dataset.src) el.setAttribute('src', el.dataset.src); },
       stop: e => { if (e && e.stopPropagation) e.stopPropagation(); },
       isLogin: st.view === 'login', isRegister: st.view === 'register', isForgot: st.view === 'forgot',
+      isReset: st.view === 'reset',
       isAuth: ['home', 'place', 'favs', 'restricted', 'me'].indexOf(st.view) >= 0,
       isHome: st.view === 'home', isPlace: st.view === 'place', isFavs: st.view === 'favs',
       isRestricted: st.view === 'restricted', isMe: st.view === 'me',
@@ -798,15 +830,10 @@ class Component extends DCLogic {
       geoStatusText: { on: 'GPS เปิดอยู่ · กำลังติดตามตำแหน่ง', asking: 'กำลังขอตำแหน่ง…', denied: 'ปิดอยู่ · ไม่ได้รับอนุญาต', unsupported: 'อุปกรณ์นี้ไม่รองรับ GPS' }[st.geoState] || 'ปิดอยู่ · แตะเพื่อเปิด',
       geoSwitchBg: st.geoState === 'on' ? '#1F8A4C' : '#DCD9D5',
       geoSwitchJustify: st.geoState === 'on' ? 'flex-end' : 'flex-start',
-      forgotHint: st.forgotMode === 'อีเมล' ? 'กรอกอีเมลที่ลงทะเบียนไว้ ระบบจะส่งลิงก์ตั้งรหัสผ่านใหม่ให้ภายใน 5 นาที' : 'กรอกเบอร์โทรศัพท์ที่ลงทะเบียนไว้ ระบบจะส่งรหัส OTP 6 หลักทาง SMS ภายใน 5 นาที',
-      forgotPh: st.forgotMode === 'อีเมล' ? 'you@example.com' : '08x-xxx-xxxx',
-      forgotBtn: st.forgotMode === 'อีเมล' ? 'ส่งลิงก์ตั้งรหัสใหม่' : 'ส่งรหัส OTP ทาง SMS',
-      forgotModes: ['อีเมล', 'เบอร์โทรศัพท์'].map(m => ({
-        name: m, onPick: () => this.setState({ forgotMode: m }),
-        border: st.forgotMode === m ? accent : '#DCD9D5',
-        color: st.forgotMode === m ? accent : '#515556',
-        bg: st.forgotMode === m ? '#FBF1EE' : '#FFFFFF'
-      })),
+      newPw: st.newPw, newPw2: st.newPw2,
+      onNewPw: e => this.setState({ newPw: e.target.value, err: '' }),
+      onNewPw2: e => this.setState({ newPw2: e.target.value, err: '' }),
+      submitNewPw: this.updatePassword,
       otherPicked: st.reason === 'อื่น ๆ',
       otherText: st.otherText,
       onOtherText: e => this.setState({ otherText: e.target.value }),
@@ -874,7 +901,7 @@ class Component extends DCLogic {
       regFields: [
         { key: 'regName', label: 'ชื่อ–นามสกุล', ph: 'สมชาย ใจดี', type: 'text' },
         { key: 'regEmail', label: 'อีเมล', ph: 'you@example.com', type: 'text' },
-        { key: 'regPhone', label: 'เบอร์โทรศัพท์ (ใช้รับ SMS ตอนลืมรหัสผ่าน)', ph: '08x-xxx-xxxx', type: 'text' },
+        { key: 'regPhone', label: 'เบอร์โทรศัพท์ (ไม่บังคับ)', ph: '08x-xxx-xxxx', type: 'text' },
         { key: 'regPw', label: 'รหัสผ่าน', ph: 'อย่างน้อย 8 ตัวอักษร', type: 'password' },
         { key: 'regPlate', label: 'ทะเบียนรถ (ไม่บังคับ)', ph: 'ขก 1234 ขอนแก่น', type: 'text' }
       ].map(f => ({
