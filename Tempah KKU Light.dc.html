@@ -683,12 +683,17 @@ class Component extends DCLogic {
   go(view) { this.setState({ view, menuOpen: false }); }
   flash(msg) { this.setState({ toast: msg }); clearTimeout(this.tt); this.tt = setTimeout(() => this.setState({ toast: '' }), 2600); }
 
-  toggleFav = (id) => {
+  toggleFav = async (id) => {
     const wasFav = this.state.favs.indexOf(id) >= 0;
     this.setState(s => ({ favs: wasFav ? s.favs.filter(f => f !== id) : s.favs.concat([id]) }));
     if (!window.SB || !this.state.userId) return;
-    if (wasFav) window.SB.from('favorites').delete().eq('user_id', this.state.userId).eq('place_id', id);
-    else window.SB.from('favorites').upsert({ user_id: this.state.userId, place_id: id });
+    const { error } = wasFav
+      ? await window.SB.from('favorites').delete().eq('user_id', this.state.userId).eq('place_id', id)
+      : await window.SB.from('favorites').upsert({ user_id: this.state.userId, place_id: id });
+    if (error) {
+      this.setState(s => ({ favs: wasFav ? s.favs.concat([id]) : s.favs.filter(f => f !== id) }));
+      this.flash('บันทึกที่จอดโปรดไม่สำเร็จ ลองใหม่อีกครั้ง');
+    }
   };
 
   afterAuth = async (user) => {
@@ -698,7 +703,8 @@ class Component extends DCLogic {
       email: '', pw: '', err: '', geoAsk: this.state.geoState === 'idle'
     });
     if (!window.SB) return;
-    const { data } = await window.SB.from('favorites').select('place_id').eq('user_id', user.id);
+    const { data, error } = await window.SB.from('favorites').select('place_id').eq('user_id', user.id);
+    if (error) { this.flash('โหลดที่จอดโปรดไม่สำเร็จ'); return; }
     this.setState({ favs: (data || []).map(r => r.place_id) });
   };
 
