@@ -1,0 +1,916 @@
+<!DOCTYPE html>
+<html>
+<head>
+<template id="__bundler_thumbnail"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 56"><rect width="120" height="56" fill="#1A1D1F"/><text x="60" y="33" font-family="Arial" font-weight="900" font-size="16" fill="#A73B24" text-anchor="middle">T.KKU</text></svg></template>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script src="./config.js"></script>
+<script>
+  window.SB = (window.SUPABASE_URL && window.SUPABASE_ANON_KEY && window.SUPABASE_URL.indexOf('YOUR-PROJECT') === -1)
+    ? supabase.createClient(window.SUPABASE_URL, window.SUPABASE_ANON_KEY)
+    : null;
+</script>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet data-dc-atomics>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;500;600;700&family=Archivo:wght@600;700;800;900&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*{-webkit-tap-highlight-color:transparent;box-sizing:border-box}
+html,body{margin:0;background:#FFFFFF;font-family:'IBM Plex Sans Thai',system-ui,sans-serif;color:#1A1D1F;-webkit-font-smoothing:antialiased}
+input,button{font-family:inherit}
+a{color:#A73B24;text-decoration:none}a:hover{color:#8c3020}
+::-webkit-scrollbar{width:0;height:0}
+@keyframes tpPulse{0%,100%{opacity:1}50%{opacity:.28}}
+@keyframes tpBlink{0%,49%{opacity:1;transform:scale(1)}50%,100%{opacity:.15;transform:scale(.82)}}
+@keyframes tpScan{0%{transform:translateY(-120%)}100%{transform:translateY(1600%)}}
+@keyframes tpUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+@keyframes tpKen{0%{transform:scale(1.04) translate(0,0)}50%{transform:scale(1.12) translate(-1.5%,-1%)}100%{transform:scale(1.04) translate(0,0)}}
+@keyframes tpFlicker{0%,92%,100%{opacity:.05}94%{opacity:.14}96%{opacity:.02}}
+@keyframes tpSlot{0%,44%{background:#DCD9D5}52%,100%{background:#A73B24}}
+@keyframes tpCar{0%{left:-16%;opacity:0}8%{opacity:1}92%{opacity:1}100%{left:104%;opacity:0}}
+</style>
+</helmet>
+
+<div style="min-height:100vh;background:#FFFFFF;display:flex;justify-content:center">
+<div style="width:100%;max-width:640px;min-height:100vh;position:relative;display:flex;flex-direction:column;background:#FFFFFF">
+
+  <sc-if value="{{ isAuth }}" hint-placeholder-val="{{ false }}">
+  <div style="display:flex;flex-direction:column;flex:1">
+
+    <div style="position:sticky;top:0;z-index:40;background:#FFFFFF;border-bottom:1px solid #EBE8E4;padding:13px 16px;display:flex;align-items:center;justify-content:space-between;gap:12px">
+      <div style="display:flex;align-items:center;gap:1px;line-height:1">
+        <span style="font-family:Archivo,sans-serif;font-weight:900;font-size:25px;color:#A73B24;letter-spacing:-1.5px">T</span>
+        <span style="font-family:Archivo,sans-serif;font-weight:800;font-size:19px;letter-spacing:-.6px;color:#1A1D1F">EMPAH</span>
+        <span style="font-family:'IBM Plex Mono',monospace;font-weight:600;font-size:10px;color:#8A8F91;padding:6px 0 0 3px;letter-spacing:.5px">.KKU</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:9px">
+        <div onClick="{{ toggleGeo }}" style="display:flex;align-items:center;gap:6px;cursor:pointer;font-size:11.5px;color:#515556;background:#F5F3F0;border:1px solid #E6E3DF;padding:7px 11px;border-radius:999px;white-space:nowrap">
+          <span style="width:7px;height:7px;border-radius:50%;background: {{ geoDot }};box-shadow: {{ geoGlow }};display:inline-block;animation: {{ geoAnim }}"></span>{{ geoLabel }}
+        </div>
+        <div onClick="{{ openMenu }}" style="cursor:pointer;width:42px;height:42px;flex:none;border-radius:14px;background:#1A1D1F;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px">
+          <span style="width:18px;height:2px;background:#fff;border-radius:2px;display:block"></span>
+          <span style="width:18px;height:2px;background:#fff;border-radius:2px;display:block"></span>
+          <span style="width:18px;height:2px;background:#fff;border-radius:2px;display:block"></span>
+        </div>
+      </div>
+    </div>
+
+    <div style="flex:1;padding:16px 16px 44px;display:flex;flex-direction:column;gap:18px">
+
+      <sc-if value="{{ isHome }}" hint-placeholder-val="{{ true }}">
+      <div style="display:flex;flex-direction:column;gap:18px;animation:tpUp .3s ease both">
+
+        <div style="display:flex;flex-direction:column;gap:4px">
+          <span style="font-size:12px;color:#8A8F91">{{ greeting }}</span>
+          <span style="font-size:clamp(22px,6vw,29px);font-weight:700;line-height:1.25;letter-spacing:-.5px;color:#1A1D1F;text-wrap:pretty">วันนี้จะจอดที่ไหนดี</span>
+        </div>
+
+        <div onClick="{{ openNearest }}" style="cursor:pointer;display:flex;align-items:center;gap:13px;padding:14px 15px;border-radius:18px;background:#FFFFFF;border:1px solid #E6E3DF;box-shadow:0 2px 8px rgba(26,29,31,.05)">
+          <div style="flex:none;width:54px;height:54px;border-radius:16px;display:flex;flex-direction:column;align-items:center;justify-content:center;background: {{ nearBadgeBg }};border:1.5px solid {{ nearBadgeFg }}">
+            <span style="font-family:'IBM Plex Mono',monospace;font-size:19px;font-weight:700;color: {{ nearBadgeFg }}">{{ nearestFree }}</span>
+            <span style="font-size:8.5px;color:#515556">ว่าง</span>
+          </div>
+          <div style="flex:1;display:flex;flex-direction:column;gap:3px;min-width:0">
+            <span style="font-size:11.5px;color:#8A8F91">ใกล้คุณที่สุดตอนนี้</span>
+            <span style="font-size:14.5px;font-weight:600;color:#1A1D1F;text-wrap:pretty">{{ nearestName }}</span>
+            <span style="font-size:11.5px;color:#515556">{{ nearestDist }} · แตะเพื่อดูภาพสด</span>
+          </div>
+          <a href="{{ nearestMapUrl }}" target="_blank" onClick="{{ stop }}" style="flex:none;font-size:12px;font-weight:600;color:#fff;background:#A73B24;border-radius:12px;padding:11px 13px;white-space:nowrap">นำทาง ↗</a>
+        </div>
+
+        <sc-if value="{{ hasFavs }}" hint-placeholder-val="{{ true }}">
+        <div style="display:flex;flex-direction:column;gap:9px">
+          <div style="display:flex;align-items:baseline;justify-content:space-between">
+            <span style="font-size:12.5px;font-weight:700;color:#1A1D1F">★ ที่จอดโปรดของคุณ</span>
+            <span onClick="{{ goFavs }}" style="font-size:11.5px;font-weight:600;color:#A73B24;cursor:pointer;white-space:nowrap">จัดการ</span>
+          </div>
+          <div style="display:flex;gap:10px;overflow-x:auto;padding-bottom:4px">
+            <sc-for list="{{ favCards }}" as="f" hint-placeholder-count="2">
+              <div onClick="{{ f.onOpen }}" style="flex:none;min-width:174px;cursor:pointer;padding:12px 13px;border-radius:16px;background:#FAF9F8;border:1px solid #E6E3DF;display:flex;flex-direction:column;gap:8px">
+                <div style="display:flex;align-items:center;gap:7px">
+                  <span style="width:8px;height:8px;border-radius:50%;flex:none;background: {{ f.statusFg }}"></span>
+                  <span style="font-size:12.5px;font-weight:600;color:#1A1D1F;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ f.short }}</span>
+                </div>
+                <div style="display:flex;align-items:baseline;gap:6px">
+                  <span style="font-family:'IBM Plex Mono',monospace;font-size:21px;font-weight:700;color: {{ f.statusFg }}">{{ f.free }}</span>
+                  <span style="font-size:11px;color:#515556">ช่องว่าง · {{ f.distText }}</span>
+                </div>
+                <div style="display:flex;gap:6px">
+                  <a href="{{ f.mapUrl }}" target="_blank" onClick="{{ stop }}" style="flex:1;text-align:center;font-size:11px;font-weight:600;color:#1A1D1F;background:#fff;border:1px solid #DCD9D5;border-radius:10px;padding:7px 0;white-space:nowrap">นำทาง ↗</a>
+                  <span onClick="{{ f.onOpen }}" style="flex:1;text-align:center;font-size:11px;font-weight:600;color:#fff;background:#A73B24;border-radius:10px;padding:8px 0;white-space:nowrap">ภาพสด</span>
+                </div>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+        </sc-if>
+
+        <div style="display:flex;flex-direction:column;gap:11px">
+          <div style="display:flex;align-items:center;gap:10px;background:#F5F3F0;border:1px solid #E6E3DF;border-radius:14px;padding:13px 14px">
+            <span style="font-size:15px;color:#8A8F91">⌕</span>
+            <input value="{{ query }}" onInput="{{ onQuery }}" placeholder="ค้นหาคณะ อาคาร หรือลานจอด…" style="flex:1;min-width:0;background:none;border:none;outline:none;color:#1A1D1F;font-size:14.5px">
+            <sc-if value="{{ query }}" hint-placeholder-val="{{ false }}">
+              <span onClick="{{ clearQuery }}" style="font-size:13px;color:#8A8F91;cursor:pointer">✕</span>
+            </sc-if>
+          </div>
+          <div style="display:flex;gap:7px;overflow-x:auto;padding-bottom:2px">
+            <sc-for list="{{ chips }}" as="ch" hint-placeholder-count="6">
+              <span onClick="{{ ch.onPick }}" style="flex:none;cursor:pointer;font-size:12px;font-weight:600;padding:8px 13px;border-radius:999px;white-space:nowrap;background: {{ ch.bg }};color: {{ ch.fg }};border:1px solid {{ ch.border }}">{{ ch.name }}</span>
+            </sc-for>
+          </div>
+          <div style="display:flex;gap:8px">
+            <span onClick="{{ setSortNear }}" style="flex:1;text-align:center;cursor:pointer;font-size:12px;font-weight:600;padding:10px 0;border-radius:11px;white-space:nowrap;background: {{ nearBg }};color: {{ nearFg }};border:1px solid {{ nearBorder }}">ใกล้ฉันที่สุด</span>
+            <span onClick="{{ setSortFree }}" style="flex:1;text-align:center;cursor:pointer;font-size:12px;font-weight:600;padding:10px 0;border-radius:11px;white-space:nowrap;background: {{ freeBg }};color: {{ freeFg }};border:1px solid {{ freeBorder }}">ว่างมากที่สุด</span>
+          </div>
+        </div>
+
+        <div style="display:flex;flex-direction:column;gap:14px">
+          <sc-for list="{{ cards }}" as="c" hint-placeholder-count="4">
+            <div style="border-radius:20px;overflow:hidden;background:#FFFFFF;border:1px solid #E6E3DF;box-shadow:0 2px 10px rgba(26,29,31,.06)">
+              <div onClick="{{ c.onOpen }}" style="position:relative;height:170px;background:#EFEDEA;cursor:pointer;overflow:hidden">
+                <sc-if value="{{ c.hasImg }}" hint-placeholder-val="{{ true }}">
+                  <img src="assets/hs05.jpg" data-src="{{ c.img }}" ref="{{ imgRef }}" alt="" style="display:block;width:100%;height:170px;object-fit:cover;animation:tpKen 22s ease-in-out infinite">
+                </sc-if>
+                <sc-if value="{{ c.noImg }}" hint-placeholder-val="{{ false }}">
+                  <div style="position:absolute;inset:0;background:#EFEDEA">
+                    <div style="position:absolute;left:0;right:0;bottom:0;height:62%;background:repeating-linear-gradient(90deg,#E2DFDB 0 1px,transparent 1px 46px),#E9E6E2"></div>
+                    <div style="position:absolute;left:8%;right:8%;top:34%;display:grid;grid-template-columns:repeat(8,1fr);gap:5px">
+                      <sc-for list="{{ c.slots }}" as="sl" hint-placeholder-count="16">
+                        <span style="height:16px;border-radius:3px;background:#DCD9D5;animation:tpSlot 7s ease-in-out infinite alternate;animation-delay: {{ sl.d }}"></span>
+                      </sc-for>
+                    </div>
+                    <span style="position:absolute;bottom:14%;width:34px;height:14px;border-radius:3px;background:#515556;animation:tpCar 9s linear infinite;animation-delay: {{ c.carDelay }}"></span>
+                  </div>
+                </sc-if>
+                <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(26,29,31,.86) 0%,rgba(26,29,31,0) 58%)"></div>
+                <div style="position:absolute;top:0;left:0;right:0;height:16px;background:linear-gradient(rgba(255,255,255,.3),transparent);animation:tpScan 6s linear infinite"></div>
+                <div style="position:absolute;top:11px;left:11px;display:flex;align-items:center;gap:5px;padding:5px 9px;border-radius:999px;background:#FFFFFF;white-space:nowrap">
+                  <span style="width:6px;height:6px;border-radius:50%;background:#C62828;display:inline-block;animation:tpPulse 1.4s infinite"></span>
+                  <span style="font-family:Archivo,sans-serif;font-size:9.5px;font-weight:800;letter-spacing:1.2px;color:#1A1D1F">LIVE</span>
+                </div>
+                <div onClick="{{ c.onStar }}" style="position:absolute;top:9px;right:9px;width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px;cursor:pointer;background:#FFFFFF;color: {{ c.starColor }}">★</div>
+                <div style="position:absolute;left:14px;right:14px;bottom:12px;display:flex;align-items:flex-end;justify-content:space-between;gap:10px">
+                  <div style="display:flex;flex-direction:column;gap:3px;min-width:0">
+                    <span style="font-size:15.5px;font-weight:700;color:#fff;letter-spacing:-.2px;text-wrap:pretty">{{ c.name }}</span>
+                    <span style="font-size:11.5px;color:rgba(255,255,255,.78);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ c.meta }}</span>
+                  </div>
+                  <span style="flex:none;font-size:11.5px;font-weight:700;padding:6px 12px;border-radius:999px;white-space:nowrap;color:#fff;background: {{ c.statusFg }}">{{ c.statusLabel }}</span>
+                </div>
+              </div>
+              <div style="padding:12px 14px;display:flex;align-items:center;gap:11px">
+                <span style="flex:1;font-size:12.5px;color:#515556;white-space:nowrap">{{ c.freeText }}</span>
+                <a href="{{ c.mapUrl }}" target="_blank" style="flex:none;font-size:11.5px;font-weight:600;color:#1A1D1F;background:#F5F3F0;border:1px solid #DCD9D5;border-radius:10px;padding:8px 12px;white-space:nowrap">นำทาง ↗</a>
+              </div>
+            </div>
+          </sc-for>
+          <sc-if value="{{ noCards }}" hint-placeholder-val="{{ false }}">
+            <div style="border:1px dashed #DCD9D5;border-radius:18px;padding:28px;text-align:center;font-size:13px;color:#8A8F91">ไม่พบสถานที่ที่ตรงกับคำค้น</div>
+          </sc-if>
+        </div>
+      </div>
+      </sc-if>
+
+      <sc-if value="{{ isPlace }}" hint-placeholder-val="{{ false }}">
+      <div style="display:flex;flex-direction:column;gap:15px;animation:tpUp .3s ease both">
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:12px">
+          <span onClick="{{ goHome }}" style="font-size:12.5px;font-weight:600;color:#515556;cursor:pointer;white-space:nowrap">← ทั้งหมด</span>
+          <span onClick="{{ starPlace }}" style="font-size:12.5px;font-weight:600;cursor:pointer;white-space:nowrap;color: {{ placeStarColor }}">★ บันทึกเป็นโปรด</span>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:5px">
+          <span style="font-size:clamp(20px,5.4vw,26px);font-weight:700;letter-spacing:-.4px;line-height:1.25;color:#1A1D1F;text-wrap:pretty">{{ placeName }}</span>
+          <span style="font-size:11.5px;color:#8A8F91">{{ placeMeta }}</span>
+        </div>
+
+        <div style="display:flex;gap:9px;overflow-x:auto;padding-bottom:4px">
+          <sc-for list="{{ lots }}" as="l" hint-placeholder-count="4">
+            <div onClick="{{ l.onPick }}" style="flex:none;width:138px;cursor:pointer;border-radius:14px;overflow:hidden;border:1.5px solid {{ l.border }};background:#FAF9F8">
+              <sc-if value="{{ l.hasImg }}" hint-placeholder-val="{{ true }}">
+                <img src="assets/kkbs-moto.jpg" data-src="{{ l.img }}" ref="{{ imgRef }}" alt="" style="display:block;width:100%;height:64px;object-fit:cover;opacity: {{ l.dim }}">
+              </sc-if>
+              <sc-if value="{{ l.noImg }}" hint-placeholder-val="{{ false }}">
+                <div style="height:64px;background:#EFEDEA;position:relative;overflow:hidden;opacity: {{ l.dim }}">
+                  <div style="position:absolute;left:10%;right:10%;top:30%;display:grid;grid-template-columns:repeat(6,1fr);gap:3px">
+                    <sc-for list="{{ l.slots }}" as="sl" hint-placeholder-count="12">
+                      <span style="height:9px;border-radius:2px;background:#DCD9D5;animation:tpSlot 6s ease-in-out infinite alternate;animation-delay: {{ sl.d }}"></span>
+                    </sc-for>
+                  </div>
+                </div>
+              </sc-if>
+              <div style="padding:8px 10px 9px;display:flex;flex-direction:column;gap:3px">
+                <span style="font-size:11.5px;font-weight:600;color:#1A1D1F;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ l.n }}</span>
+                <span style="font-size:11px;font-weight:600;color: {{ l.statusFg }}">ว่าง {{ l.free }} ช่อง</span>
+              </div>
+            </div>
+          </sc-for>
+        </div>
+
+        <div style="border-radius:20px;overflow:hidden;background:#FFFFFF;border:1px solid #E6E3DF;box-shadow:0 2px 10px rgba(26,29,31,.06)">
+          <div style="position:relative;background:#EFEDEA;overflow:hidden">
+            <sc-if value="{{ lotHasImg }}" hint-placeholder-val="{{ true }}">
+              <img src="assets/hs05.jpg" data-src="{{ lotImg }}" ref="{{ imgRef }}" alt="" style="display:block;width:100%;height:clamp(250px,60vw,350px);object-fit:cover;animation:tpKen 26s ease-in-out infinite">
+            </sc-if>
+            <sc-if value="{{ lotNoImg }}" hint-placeholder-val="{{ false }}">
+              <div style="position:relative;height:clamp(250px,60vw,350px);background:#EFEDEA;overflow:hidden">
+                <div style="position:absolute;left:0;right:0;bottom:0;height:58%;background:repeating-linear-gradient(90deg,#E2DFDB 0 1px,transparent 1px 52px),#E9E6E2"></div>
+                <div style="position:absolute;left:7%;right:7%;top:26%;display:grid;grid-template-columns:repeat(8,1fr);gap:7px">
+                  <sc-for list="{{ lotSlots }}" as="sl" hint-placeholder-count="24">
+                    <span style="height:22px;border-radius:4px;background:#DCD9D5;animation:tpSlot 8s ease-in-out infinite alternate;animation-delay: {{ sl.d }}"></span>
+                  </sc-for>
+                </div>
+                <span style="position:absolute;bottom:12%;width:52px;height:20px;border-radius:4px;background:#515556;animation:tpCar 11s linear infinite"></span>
+              </div>
+            </sc-if>
+            <div style="position:absolute;top:0;left:0;right:0;height:22px;background:linear-gradient(rgba(255,255,255,.32),transparent);animation:tpScan 7s linear infinite"></div>
+            <div style="position:absolute;top:12px;left:12px;right:12px;display:flex;align-items:center;justify-content:space-between;gap:10px">
+              <span style="font-size:11px;color:#1A1D1F;background:#FFFFFF;padding:6px 10px;border-radius:999px;white-space:nowrap">ภาพสด · {{ clock }}</span>
+              <span style="display:flex;align-items:center;gap:6px;background:#FFFFFF;padding:6px 10px;border-radius:999px;white-space:nowrap">
+                <span style="width:7px;height:7px;border-radius:50%;background:#C62828;display:inline-block;animation:tpPulse 1.2s infinite"></span>
+                <span style="font-family:Archivo,sans-serif;font-size:10px;font-weight:800;letter-spacing:1.4px;color:#1A1D1F">LIVE</span>
+              </span>
+            </div>
+            <a href="{{ lotMapUrl }}" target="_blank" style="position:absolute;bottom:14px;right:14px;display:flex;align-items:center;gap:7px;padding:12px 16px;border-radius:999px;background:#A73B24;color:#fff;font-size:13px;font-weight:700;white-space:nowrap;box-shadow:0 6px 18px rgba(26,29,31,.28)">➤ นำทางด้วย Google Maps</a>
+          </div>
+
+          <div style="padding:16px;display:flex;flex-direction:column;gap:15px">
+            <div style="display:flex;align-items:center;gap:15px">
+              <div style="flex:none;width:76px;height:76px;border-radius:20px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;background: {{ lotStatusBg }};border:1.5px solid {{ lotStatusFg }}">
+                <span style="font-family:'IBM Plex Mono',monospace;font-size:22px;font-weight:700;color: {{ lotStatusFg }}">{{ lotFree }}</span>
+                <span style="font-size:9.5px;color:#515556">ช่องว่าง</span>
+              </div>
+              <div style="flex:1;display:flex;flex-direction:column;gap:6px;min-width:0">
+                <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+                  <span style="font-size:15px;font-weight:700;color:#1A1D1F">{{ lotName }}</span>
+                  <span style="font-size:11px;font-weight:700;padding:4px 10px;border-radius:999px;white-space:nowrap;color:#fff;background: {{ lotStatusFg }}">{{ lotStatusLabel }}</span>
+                </div>
+                <span style="font-size:12px;color:#515556">{{ lotFree }} จาก {{ lotTotal }} ช่อง · {{ lotType }}</span>
+                <span style="font-size:12px;color:#515556">ระยะจากคุณ {{ distText }}</span>
+              </div>
+            </div>
+
+            <div style="border-radius:14px;overflow:hidden;border:1px solid #E6E3DF">
+              <iframe src="{{ embedUrl }}" title="แผนที่" loading="lazy" style="display:block;width:100%;height:190px;border:0"></iframe>
+            </div>
+
+            <div style="display:flex;gap:10px">
+              <div onClick="{{ openReport }}" style="flex:1;text-align:center;cursor:pointer;font-size:14.5px;font-weight:700;padding:15px 0;border-radius:14px;color:#fff;background:#C62828">รายงานปัญหา</div>
+              <div onClick="{{ finish }}" style="flex:1;text-align:center;cursor:pointer;font-size:14.5px;font-weight:700;padding:15px 0;border-radius:14px;color:#fff;background:#1F8A4C">เสร็จสิ้น</div>
+            </div>
+          </div>
+        </div>
+        <div style="font-size:11px;color:#8A8F91;line-height:1.65">ภาพจากกล้องของมหาวิทยาลัย (ในต้นแบบนี้เป็นภาพจำลอง) อัปเดตทุก 30 วินาที · เก็บภาพ 24 ชม. แล้วลบอัตโนมัติ</div>
+      </div>
+      </sc-if>
+
+      <sc-if value="{{ isFavs }}" hint-placeholder-val="{{ false }}">
+      <div style="display:flex;flex-direction:column;gap:13px;animation:tpUp .3s ease both">
+        <span style="font-size:clamp(20px,5.4vw,26px);font-weight:700;letter-spacing:-.4px;color:#1A1D1F">ที่จอดโปรด</span>
+        <span style="font-size:12px;color:#8A8F91;margin-top:-6px">รายการนี้จะขึ้นบนสุดของหน้าแรกทุกครั้งที่เปิดเว็บ</span>
+        <sc-for list="{{ favCards }}" as="f" hint-placeholder-count="2">
+          <div style="display:flex;align-items:center;gap:12px;padding:13px 14px;border-radius:16px;background:#FFFFFF;border:1px solid #E6E3DF">
+            <span onClick="{{ f.onStar }}" style="font-size:17px;color:#E8A82B;cursor:pointer">★</span>
+            <div onClick="{{ f.onOpen }}" style="flex:1;display:flex;flex-direction:column;gap:3px;min-width:0;cursor:pointer">
+              <span style="font-size:14px;font-weight:600;color:#1A1D1F;text-wrap:pretty">{{ f.name }}</span>
+              <span style="font-size:11.5px;color:#515556">{{ f.freeText }} · {{ f.distText }}</span>
+            </div>
+            <a href="{{ f.mapUrl }}" target="_blank" style="flex:none;font-size:11px;font-weight:600;color:#1A1D1F;background:#F5F3F0;border:1px solid #DCD9D5;border-radius:10px;padding:8px 11px;white-space:nowrap">นำทาง ↗</a>
+          </div>
+        </sc-for>
+        <sc-if value="{{ noFavs }}" hint-placeholder-val="{{ false }}">
+          <div style="border:1px dashed #DCD9D5;border-radius:18px;padding:28px;text-align:center;font-size:13px;color:#8A8F91;line-height:1.7">ยังไม่มีที่จอดโปรด<br>กดดาว ★ บนการ์ดเพื่อปักหมุดไว้บนสุด</div>
+        </sc-if>
+      </div>
+      </sc-if>
+
+      <sc-if value="{{ isRestricted }}" hint-placeholder-val="{{ false }}">
+      <div style="display:flex;flex-direction:column;gap:12px;animation:tpUp .3s ease both">
+        <span style="font-size:clamp(20px,5.4vw,26px);font-weight:700;letter-spacing:-.4px;color:#1A1D1F;text-wrap:pretty">พื้นที่ที่ไม่สามารถเข้าถึงได้</span>
+        <span style="font-size:12px;color:#8A8F91;line-height:1.7;margin-top:-4px">พื้นที่ปิด ห้ามจอด หรือสงวนสิทธิ์เฉพาะกลุ่ม ระบบจะไม่แนะนำที่จอดในบริเวณนี้</span>
+        <sc-for list="{{ restricted }}" as="r" hint-placeholder-count="6">
+          <div style="padding:14px 16px;border-radius:16px;background:#FDF6F4;border:1px solid #F0D9D2;display:flex;flex-direction:column;gap:5px">
+            <span style="font-size:13.5px;font-weight:600;color:#1A1D1F;text-wrap:pretty">{{ r.name }}</span>
+            <span style="font-size:11.5px;color:#515556;line-height:1.6">{{ r.reason }}</span>
+            <span style="font-size:11px;font-weight:600;color:#A73B24">{{ r.period }}</span>
+          </div>
+        </sc-for>
+      </div>
+      </sc-if>
+
+      <sc-if value="{{ isMe }}" hint-placeholder-val="{{ false }}">
+      <div style="display:flex;flex-direction:column;gap:12px;animation:tpUp .3s ease both">
+        <span style="font-size:clamp(20px,5.4vw,26px);font-weight:700;letter-spacing:-.4px;color:#1A1D1F">บัญชีของฉัน</span>
+        <div style="padding:16px;border-radius:18px;background:#FAF9F8;border:1px solid #E6E3DF;display:flex;align-items:center;gap:14px">
+          <div style="width:48px;height:48px;border-radius:50%;background:#A73B24;display:flex;align-items:center;justify-content:center;font-family:Archivo,sans-serif;font-weight:800;font-size:18px;color:#fff">{{ initial }}</div>
+          <div style="display:flex;flex-direction:column;gap:3px;min-width:0">
+            <span style="font-size:14px;font-weight:600;color:#1A1D1F;overflow:hidden;text-overflow:ellipsis">{{ userLabel }}</span>
+            <span style="font-size:11px;color:#8A8F91">{{ roleLabel }}</span>
+          </div>
+        </div>
+        <div onClick="{{ toggleGeo }}" style="padding:15px 16px;border-radius:14px;cursor:pointer;background:#FFFFFF;border:1px solid #E6E3DF;display:flex;align-items:center;justify-content:space-between;gap:12px">
+          <div style="display:flex;flex-direction:column;gap:4px;min-width:0">
+            <span style="font-size:13px;color:#1A1D1F;text-wrap:pretty">ติดตามตำแหน่ง GPS เพื่อหาลานจอดที่ใกล้ที่สุด</span>
+            <span style="display:flex;align-items:center;gap:6px;font-size:11.5px;color:#8A8F91">
+              <span style="width:7px;height:7px;border-radius:50%;background: {{ geoDot }};box-shadow: {{ geoGlow }};display:inline-block;animation: {{ geoAnim }}"></span>{{ geoStatusText }}
+            </span>
+          </div>
+          <span style="flex:none;width:46px;height:26px;border-radius:99px;padding:3px;display:flex;align-items:center;justify-content: {{ geoSwitchJustify }};background: {{ geoSwitchBg }};transition:background .2s">
+            <span style="width:20px;height:20px;border-radius:50%;background:#fff;box-shadow:0 1px 3px rgba(26,29,31,.3);display:block"></span>
+          </span>
+        </div>
+        <sc-for list="{{ prefs }}" as="p" hint-placeholder-count="3">
+          <div onClick="{{ p.onToggle }}" style="cursor:pointer;padding:15px 16px;border-radius:14px;background:#FFFFFF;border:1px solid #E6E3DF;display:flex;align-items:center;justify-content:space-between;gap:12px">
+            <span style="font-size:13px;color:#1A1D1F;text-wrap:pretty">{{ p.name }}</span>
+            <span style="flex:none;width:44px;height:26px;border-radius:999px;display:flex;align-items:center;padding:2px;background: {{ p.track }};justify-content: {{ p.justify }}">
+              <span style="width:22px;height:22px;border-radius:50%;background:#fff;display:block;box-shadow:0 1px 3px rgba(26,29,31,.25)"></span>
+            </span>
+          </div>
+        </sc-for>
+        <div onClick="{{ logout }}" style="text-align:center;cursor:pointer;font-size:13.5px;font-weight:600;color:#A73B24;padding:15px;border:1px solid #F0D9D2;border-radius:14px;background:#FDF6F4">ออกจากระบบ</div>
+      </div>
+      </sc-if>
+
+    </div>
+  </div>
+  </sc-if>
+
+  <sc-if value="{{ menuOpen }}" hint-placeholder-val="{{ false }}">
+  <div onClick="{{ closeMenu }}" style="position:fixed;inset:0;z-index:90;background:rgba(26,29,31,.42);display:flex;justify-content:flex-end;align-items:flex-start;padding:14px">
+    <div style="width:min(280px,86vw);background:#FFFFFF;border-radius:20px;border:1px solid #E6E3DF;box-shadow:0 20px 50px rgba(26,29,31,.3);padding:10px;display:flex;flex-direction:column;gap:4px;animation:tpUp .2s ease both">
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 10px 10px">
+        <span style="font-size:11px;font-weight:700;letter-spacing:1px;color:#8A8F91">เมนู</span>
+        <span onClick="{{ closeMenu }}" style="font-size:15px;color:#515556;cursor:pointer">✕</span>
+      </div>
+      <sc-for list="{{ tabs }}" as="tb" hint-placeholder-count="4">
+        <div onClick="{{ tb.onPick }}" style="cursor:pointer;display:flex;align-items:center;gap:12px;padding:13px 12px;border-radius:12px;background: {{ tb.bg }};color: {{ tb.color }}">
+          <span style="font-size:16px;line-height:1;width:20px;text-align:center">{{ tb.icon }}</span>
+          <span style="font-size:14px;font-weight:600">{{ tb.name }}</span>
+        </div>
+      </sc-for>
+      <div onClick="{{ logout }}" style="cursor:pointer;margin-top:4px;padding:13px 12px;border-top:1px solid #EBE8E4;font-size:13px;font-weight:600;color:#A73B24">ออกจากระบบ</div>
+    </div>
+  </div>
+  </sc-if>
+
+  <sc-if value="{{ isLogin }}" hint-placeholder-val="{{ true }}">
+  <div style="flex:1;display:flex;flex-direction:column;justify-content:center;gap:20px;padding:44px 22px 40px;animation:tpUp .35s ease both">
+    <div style="display:flex;flex-direction:column;align-items:center;gap:6px">
+      <div style="display:flex;align-items:center;gap:1px;line-height:1">
+        <span style="font-family:Archivo,sans-serif;font-weight:900;font-size:clamp(44px,13vw,58px);color:#A73B24;letter-spacing:-3px">T</span>
+        <span style="font-family:Archivo,sans-serif;font-weight:800;font-size:clamp(32px,9.5vw,42px);letter-spacing:-1.5px;color:#1A1D1F">EMPAH</span>
+        <span style="font-family:'IBM Plex Mono',monospace;font-weight:600;font-size:13px;color:#8A8F91;padding:12px 0 0 4px;letter-spacing:1px">.KKU</span>
+      </div>
+      <span style="font-size:12.5px;color:#515556;text-align:center">ดูลานจอดรถว่างในมหาวิทยาลัยขอนแก่นแบบเรียลไทม์</span>
+    </div>
+
+    <div style="padding:20px;border-radius:20px;background:#FFFFFF;border:1px solid #E6E3DF;box-shadow:0 4px 18px rgba(26,29,31,.07);display:flex;flex-direction:column;gap:13px">
+      <div style="display:flex;flex-direction:column;gap:6px">
+        <span style="font-size:11.5px;font-weight:600;color:#515556">อีเมล หรือ เบอร์โทรศัพท์</span>
+        <input value="{{ email }}" onInput="{{ onEmail }}" placeholder="you@example.com หรือ 08x-xxx-xxxx" style="width:100%;background:#F5F3F0;border:1px solid #E6E3DF;border-radius:12px;padding:14px;font-size:15px;color:#1A1D1F;outline:none">
+      </div>
+      <div style="display:flex;flex-direction:column;gap:6px">
+        <span style="font-size:11.5px;font-weight:600;color:#515556">รหัสผ่าน</span>
+        <input value="{{ pw }}" onInput="{{ onPw }}" type="password" placeholder="••••••••" style="width:100%;background:#F5F3F0;border:1px solid #E6E3DF;border-radius:12px;padding:14px;font-size:15px;color:#1A1D1F;outline:none">
+      </div>
+      <sc-if value="{{ err }}" hint-placeholder-val="{{ false }}">
+        <span style="font-size:12px;color:#C62828">{{ err }}</span>
+      </sc-if>
+      <div onClick="{{ doLogin }}" style="text-align:center;cursor:pointer;background:#A73B24;color:#fff;font-size:16px;font-weight:700;padding:15px;border-radius:12px">Login</div>
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;padding-top:2px">
+        <span onClick="{{ goRegister }}" style="font-size:13px;font-weight:600;color:#1A1D1F;cursor:pointer;white-space:nowrap">Register</span>
+        <span onClick="{{ goForgot }}" style="font-size:13px;color:#515556;cursor:pointer;text-decoration:underline;white-space:nowrap">ลืมรหัสผ่าน</span>
+      </div>
+    </div>
+
+    <div style="display:flex;align-items:center;gap:12px">
+      <div style="flex:1;height:1px;background:#E6E3DF"></div>
+      <span style="font-size:10.5px;color:#8A8F91;letter-spacing:1px">หรือ</span>
+      <div style="flex:1;height:1px;background:#E6E3DF"></div>
+    </div>
+    <div onClick="{{ doGuest }}" style="text-align:center;cursor:pointer;font-size:14.5px;font-weight:600;color:#1A1D1F;border:1px solid #DCD9D5;background:#FFFFFF;border-radius:12px;padding:15px">Continue as guest →</div>
+  </div>
+  </sc-if>
+
+  <sc-if value="{{ isRegister }}" hint-placeholder-val="{{ false }}">
+  <div style="flex:1;display:flex;flex-direction:column;gap:13px;padding:44px 22px 40px;animation:tpUp .3s ease both">
+    <span onClick="{{ goLogin }}" style="font-size:12.5px;color:#515556;cursor:pointer;white-space:nowrap">← กลับ</span>
+    <span style="font-size:clamp(22px,6vw,28px);font-weight:700;letter-spacing:-.5px;color:#1A1D1F">สมัครสมาชิก</span>
+    <div style="padding:18px;border-radius:20px;background:#FFFFFF;border:1px solid #E6E3DF;box-shadow:0 4px 18px rgba(26,29,31,.07);display:flex;flex-direction:column;gap:12px">
+      <sc-for list="{{ regFields }}" as="rf" hint-placeholder-count="4">
+        <div style="display:flex;flex-direction:column;gap:6px">
+          <span style="font-size:11.5px;font-weight:600;color:#515556">{{ rf.label }}</span>
+          <input value="{{ rf.value }}" onInput="{{ rf.onInput }}" type="{{ rf.type }}" placeholder="{{ rf.ph }}" style="width:100%;background:#F5F3F0;border:1px solid #E6E3DF;border-radius:12px;padding:14px;font-size:15px;color:#1A1D1F;outline:none">
+        </div>
+      </sc-for>
+      <div style="display:flex;gap:8px;padding-top:2px">
+        <sc-for list="{{ roles }}" as="ro" hint-placeholder-count="3">
+          <div onClick="{{ ro.onPick }}" style="flex:1;text-align:center;cursor:pointer;font-size:12.5px;font-weight:600;padding:12px 4px;border-radius:12px;white-space:nowrap;border:1px solid {{ ro.border }};color: {{ ro.color }};background: {{ ro.bg }}">{{ ro.name }}</div>
+        </sc-for>
+      </div>
+      <sc-if value="{{ err }}" hint-placeholder-val="{{ false }}">
+        <span style="font-size:12px;color:#C62828">{{ err }}</span>
+      </sc-if>
+      <div onClick="{{ doRegister }}" style="text-align:center;cursor:pointer;background:#A73B24;color:#fff;font-size:16px;font-weight:700;padding:15px;border-radius:12px">สร้างบัญชี</div>
+    </div>
+  </div>
+  </sc-if>
+
+  <sc-if value="{{ isForgot }}" hint-placeholder-val="{{ false }}">
+  <div style="flex:1;display:flex;flex-direction:column;justify-content:center;gap:15px;padding:44px 22px 40px;animation:tpUp .3s ease both">
+    <span onClick="{{ goLogin }}" style="font-size:12.5px;color:#515556;cursor:pointer;white-space:nowrap">← กลับ</span>
+    <span style="font-size:clamp(22px,6vw,28px);font-weight:700;letter-spacing:-.5px;color:#1A1D1F">ลืมรหัสผ่าน</span>
+    <span style="font-size:13px;color:#515556;line-height:1.7;margin-top:-6px">{{ forgotHint }}</span>
+    <div style="padding:18px;border-radius:20px;background:#FFFFFF;border:1px solid #E6E3DF;box-shadow:0 4px 18px rgba(26,29,31,.07);display:flex;flex-direction:column;gap:12px">
+      <div style="display:flex;gap:8px">
+        <sc-for list="{{ forgotModes }}" as="fm" hint-placeholder-count="2">
+          <div onClick="{{ fm.onPick }}" style="flex:1;text-align:center;cursor:pointer;font-size:13px;font-weight:600;padding:12px 4px;border-radius:12px;white-space:nowrap;border:1px solid {{ fm.border }};color: {{ fm.color }};background: {{ fm.bg }}">{{ fm.name }}</div>
+        </sc-for>
+      </div>
+      <input value="{{ forgotValue }}" onInput="{{ onForgotValue }}" placeholder="{{ forgotPh }}" style="width:100%;background:#F5F3F0;border:1px solid #E6E3DF;border-radius:12px;padding:14px;font-size:15px;color:#1A1D1F;outline:none">
+      <div onClick="{{ sendReset }}" style="text-align:center;cursor:pointer;background:#A73B24;color:#fff;font-size:16px;font-weight:700;padding:15px;border-radius:12px">{{ forgotBtn }}</div>
+    </div>
+  </div>
+  </sc-if>
+
+  <sc-if value="{{ reportOpen }}" hint-placeholder-val="{{ false }}">
+  <div style="position:fixed;inset:0;z-index:70;background:rgba(26,29,31,.45);display:flex;align-items:flex-end;justify-content:center;padding:0 10px 10px">
+    <div style="width:100%;max-width:620px;border-radius:24px;padding:18px 18px 24px;background:#FFFFFF;border:1px solid #E6E3DF;box-shadow:0 -10px 50px rgba(26,29,31,.3);display:flex;flex-direction:column;gap:10px;animation:tpUp .25s ease both">
+      <div style="width:38px;height:4px;border-radius:99px;background:#DCD9D5;align-self:center;margin-bottom:4px"></div>
+      <span style="font-size:16.5px;font-weight:700;color:#1A1D1F">รายงานปัญหา · {{ lotName }}</span>
+      <span style="font-size:12.5px;color:#515556;margin-top:-6px">ช่วยบอกเราว่าภาพหรือสถานะไม่ตรงกับความจริงอย่างไร</span>
+      <sc-for list="{{ reasons }}" as="rs" hint-placeholder-count="5">
+        <div onClick="{{ rs.onPick }}" style="cursor:pointer;border-radius:12px;padding:13px 14px;font-size:13.5px;font-weight:600;color:#1A1D1F;border:1px solid {{ rs.border }};background: {{ rs.bg }}">{{ rs.name }}</div>
+      </sc-for>
+      <sc-if value="{{ otherPicked }}" hint-placeholder-val="{{ false }}">
+        <div style="display:flex;flex-direction:column;gap:6px;animation:tpUp .2s ease both">
+          <span style="font-size:11.5px;font-weight:600;color:#515556">ปัญหาอื่น ๆ คืออะไร</span>
+          <textarea value="{{ otherText }}" onInput="{{ onOtherText }}" rows="3" placeholder="อธิบายสั้น ๆ เช่น มีรถจอดขวางทางเข้า–ออก" style="width:100%;background:#FAF9F8;border:1px solid #DCD9D5;border-radius:12px;padding:13px;font-size:14px;font-family:inherit;color:#1A1D1F;outline:none;resize:none"></textarea>
+        </div>
+      </sc-if>
+      <div style="display:flex;gap:10px;padding-top:4px">
+        <div onClick="{{ closeReport }}" style="flex:1;text-align:center;cursor:pointer;font-size:14px;font-weight:600;color:#515556;padding:14px;border-radius:12px;border:1px solid #DCD9D5">ยกเลิก</div>
+        <div onClick="{{ sendReport }}" style="flex:2;text-align:center;cursor:pointer;background:#C62828;color:#fff;font-size:15px;font-weight:700;padding:14px;border-radius:12px">ส่งรายงาน</div>
+      </div>
+    </div>
+  </div>
+  </sc-if>
+
+  <sc-if value="{{ geoAsk }}" hint-placeholder-val="{{ false }}">
+  <div style="position:fixed;inset:0;z-index:90;background:rgba(26,29,31,.45);display:flex;align-items:center;justify-content:center;padding:22px">
+    <div style="width:100%;max-width:400px;border-radius:22px;padding:24px;background:#FFFFFF;border:1px solid #E6E3DF;box-shadow:0 18px 60px rgba(26,29,31,.32);display:flex;flex-direction:column;gap:12px;animation:tpUp .22s ease both">
+      <div style="width:44px;height:44px;border-radius:14px;background:#FBF1EE;display:flex;align-items:center;justify-content:center;font-size:20px">📍</div>
+      <span style="font-size:17px;font-weight:700;color:#1A1D1F;text-wrap:pretty">อนุญาตให้ Tempah.KKU เข้าถึงตำแหน่งของคุณ?</span>
+      <span style="font-size:13px;color:#515556;line-height:1.75">ระบบใช้ตำแหน่งเพื่อเรียงลานจอดที่ใกล้คุณที่สุดและนำทางด้วย Google Maps เท่านั้น ตำแหน่งจะไม่ถูกบันทึกไว้ และคุณปิดได้ทุกเมื่อในหน้าบัญชีของฉัน</span>
+      <div style="display:flex;gap:10px;padding-top:6px">
+        <div onClick="{{ denyGeo }}" style="flex:1;text-align:center;cursor:pointer;font-size:14px;font-weight:600;color:#515556;padding:14px;border-radius:12px;border:1px solid #DCD9D5">ไม่อนุญาต</div>
+        <div onClick="{{ allowGeo }}" style="flex:1;text-align:center;cursor:pointer;background:#A73B24;color:#fff;font-size:15px;font-weight:700;padding:14px;border-radius:12px">อนุญาต</div>
+      </div>
+    </div>
+  </div>
+  </sc-if>
+
+  <sc-if value="{{ toast }}" hint-placeholder-val="{{ false }}">
+    <div style="position:fixed;left:50%;transform:translateX(-50%);bottom:24px;z-index:80;width:min(560px,calc(100% - 28px));padding:14px 16px;border-radius:14px;font-size:13px;font-weight:600;color:#fff;background:#1A1D1F;box-shadow:0 14px 36px rgba(26,29,31,.3);animation:tpUp .25s ease both">{{ toast }}</div>
+  </sc-if>
+
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;accent&quot;:{&quot;editor&quot;:&quot;color&quot;,&quot;default&quot;:&quot;#A73B24&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;options&quot;:[&quot;#A73B24&quot;,&quot;#C9563A&quot;,&quot;#2FA85B&quot;,&quot;#3B6EC9&quot;],&quot;section&quot;:&quot;ธีม&quot;}}">
+class Component extends DCLogic {
+  state = {
+    view: 'login', email: '', pw: '', err: '', query: '', cat: 'ทั้งหมด', sort: 'near',
+    user: null, userId: null, role: 'นักศึกษา', favs: [], placeId: 'hs', lotIx: 0,
+    reportOpen: false, reason: null, otherText: '', toast: '', tick: 0, prefs: [true, true, false], menuOpen: false,
+    geo: null, geoState: 'idle', geoAsk: false, forgotMode: 'อีเมล', forgotValue: '',
+    regName: '', regEmail: '', regPhone: '', regPw: '', regPlate: ''
+  };
+
+  ME = { lat: 16.4745, lng: 102.8235 };
+
+  PLACES = [
+    { id: 'kkbs', name: 'คณะการจัดการและการบัญชี', cat: 'คณะ', lat: 16.4735, lng: 102.8231,
+      lots: [ { n: 'ลานหน้า KKBS', total: 55, free: 6, type: 'รถยนต์', img: 'assets/kkbs-front.jpg' },
+              { n: 'ลานจักรยานยนต์ KKBS', total: 140, free: 39, type: 'จักรยานยนต์', img: 'assets/kkbs-moto.jpg' } ] },
+    { id: 'edu', name: 'คณะศึกษาศาสตร์', cat: 'คณะ', lat: 16.4726, lng: 102.8232,
+      lots: [ { n: 'ลานจอดหน้าคณะ', total: 65, free: 12, type: 'รถยนต์', img: 'assets/edu-front.jpg' } ] },
+    { id: 'satit', name: 'โรงเรียนสาธิตมหาวิทยาลัยขอนแก่น', cat: 'คณะ', lat: 16.4719, lng: 102.8238,
+      lots: [ { n: 'ลานข้างโรงเรียนสาธิต', total: 90, free: 21, type: 'รถยนต์', img: 'assets/satit-lot.jpg' } ] },
+    { id: 'hs', name: 'คณะมนุษยศาสตร์และสังคมศาสตร์', cat: 'คณะ', lat: 16.4731, lng: 102.8214,
+      lots: [ { n: 'ลานจอดหน้าอาคาร HS.05', total: 140, free: 47, type: 'จักรยานยนต์', img: 'assets/hs05.jpg' },
+              { n: 'หน้าอาคาร HS.02', total: 48, free: 0, type: 'รถยนต์', img: 'assets/hs02.png' },
+              { n: 'หน้าอาคารรัตนพิทยา', total: 55, free: 9, type: 'รถยนต์', img: 'assets/rattana.jpg' },
+              { n: 'ลานจอดป่าทไวไลท์', total: 80, free: 31, type: 'จักรยานยนต์', img: 'assets/twilight.jpg' } ] },
+    { id: 'sci', name: 'คณะวิทยาศาสตร์', cat: 'คณะ', lat: 16.4756, lng: 102.8196,
+      lots: [ { n: 'ลานจอดหน้าอาคาร SC.07', total: 90, free: 11, type: 'รถยนต์', img: 'assets/sc07.jpg' },
+              { n: 'ลานจักรยานยนต์ SC.03', total: 120, free: 34, type: 'จักรยานยนต์', img: 'assets/sc03.jpg' },
+              { n: 'ตึกหลอด SC.06', total: 40, free: 5, type: 'รถยนต์', img: 'assets/sc06.jpg' } ] },
+    { id: 'cc', name: 'วิทยาลัยการคอมพิวเตอร์', cat: 'คณะ', lat: 16.4741, lng: 102.8189,
+      lots: [ { n: 'ลานหน้าวิทยาลัย', total: 50, free: 6, type: 'รถยนต์', img: 'assets/cc-front.jpg' } ] },
+    { id: 'compcenter', name: 'ศูนย์คอมพิวเตอร์', cat: 'อาคาร–สำนักงาน', lat: 16.4747, lng: 102.8184,
+      lots: [ { n: 'ลานจอดรถสำนักเทคโนโลยีดิจิทัล', total: 45, free: 13, type: 'รถยนต์', img: 'assets/compcenter.jpg' } ] },
+    { id: 'eng', name: 'คณะวิศวกรรมศาสตร์', cat: 'คณะ', lat: 16.4776, lng: 102.8195,
+      lots: [ { n: 'ลานหน้าตึกเพียรวิจิตร', total: 95, free: 28, type: 'รถยนต์', img: 'assets/eng-pian.jpg' },
+              { n: 'ลานจักรยานยนต์ EN', total: 220, free: 74, type: 'จักรยานยนต์', img: 'assets/eng-moto.jpg' } ] },
+    { id: 'ams', name: 'คณะเทคนิคการแพทย์', cat: 'คณะ', lat: 16.4699, lng: 102.8264,
+      lots: [ { n: 'ลานรวม AMS-PH', total: 110, free: 33, type: 'รถยนต์', img: 'assets/ams-ph.jpg' } ] },
+    { id: 'ph', name: 'คณะสาธารณสุขศาสตร์', cat: 'คณะ', lat: 16.4693, lng: 102.8259,
+      lots: [ { n: 'ลานจักรยานยนต์ PH', total: 130, free: 44, type: 'จักรยานยนต์', img: 'assets/ph-moto.jpg' } ] },
+    { id: 'vet', name: 'คณะสัตวแพทยศาสตร์', cat: 'คณะ', lat: 16.4772, lng: 102.8291,
+      lots: [ { n: 'ลานหน้าโรงพยาบาลสัตว์', total: 60, free: 24, type: 'รถยนต์' } ] },
+    { id: 'arch', name: 'คณะสถาปัตยกรรมศาสตร์', cat: 'คณะ', lat: 16.4749, lng: 102.8163,
+      lots: [ { n: 'ลานหน้าคณะสถาปัตย์', total: 45, free: 16, type: 'รถยนต์', img: 'assets/arch-front.jpg' } ] },
+    { id: 'fa', name: 'คณะศิลปกรรมศาสตร์', cat: 'คณะ', lat: 16.4754, lng: 102.8158,
+      lots: [ { n: 'ลานศิลปกรรม', total: 60, free: 25, type: 'จักรยานยนต์', img: 'assets/fa-lot.jpg' } ] },
+    { id: 'agri', name: 'คณะเกษตรศาสตร์', cat: 'คณะ', lat: 16.4784, lng: 102.8172,
+      lots: [ { n: 'ลานหน้าคณะเกษตร', total: 80, free: 46, type: 'รถยนต์', img: 'assets/agri-front.jpg' } ] },
+    { id: 'tech', name: 'คณะเทคโนโลยี', cat: 'คณะ', lat: 16.4791, lng: 102.8181,
+      lots: [ { n: 'ลานคณะเทคโนโลยี', total: 70, free: 29, type: 'รถยนต์', img: 'assets/tech-lot.jpg' } ] },
+    { id: 'law', name: 'คณะนิติศาสตร์', cat: 'คณะ', lat: 16.4808, lng: 102.8213,
+      lots: [ { n: 'ลานหน้าคณะนิติศาสตร์', total: 45, free: 20, type: 'รถยนต์', img: 'assets/law-front.jpg' } ] },
+    { id: 'dent', name: 'คณะทันตแพทยศาสตร์', cat: 'คณะ', lat: 16.4671, lng: 102.8281,
+      lots: [ { n: 'ลานหน้าคณะทันตแพทย์', total: 70, free: 9, type: 'รถยนต์', img: 'assets/dent-front.jpg' } ] },
+    { id: 'sala', name: 'ศาลาพระราชทานปริญญาบัตร (เดิม)', cat: 'จุดเยี่ยมชม', lat: 16.4813, lng: 102.8206,
+      lots: [ { n: 'ลานศาลาพระราชทานฯ', total: 55, free: 27, type: 'รถยนต์', img: 'assets/sala.jpg' } ] },
+    { id: 'parking1', name: 'อาคารจอดรถ 1 (ศูนย์อาหารและบริการ 4)', cat: 'อาคารจอดรถ', lat: 16.4739, lng: 102.8226,
+      lots: [ { n: 'ชั้น 1 (ศูนย์อาหาร)', total: 38, free: 4, type: 'รถยนต์', img: 'assets/parking1-entry.jpg' },
+              { n: 'ชั้น 2', total: 44, free: 9, type: 'รถยนต์', img: 'assets/parking1-f2.jpg' },
+              { n: 'ชั้น 3', total: 44, free: 17, type: 'รถยนต์', img: 'assets/parking1-f3.jpg' },
+              { n: 'ชั้น 4', total: 44, free: 26, type: 'รถยนต์', img: 'assets/parking1-f4.jpg' } ] },
+    { id: 'complex', name: 'ศูนย์อาหารและบริการ 1 (คอมเพล็กซ์)', cat: 'โรงอาหาร', closed: true, lat: 16.4762, lng: 102.8228,
+      lots: [ { n: 'ลานหน้าคอมเพล็กซ์', total: 85, free: 0, type: 'รถยนต์', img: 'assets/complex.jpg' },
+              { n: 'ลานจักรยานยนต์ฝั่งตะวันออก', total: 200, free: 0, type: 'จักรยานยนต์', img: 'assets/complex-moto.jpg' } ] },
+    { id: 'rongchai', name: 'ศูนย์อาหารและบริการ 1 (โรงชาย)', cat: 'โรงอาหาร', lat: 16.4788, lng: 102.8266,
+      lots: [ { n: 'ลานหน้าโรงชาย', total: 45, free: 14, type: 'รถยนต์', img: 'assets/rongchai.jpg' },
+              { n: 'ลานจักรยานยนต์โรงชาย', total: 150, free: 71, type: 'จักรยานยนต์', img: 'assets/rongchai-moto.jpg' } ] },
+    { id: 'nongwaeng', name: 'ศูนย์อาหารหนองแวง (ศูนย์อาหารและบริการ 3)', cat: 'โรงอาหาร', lat: 16.4801, lng: 102.8241,
+      lots: [ { n: 'ลานหน้าศูนย์อาหาร', total: 50, free: 19, type: 'รถยนต์', img: 'assets/nongwaeng.jpg' },
+              { n: 'ลานจักรยานยนต์หนองแวง', total: 180, free: 88, type: 'จักรยานยนต์', img: 'assets/nongwaeng-moto.jpg' } ] },
+    { id: 'museum', name: 'พิพิธภัณฑ์ธรรมชาติวิทยา', cat: 'จุดเยี่ยมชม', lat: 16.4711, lng: 102.8156,
+      lots: [ { n: 'ลานจอดผู้เข้าชม', total: 60, free: 34, type: 'รถยนต์', img: 'assets/museum.jpg' } ] },
+    { id: 'bungsithan', name: 'บึงสีฐาน', cat: 'จุดเยี่ยมชม', lat: 16.4823, lng: 102.8196,
+      lots: [ { n: 'ลานจอดริมบึงศรีฐาน', total: 90, free: 52, type: 'รถยนต์', img: 'assets/bung.jpg' } ] },
+    { id: 'artgallery', name: 'หอศิลปวัฒนธรรม มข.', cat: 'จุดเยี่ยมชม', lat: 16.4831, lng: 102.8189,
+      lots: [ { n: 'ลานหอศิลปวัฒนธรรม', total: 40, free: 18, type: 'รถยนต์', img: 'assets/artgallery.jpg' } ] },
+    { id: 'sciencepark', name: 'อุทยานวิทยาศาสตร์', cat: 'จุดเยี่ยมชม', lat: 16.4834, lng: 102.8118,
+      lots: [ { n: 'ลานจอด Science Park', total: 110, free: 68, type: 'รถยนต์', img: 'assets/sciencepark.jpg' } ] },
+    { id: 'agripark', name: 'อุทยานเทคโนโลยีการเกษตร', cat: 'จุดเยี่ยมชม', lat: 16.4842, lng: 102.8135,
+      lots: [ { n: 'ลานตลาดเกษตร', total: 80, free: 22, type: 'รถยนต์', img: 'assets/agripark.jpg' } ] },
+    { id: 'library', name: 'สำนักหอสมุด (สำนักวิทยบริการ)', cat: 'อาคาร–สำนักงาน', lat: 16.4751, lng: 102.8212,
+      lots: [ { n: 'ลานหน้าหอสมุด', total: 70, free: 15, type: 'รถยนต์' },
+              { n: 'ลานจักรยานยนต์หอสมุด', total: 160, free: 62, type: 'จักรยานยนต์', img: 'assets/library-moto.jpg' } ] },
+    { id: 'phimol', name: 'อาคารพิมล กลกิจ (สำนักบริการวิชาการ)', cat: 'อาคาร–สำนักงาน', lat: 16.4744, lng: 102.8206,
+      lots: [ { n: 'ลานหน้าอาคาร', total: 60, free: 22, type: 'รถยนต์', img: 'assets/phimol-front.jpg' },
+              { n: 'ลานหลังอาคาร', total: 40, free: 6, type: 'จักรยานยนต์', img: 'assets/phimol-back.jpg' } ] },
+    { id: 'heart', name: 'ศูนย์หัวใจสิริกิติ์ฯ', cat: 'โรงพยาบาล', lat: 16.4678, lng: 102.8288,
+      lots: [ { n: 'ลานศูนย์หัวใจสิริกิติ์ฯ', total: 95, free: 18, type: 'รถยนต์', img: 'assets/heart.jpg' } ] },
+    { id: 'srinagarind', name: 'โรงพยาบาลศรีนครินทร์', cat: 'โรงพยาบาล', lat: 16.4684, lng: 102.8296,
+      lots: [ { n: 'ลานจอดรถฟรีผู้ป่วย', total: 120, free: 8, type: 'รถยนต์', img: 'assets/srinagarind.jpg' } ] },
+    { id: 'gjcc', name: 'ศูนย์ประชุมอเนกประสงค์กาญจนาภิเษก', cat: 'อาคาร–สำนักงาน', lat: 16.4816, lng: 102.8158,
+      lots: [ { n: 'ลานจอดหลัก', total: 320, free: 187, type: 'รถยนต์', img: 'assets/gjcc-main.jpg' },
+              { n: 'ลานจอดฝั่งประตูสีฐาน', total: 140, free: 62, type: 'รถยนต์' } ] },
+    { id: 'gym', name: 'อาคารพลศึกษาและสนามกีฬากลาง 50 ปี', cat: 'กีฬา–หอพัก', lat: 16.4767, lng: 102.8253,
+      lots: [ { n: 'ลานหน้ายิม', total: 100, free: 63, type: 'รถยนต์', img: 'assets/gym-front.jpg' },
+              { n: 'ลานสนามกีฬา 50 ปี', total: 150, free: 92, type: 'รถยนต์', img: 'assets/gym-50.jpg' } ] },
+    { id: 'dorm', name: 'หอพักนักศึกษา (นพรัตน์ · หอ 9 หลัง)', cat: 'กีฬา–หอพัก', lat: 16.4796, lng: 102.8283,
+      lots: [ { n: 'ลานผู้มาเยี่ยม', total: 30, free: 11, type: 'รถยนต์', img: 'assets/dorm-visitor.jpg' },
+              { n: 'ลานจักรยานยนต์หอพัก', total: 260, free: 96, type: 'จักรยานยนต์', img: 'assets/dorm-moto.jpg' } ] },
+    { id: 'kaen', name: 'อาคารแก่นกัลปพฤกษ์', cat: 'อาคาร–สำนักงาน', lat: 16.4759, lng: 102.8271,
+      lots: [ { n: 'ลานหน้าแก่นกัลปพฤกษ์', total: 55, free: 13, type: 'รถยนต์', img: 'assets/kaen.jpg' } ] },
+    { id: 'jaturamuk', name: 'อาคารจตุรมุข', cat: 'อาคาร–สำนักงาน', lat: 16.4764, lng: 102.8278,
+      lots: [ { n: 'ลานจตุรมุข', total: 35, free: 4, type: 'รถยนต์' } ] },
+    { id: 'siri', name: 'อาคารสิริคุณากร (สำนักงานอธิการบดี)', cat: 'อาคาร–สำนักงาน', lat: 16.4753, lng: 102.8288,
+      lots: [ { n: 'ลานผู้มาติดต่อ', total: 40, free: 7, type: 'รถยนต์', img: 'assets/siri.jpg' },
+              { n: 'ลานสำนักงานอธิการบดี 2', total: 50, free: 12, type: 'รถยนต์', img: 'assets/siri2.jpg' } ] }
+  ];
+
+  RESTRICTED = [
+    { name: 'ศูนย์อาหารและบริการ 1 (คอมเพล็กซ์)', reason: 'ปิดปรับปรุงทั้งบริเวณ จอดไม่ได้', period: 'ปิดปรับปรุง' },
+    { name: 'ลานจอดชั้นในอาคารสิริคุณากร', reason: 'สงวนสำหรับผู้บริหารและรถราชการ', period: 'จ–ศ 07:00–17:00' },
+    { name: 'โรงพยาบาลศรีนครินทร์ โซนฉุกเฉิน', reason: 'เฉพาะรถพยาบาลและรถฉุกเฉิน', period: 'ตลอดเวลา' },
+    { name: 'ลานจอดหอพักนักศึกษา (โซนผู้พักอาศัย)', reason: 'เฉพาะผู้พักอาศัยที่ลงทะเบียนทะเบียนรถไว้', period: 'ตลอดเวลา' },
+    { name: 'ถนนรอบบึงสีฐาน · เส้นทางเดิน–วิ่ง–ปั่น', reason: 'ห้ามจอดตลอดแนวเส้นทาง', period: 'ตลอดเวลา' },
+    { name: 'ลานสนามกีฬากลาง 50 ปี (ช่วงจัดกิจกรรม)', reason: 'ปิดใช้จัดงานมหาวิทยาลัย', period: 'ตามประกาศ · ส–อา' },
+    { name: 'ลานหน้าโรงเรียนสาธิตมหาวิทยาลัยขอนแก่น', reason: 'ช่วงรับ–ส่งนักเรียน ห้ามจอดค้าง', period: 'จ–ศ 07:00–08:30, 15:00–16:30' }
+  ];
+
+  REASONS = ['กล้องไม่ทำงาน / ภาพค้าง', 'ภาพไม่ตรงกับความจริง', 'ที่จอดถูกปิดกั้น / มีสิ่งกีดขวาง', 'สถานะว่างแต่จอดไม่ได้', 'อื่น ๆ'];
+  CATS = ['ทั้งหมด', 'คณะ', 'อาคาร–สำนักงาน', 'โรงอาหาร', 'อาคารจอดรถ', 'จุดเยี่ยมชม', 'โรงพยาบาล', 'กีฬา–หอพัก'];
+  PREFS = ['แจ้งเตือนเมื่อที่จอดโปรดมีที่ว่าง', 'ซ่อนพื้นที่ที่เข้าไม่ได้ออกจากผลค้นหา', 'แสดงเฉพาะลานจักรยานยนต์'];
+
+  componentDidMount() {
+    this.timer = setInterval(() => {
+      this.PLACES.forEach(p => { if (!p.closed) p.lots.forEach(l => {
+        l.free = Math.max(0, Math.min(l.total, l.free + Math.round((Math.random() - 0.45) * Math.max(2, l.total * 0.04))));
+      }); });
+      this.setState(s => ({ tick: s.tick + 1 }));
+    }, 3000);
+    if (window.SB) {
+      window.SB.auth.getSession().then(({ data }) => {
+        if (data && data.session && data.session.user) this.afterAuth(data.session.user);
+      });
+    }
+  }
+  componentWillUnmount() { clearInterval(this.timer); clearTimeout(this.tt); if (this.watch) navigator.geolocation.clearWatch(this.watch); }
+
+  toggleGeo = () => {
+    if (this.state.geoState === 'on' || this.state.geoState === 'asking') { this.stopGeo(); return; }
+    this.setState({ geoAsk: true });
+  };
+  stopGeo = () => {
+    if (this.watch) { navigator.geolocation.clearWatch(this.watch); this.watch = null; }
+    this.setState({ geoState: 'idle', geo: null, geoAsk: false });
+    this.flash('ปิดการติดตามตำแหน่ง GPS แล้ว');
+  };
+  allowGeo = () => { this.setState({ geoAsk: false }); this.askGeo(); };
+  denyGeo = () => { this.setState({ geoAsk: false, geoState: 'denied' }); };
+  askGeo = () => {
+    if (!navigator.geolocation) { this.setState({ geoState: 'unsupported' }); return; }
+    this.setState({ geoState: 'asking' });
+    this.watch = navigator.geolocation.watchPosition(
+      pos => this.setState({ geo: { lat: pos.coords.latitude, lng: pos.coords.longitude }, geoState: 'on' }),
+      () => this.setState({ geoState: 'denied' }),
+      { enableHighAccuracy: true, maximumAge: 15000, timeout: 8000 }
+    );
+  };
+  origin() { return this.state.geo || this.ME; }
+  dist(p) {
+    const o = this.origin(), R = 6371000, rad = Math.PI / 180;
+    const dLat = (p.lat - o.lat) * rad, dLng = (p.lng - o.lng) * rad;
+    const a = Math.sin(dLat / 2) ** 2 + Math.cos(o.lat * rad) * Math.cos(p.lat * rad) * Math.sin(dLng / 2) ** 2;
+    return Math.round(R * 2 * Math.asin(Math.sqrt(a)));
+  }
+  distText(p) { const d = this.dist(p); return d < 950 ? d + ' ม.' : (d / 1000).toFixed(1) + ' กม.'; }
+  mapUrl(p, lotName) {
+    const q = encodeURIComponent((lotName ? lotName + ' ' : '') + p.name + ' มหาวิทยาลัยขอนแก่น');
+    const o = this.origin();
+    return 'https://www.google.com/maps/dir/?api=1&origin=' + o.lat + ',' + o.lng + '&destination=' + q + '&travelmode=driving';
+  }
+  embedUrl(p) { return 'https://maps.google.com/maps?q=' + encodeURIComponent(p.name + ' มหาวิทยาลัยขอนแก่น') + '&z=17&output=embed'; }
+  status(free, total, closed) {
+    if (closed) return { statusLabel: 'ปิดปรับปรุง', statusFg: '#6B7173', statusBg: '#F1F0EE' };
+    if (free === 0) return { statusLabel: 'เต็ม', statusFg: '#C62828', statusBg: '#FDECEC' };
+    if (free / total <= 0.3) return { statusLabel: 'ใกล้เต็ม', statusFg: '#B96A0C', statusBg: '#FCF3E6' };
+    return { statusLabel: 'ว่าง', statusFg: '#1F8A4C', statusBg: '#EAF7EF' };
+  }
+  agg(p) {
+    return { free: p.lots.reduce((a, l) => a + l.free, 0), total: p.lots.reduce((a, l) => a + l.total, 0) };
+  }
+  slots(n, seed) {
+    return Array.from({ length: n }).map((_, i) => ({ d: (((i * 37 + seed * 13) % 70) / 10).toFixed(1) + 's' }));
+  }
+  go(view) { this.setState({ view, menuOpen: false }); }
+  flash(msg) { this.setState({ toast: msg }); clearTimeout(this.tt); this.tt = setTimeout(() => this.setState({ toast: '' }), 2600); }
+
+  toggleFav = (id) => {
+    const wasFav = this.state.favs.indexOf(id) >= 0;
+    this.setState(s => ({ favs: wasFav ? s.favs.filter(f => f !== id) : s.favs.concat([id]) }));
+    if (!window.SB || !this.state.userId) return;
+    if (wasFav) window.SB.from('favorites').delete().eq('user_id', this.state.userId).eq('place_id', id);
+    else window.SB.from('favorites').upsert({ user_id: this.state.userId, place_id: id });
+  };
+
+  afterAuth = async (user) => {
+    this.setState({
+      view: 'home', user: user.email, userId: user.id,
+      role: (user.user_metadata && user.user_metadata.role) || 'นักศึกษา',
+      email: '', pw: '', err: '', geoAsk: this.state.geoState === 'idle'
+    });
+    if (!window.SB) return;
+    const { data } = await window.SB.from('favorites').select('place_id').eq('user_id', user.id);
+    this.setState({ favs: (data || []).map(r => r.place_id) });
+  };
+
+  doLogin = async () => {
+    const s = this.state;
+    if (!s.email || !s.pw) { this.setState({ err: 'กรุณากรอกอีเมลและรหัสผ่าน' }); return; }
+    if (!window.SB) { this.setState({ err: 'ระบบยังไม่ได้เชื่อมต่อฐานข้อมูล (ดู config.js) — ลองใช้ Continue as guest แทน' }); return; }
+    this.setState({ err: '' });
+    const { data, error } = await window.SB.auth.signInWithPassword({ email: s.email, password: s.pw });
+    if (error) { this.setState({ err: 'อีเมลหรือรหัสผ่านไม่ถูกต้อง' }); return; }
+    this.afterAuth(data.user);
+  };
+
+  doRegister = async () => {
+    const s = this.state;
+    if (!s.regName.trim()) { this.setState({ err: 'กรุณากรอกชื่อ-นามสกุล' }); return; }
+    if (!s.regEmail.trim()) { this.setState({ err: 'กรุณากรอกอีเมล' }); return; }
+    if (!s.regPw || s.regPw.length < 8) { this.setState({ err: 'รหัสผ่านต้องมีอย่างน้อย 8 ตัวอักษร' }); return; }
+    if (!window.SB) { this.setState({ err: 'ระบบยังไม่ได้เชื่อมต่อฐานข้อมูล (ดู config.js)' }); return; }
+    this.setState({ err: '' });
+    const { data, error } = await window.SB.auth.signUp({
+      email: s.regEmail.trim(), password: s.regPw,
+      options: { data: { name: s.regName.trim(), phone: s.regPhone.trim(), plate: s.regPlate.trim(), role: s.role } }
+    });
+    if (error) { this.setState({ err: error.message }); return; }
+    if (data.session) { this.afterAuth(data.user); }
+    else { this.flash('สมัครสำเร็จ กรุณายืนยันอีเมลก่อนเข้าสู่ระบบ'); this.go('login'); }
+  };
+
+  sendReset = async () => {
+    const s = this.state;
+    if (s.forgotMode !== 'อีเมล') { this.flash('ตอนนี้รองรับเฉพาะรีเซ็ตผ่านอีเมล กรุณาเลือก "อีเมล"'); return; }
+    if (!s.forgotValue.trim()) { this.flash('กรุณากรอกอีเมล'); return; }
+    if (!window.SB) { this.flash('ระบบยังไม่ได้เชื่อมต่อฐานข้อมูล'); return; }
+    const { error } = await window.SB.auth.resetPasswordForEmail(s.forgotValue.trim());
+    this.flash(error ? 'ส่งไม่สำเร็จ ลองใหม่อีกครั้ง' : 'ส่งลิงก์ตั้งรหัสผ่านใหม่แล้ว ตรวจสอบอีเมลของคุณ');
+    this.go('login');
+  };
+
+  doLogout = () => {
+    if (window.SB) window.SB.auth.signOut();
+    this.setState({ view: 'login', email: '', pw: '', user: null, userId: null, favs: [], menuOpen: false });
+  };
+
+  card(p, i) {
+    const a = this.agg(p), s = this.status(a.free, a.total, p.closed);
+    const img = p.lots.filter(l => l.img)[0];
+    const short = p.name.split(/[·(]/)[0].trim();
+    return Object.assign({}, s, {
+      id: p.id, name: p.name, short: short, free: a.free, total: a.total,
+      freeText: p.closed ? 'ปิดปรับปรุง — ยังจอดไม่ได้' : 'ว่าง ' + a.free + ' จาก ' + a.total + ' ช่อง',
+      meta: p.cat + ' · ' + this.distText(p) + ' · ' + p.lots.length + ' ลานจอด',
+      distText: this.distText(p),
+      hasImg: !!img, noImg: !img, img: img ? img.img : '',
+      slots: this.slots(16, i + 1), carDelay: ((i % 5) * 1.4).toFixed(1) + 's',
+      mapUrl: this.mapUrl(p),
+      starColor: this.state.favs.indexOf(p.id) >= 0 ? '#E8A82B' : '#C9C6C2',
+      onOpen: () => this.setState({ view: 'place', placeId: p.id, lotIx: 0 }),
+      onStar: e => { if (e && e.stopPropagation) e.stopPropagation(); this.toggleFav(p.id); }
+    });
+  }
+
+  renderVals() {
+    const st = this.state;
+    const accent = this.props.accent || '#A73B24';
+    const place = this.PLACES.filter(p => p.id === st.placeId)[0] || this.PLACES[0];
+    const lot = place.lots[st.lotIx] || place.lots[0];
+    const lotSt = this.status(lot.free, lot.total, place.closed);
+    const q = st.query.trim().toLowerCase();
+
+    let list = this.PLACES.filter(p => {
+      const inCat = st.cat === 'ทั้งหมด' || p.cat === st.cat;
+      const hit = q === '' || (p.name + ' ' + p.cat + ' ' + p.lots.map(l => l.n).join(' ')).toLowerCase().indexOf(q) >= 0;
+      return inCat && hit;
+    });
+    list = st.sort === 'free'
+      ? list.slice().sort((a, b) => this.agg(b).free - this.agg(a).free)
+      : list.slice().sort((a, b) => this.dist(a) - this.dist(b));
+
+    const open = this.PLACES.filter(p => !p.closed && this.agg(p).free > 0);
+    const nearest = open.slice().sort((a, b) => this.dist(a) - this.dist(b))[0] || this.PLACES[0];
+    const nSt = this.status(this.agg(nearest).free, this.agg(nearest).total, nearest.closed);
+    const geoLabelMap = { on: 'GPS เปิดอยู่', asking: 'กำลังหาตำแหน่ง…', denied: 'เปิด GPS', idle: 'เปิด GPS', unsupported: 'ไม่รองรับ GPS' };
+    const hr = new Date().getHours();
+
+    return {
+      imgRef: el => { if (el && el.dataset.src && el.getAttribute('src') !== el.dataset.src) el.setAttribute('src', el.dataset.src); },
+      stop: e => { if (e && e.stopPropagation) e.stopPropagation(); },
+      isLogin: st.view === 'login', isRegister: st.view === 'register', isForgot: st.view === 'forgot',
+      isAuth: ['home', 'place', 'favs', 'restricted', 'me'].indexOf(st.view) >= 0,
+      isHome: st.view === 'home', isPlace: st.view === 'place', isFavs: st.view === 'favs',
+      isRestricted: st.view === 'restricted', isMe: st.view === 'me',
+      email: st.email, pw: st.pw, err: st.err, query: st.query, toast: st.toast,
+      onEmail: e => this.setState({ email: e.target.value, err: '' }),
+      onPw: e => this.setState({ pw: e.target.value, err: '' }),
+      onQuery: e => this.setState({ query: e.target.value }),
+      clearQuery: () => this.setState({ query: '' }),
+      doLogin: this.doLogin,
+      doRegister: this.doRegister,
+      sendReset: this.sendReset,
+      forgotValue: st.forgotValue,
+      onForgotValue: e => this.setState({ forgotValue: e.target.value }),
+      doGuest: () => this.setState({ view: 'home', user: null, userId: null, favs: [], err: '', geoAsk: this.state.geoState === 'idle' }),
+      goRegister: () => this.go('register'), goForgot: () => this.go('forgot'), goLogin: () => this.go('login'),
+      goHome: () => this.go('home'), goRestricted: () => this.go('restricted'), goFavs: () => this.go('favs'),
+      logout: this.doLogout,
+      askGeo: this.askGeo,
+      toggleGeo: this.toggleGeo,
+      allowGeo: this.allowGeo,
+      denyGeo: this.denyGeo,
+      geoAsk: st.geoAsk,
+      geoLabel: geoLabelMap[st.geoState] || 'เปิด GPS',
+      geoDot: st.geoState === 'on' ? '#1F8A4C' : (st.geoState === 'asking' ? '#B96A0C' : '#9A9EA0'),
+      geoGlow: st.geoState === 'on' ? '0 0 0 3px rgba(31,138,76,.18)' : 'none',
+      geoAnim: st.geoState === 'on' ? 'tpBlink 1.1s steps(1,end) infinite' : (st.geoState === 'asking' ? 'tpBlink .45s steps(1,end) infinite' : 'tpPulse 2.4s ease-in-out infinite'),
+      geoStatusText: { on: 'GPS เปิดอยู่ · กำลังติดตามตำแหน่ง', asking: 'กำลังขอตำแหน่ง…', denied: 'ปิดอยู่ · ไม่ได้รับอนุญาต', unsupported: 'อุปกรณ์นี้ไม่รองรับ GPS' }[st.geoState] || 'ปิดอยู่ · แตะเพื่อเปิด',
+      geoSwitchBg: st.geoState === 'on' ? '#1F8A4C' : '#DCD9D5',
+      geoSwitchJustify: st.geoState === 'on' ? 'flex-end' : 'flex-start',
+      forgotHint: st.forgotMode === 'อีเมล' ? 'กรอกอีเมลที่ลงทะเบียนไว้ ระบบจะส่งลิงก์ตั้งรหัสผ่านใหม่ให้ภายใน 5 นาที' : 'กรอกเบอร์โทรศัพท์ที่ลงทะเบียนไว้ ระบบจะส่งรหัส OTP 6 หลักทาง SMS ภายใน 5 นาที',
+      forgotPh: st.forgotMode === 'อีเมล' ? 'you@example.com' : '08x-xxx-xxxx',
+      forgotBtn: st.forgotMode === 'อีเมล' ? 'ส่งลิงก์ตั้งรหัสใหม่' : 'ส่งรหัส OTP ทาง SMS',
+      forgotModes: ['อีเมล', 'เบอร์โทรศัพท์'].map(m => ({
+        name: m, onPick: () => this.setState({ forgotMode: m }),
+        border: st.forgotMode === m ? accent : '#DCD9D5',
+        color: st.forgotMode === m ? accent : '#515556',
+        bg: st.forgotMode === m ? '#FBF1EE' : '#FFFFFF'
+      })),
+      otherPicked: st.reason === 'อื่น ๆ',
+      otherText: st.otherText,
+      onOtherText: e => this.setState({ otherText: e.target.value }),
+      greeting: hr < 11 ? 'สวัสดีตอนเช้า' : (hr < 17 ? 'สวัสดีตอนบ่าย' : 'สวัสดีตอนเย็น'),
+      nearestName: nearest.name, nearestDist: 'ห่างจากคุณ ' + this.distText(nearest),
+      nearestFree: this.agg(nearest).free, nearBadgeFg: nSt.statusFg, nearBadgeBg: nSt.statusBg,
+      nearestMapUrl: this.mapUrl(nearest),
+      openNearest: () => this.setState({ view: 'place', placeId: nearest.id, lotIx: 0 }),
+      chips: this.CATS.map(c => ({
+        name: c, onPick: () => this.setState({ cat: c }),
+        bg: st.cat === c ? accent : '#F5F3F0',
+        fg: st.cat === c ? '#fff' : '#515556',
+        border: st.cat === c ? accent : '#E6E3DF'
+      })),
+      setSortNear: () => this.setState({ sort: 'near' }), setSortFree: () => this.setState({ sort: 'free' }),
+      nearBg: st.sort === 'near' ? accent : '#F5F3F0',
+      nearFg: st.sort === 'near' ? '#fff' : '#515556',
+      nearBorder: st.sort === 'near' ? accent : '#E6E3DF',
+      freeBg: st.sort === 'free' ? accent : '#F5F3F0',
+      freeFg: st.sort === 'free' ? '#fff' : '#515556',
+      freeBorder: st.sort === 'free' ? accent : '#E6E3DF',
+      cards: list.map((p, i) => this.card(p, i)), noCards: list.length === 0,
+      favCards: this.PLACES.filter(p => st.favs.indexOf(p.id) >= 0).map((p, i) => this.card(p, i)),
+      hasFavs: st.favs.length > 0, noFavs: st.favs.length === 0,
+      restricted: this.RESTRICTED,
+      placeName: place.name,
+      placeMeta: place.cat + ' · ' + place.lots.length + ' ลานจอด · ห่างจากคุณ ' + this.distText(place),
+      placeStarColor: st.favs.indexOf(place.id) >= 0 ? '#E8A82B' : '#8A8F91',
+      starPlace: () => this.toggleFav(place.id),
+      lots: place.lots.map((l, i) => {
+        const s = this.status(l.free, l.total, place.closed);
+        return { n: l.n, free: l.free, img: l.img || '', hasImg: !!l.img, noImg: !l.img,
+          slots: this.slots(12, i + 2), statusFg: s.statusFg, dim: i === st.lotIx ? '1' : '.55',
+          border: i === st.lotIx ? accent : '#E6E3DF',
+          onPick: () => this.setState({ lotIx: i }) };
+      }),
+      lotName: lot.n, lotFree: lot.free, lotTotal: lot.total, lotType: lot.type,
+      lotImg: lot.img || '', lotHasImg: !!lot.img, lotNoImg: !lot.img,
+      lotSlots: this.slots(24, st.lotIx + 3),
+      lotStatusLabel: lotSt.statusLabel, lotStatusFg: lotSt.statusFg, lotStatusBg: lotSt.statusBg,
+      lotMapUrl: this.mapUrl(place, lot.n), embedUrl: this.embedUrl(place),
+      distText: this.distText(place),
+      clock: new Date().toLocaleTimeString('th-TH', { hour: '2-digit', minute: '2-digit', second: '2-digit' }),
+      tabs: [
+        { name: 'หน้าแรก', icon: '⌂', view: 'home' },
+        { name: 'ที่จอดโปรด', icon: '★', view: 'favs' },
+        { name: 'พื้นที่ปิด', icon: '⃠', view: 'restricted' },
+        { name: 'บัญชี', icon: '☻', view: 'me' }
+      ].map(t => {
+        const on = st.view === t.view || (t.view === 'home' && st.view === 'place');
+        return { name: t.name, icon: t.icon, color: on ? '#A73B24' : '#1A1D1F',
+          bg: on ? '#FBF1EE' : 'transparent', onPick: () => this.go(t.view) };
+      }),
+      menuOpen: st.menuOpen,
+      openMenu: () => this.setState({ menuOpen: true }),
+      closeMenu: () => this.setState({ menuOpen: false }),
+      initial: st.user ? st.user.charAt(0).toUpperCase() : 'G',
+      userLabel: st.user ? st.user : 'ผู้เยี่ยมชม (guest)',
+      roleLabel: st.user ? st.role + ' · มหาวิทยาลัยขอนแก่น' : 'ยังไม่เข้าสู่ระบบ — บันทึกที่จอดโปรดไม่ได้',
+      prefs: this.PREFS.map((p, i) => ({
+        name: p, track: st.prefs[i] ? '#1F8A4C' : '#DCD9D5',
+        justify: st.prefs[i] ? 'flex-end' : 'flex-start',
+        onToggle: () => this.setState(s => { const n = s.prefs.slice(); n[i] = !n[i]; return { prefs: n }; })
+      })),
+      regFields: [
+        { key: 'regName', label: 'ชื่อ–นามสกุล', ph: 'สมชาย ใจดี', type: 'text' },
+        { key: 'regEmail', label: 'อีเมล', ph: 'you@example.com', type: 'text' },
+        { key: 'regPhone', label: 'เบอร์โทรศัพท์ (ใช้รับ SMS ตอนลืมรหัสผ่าน)', ph: '08x-xxx-xxxx', type: 'text' },
+        { key: 'regPw', label: 'รหัสผ่าน', ph: 'อย่างน้อย 8 ตัวอักษร', type: 'password' },
+        { key: 'regPlate', label: 'ทะเบียนรถ (ไม่บังคับ)', ph: 'ขก 1234 ขอนแก่น', type: 'text' }
+      ].map(f => ({
+        label: f.label, ph: f.ph, type: f.type, value: st[f.key],
+        onInput: e => this.setState({ [f.key]: e.target.value })
+      })),
+      roles: ['นักศึกษา', 'บุคลากร', 'ผู้ใช้ทั่วไป'].map(r => ({
+        name: r, onPick: () => this.setState({ role: r }),
+        border: st.role === r ? accent : '#DCD9D5',
+        color: st.role === r ? '#A73B24' : '#515556',
+        bg: st.role === r ? '#FBF1EE' : '#FFFFFF'
+      })),
+      reportOpen: st.reportOpen,
+      openReport: () => this.setState({ reportOpen: true, reason: null, otherText: '' }),
+      closeReport: () => this.setState({ reportOpen: false }),
+      sendReport: () => {
+        if (!st.reason) { this.flash('กรุณาเลือกปัญหาที่พบก่อนส่งรายงาน'); return; }
+        if (st.reason === 'อื่น ๆ' && !this.state.otherText.trim()) { this.flash('กรุณาระบุปัญหาอื่น ๆ ก่อนส่งรายงาน'); return; }
+        this.setState({ reportOpen: false });
+        this.flash('ส่งรายงานแล้ว เจ้าหน้าที่จะตรวจสอบกล้องจุดนี้');
+        if (window.SB) {
+          window.SB.from('reports').insert({
+            user_id: st.userId, place_id: place.id, lot_name: lot.n,
+            reason: st.reason, other_text: st.reason === 'อื่น ๆ' ? st.otherText.trim() : null
+          });
+        }
+      },
+      reasons: this.REASONS.map(r => ({
+        name: r, onPick: () => this.setState({ reason: r }),
+        border: st.reason === r ? accent : '#DCD9D5',
+        bg: st.reason === r ? '#FBF1EE' : '#FAF9F8'
+      })),
+      finish: () => { this.setState({ view: 'home' }); this.flash('ขอบคุณที่ช่วยยืนยันสถานะที่จอด'); }
+    };
+  }
+}
+</script>
+</body>
+</html>
