@@ -368,11 +368,11 @@ a{color:#A73B24;text-decoration:none}a:hover{color:#8c3020}
     <div style="padding:20px;border-radius:20px;background:#FFFFFF;border:1px solid #E6E3DF;box-shadow:0 4px 18px rgba(26,29,31,.07);display:flex;flex-direction:column;gap:13px">
       <div style="display:flex;flex-direction:column;gap:6px">
         <span style="font-size:11.5px;font-weight:600;color:#515556">อีเมล</span>
-        <input value="{{ email }}" onInput="{{ onEmail }}" placeholder="you@example.com" style="width:100%;background:#F5F3F0;border:1px solid #E6E3DF;border-radius:12px;padding:14px;font-size:15px;color:#1A1D1F;outline:none">
+        <input value="{{ email }}" onInput="{{ onEmail }}" onKeyDown="{{ onEmailKeyDown }}" enterkeyhint="next" placeholder="you@example.com" style="width:100%;background:#F5F3F0;border:1px solid #E6E3DF;border-radius:12px;padding:14px;font-size:15px;color:#1A1D1F;outline:none">
       </div>
       <div style="display:flex;flex-direction:column;gap:6px">
         <span style="font-size:11.5px;font-weight:600;color:#515556">รหัสผ่าน</span>
-        <input value="{{ pw }}" onInput="{{ onPw }}" type="password" placeholder="••••••••" style="width:100%;background:#F5F3F0;border:1px solid #E6E3DF;border-radius:12px;padding:14px;font-size:15px;color:#1A1D1F;outline:none">
+        <input value="{{ pw }}" onInput="{{ onPw }}" onKeyDown="{{ onPwKeyDown }}" enterkeyhint="go" type="password" placeholder="••••••••" style="width:100%;background:#F5F3F0;border:1px solid #E6E3DF;border-radius:12px;padding:14px;font-size:15px;color:#1A1D1F;outline:none">
       </div>
       <sc-if value="{{ err }}" hint-placeholder-val="{{ false }}">
         <span style="font-size:12px;color:#C62828">{{ err }}</span>
@@ -401,7 +401,7 @@ a{color:#A73B24;text-decoration:none}a:hover{color:#8c3020}
       <sc-for list="{{ regFields }}" as="rf" hint-placeholder-count="4">
         <div style="display:flex;flex-direction:column;gap:6px">
           <span style="font-size:11.5px;font-weight:600;color:#515556">{{ rf.label }}</span>
-          <input value="{{ rf.value }}" onInput="{{ rf.onInput }}" type="{{ rf.type }}" placeholder="{{ rf.ph }}" style="width:100%;background:#F5F3F0;border:1px solid #E6E3DF;border-radius:12px;padding:14px;font-size:15px;color:#1A1D1F;outline:none">
+          <input value="{{ rf.value }}" onInput="{{ rf.onInput }}" onKeyDown="{{ rf.onKeyDown }}" enterkeyhint="{{ rf.enterHint }}" type="{{ rf.type }}" placeholder="{{ rf.ph }}" style="width:100%;background:#F5F3F0;border:1px solid #E6E3DF;border-radius:12px;padding:14px;font-size:15px;color:#1A1D1F;outline:none">
         </div>
       </sc-for>
       <div style="display:flex;gap:8px;padding-top:2px">
@@ -423,7 +423,7 @@ a{color:#A73B24;text-decoration:none}a:hover{color:#8c3020}
     <span style="font-size:clamp(22px,6vw,28px);font-weight:700;letter-spacing:-.5px;color:#1A1D1F">ลืมรหัสผ่าน</span>
     <span style="font-size:13px;color:#515556;line-height:1.7;margin-top:-6px">กรอกอีเมลที่ลงทะเบียนไว้ ระบบจะส่งลิงก์ตั้งรหัสผ่านใหม่ให้ภายใน 5 นาที</span>
     <div style="padding:18px;border-radius:20px;background:#FFFFFF;border:1px solid #E6E3DF;box-shadow:0 4px 18px rgba(26,29,31,.07);display:flex;flex-direction:column;gap:12px">
-      <input value="{{ forgotValue }}" onInput="{{ onForgotValue }}" placeholder="you@example.com" style="width:100%;background:#F5F3F0;border:1px solid #E6E3DF;border-radius:12px;padding:14px;font-size:15px;color:#1A1D1F;outline:none">
+      <input value="{{ forgotValue }}" onInput="{{ onForgotValue }}" onKeyDown="{{ onForgotKeyDown }}" enterkeyhint="go" placeholder="you@example.com" style="width:100%;background:#F5F3F0;border:1px solid #E6E3DF;border-radius:12px;padding:14px;font-size:15px;color:#1A1D1F;outline:none">
       <div onClick="{{ sendReset }}" style="text-align:center;cursor:pointer;background:#A73B24;color:#fff;font-size:16px;font-weight:700;padding:15px;border-radius:12px">ส่งลิงก์ตั้งรหัสใหม่</div>
     </div>
   </div>
@@ -436,11 +436,11 @@ a{color:#A73B24;text-decoration:none}a:hover{color:#8c3020}
     <div style="padding:18px;border-radius:20px;background:#FFFFFF;border:1px solid #E6E3DF;box-shadow:0 4px 18px rgba(26,29,31,.07);display:flex;flex-direction:column;gap:12px">
       <div style="display:flex;flex-direction:column;gap:6px">
         <span style="font-size:11.5px;font-weight:600;color:#515556">รหัสผ่านใหม่</span>
-        <input value="{{ newPw }}" onInput="{{ onNewPw }}" type="password" placeholder="อย่างน้อย 8 ตัวอักษร" style="width:100%;background:#F5F3F0;border:1px solid #E6E3DF;border-radius:12px;padding:14px;font-size:15px;color:#1A1D1F;outline:none">
+        <input value="{{ newPw }}" onInput="{{ onNewPw }}" onKeyDown="{{ onNewPwKeyDown }}" enterkeyhint="next" type="password" placeholder="อย่างน้อย 8 ตัวอักษร" style="width:100%;background:#F5F3F0;border:1px solid #E6E3DF;border-radius:12px;padding:14px;font-size:15px;color:#1A1D1F;outline:none">
       </div>
       <div style="display:flex;flex-direction:column;gap:6px">
         <span style="font-size:11.5px;font-weight:600;color:#515556">ยืนยันรหัสผ่านใหม่</span>
-        <input value="{{ newPw2 }}" onInput="{{ onNewPw2 }}" type="password" placeholder="พิมพ์รหัสผ่านใหม่อีกครั้ง" style="width:100%;background:#F5F3F0;border:1px solid #E6E3DF;border-radius:12px;padding:14px;font-size:15px;color:#1A1D1F;outline:none">
+        <input value="{{ newPw2 }}" onInput="{{ onNewPw2 }}" onKeyDown="{{ onNewPw2KeyDown }}" enterkeyhint="go" type="password" placeholder="พิมพ์รหัสผ่านใหม่อีกครั้ง" style="width:100%;background:#F5F3F0;border:1px solid #E6E3DF;border-radius:12px;padding:14px;font-size:15px;color:#1A1D1F;outline:none">
       </div>
       <sc-if value="{{ err }}" hint-placeholder-val="{{ false }}">
         <span style="font-size:12px;color:#C62828">{{ err }}</span>
@@ -683,6 +683,17 @@ class Component extends DCLogic {
   go(view) { this.setState({ view, menuOpen: false }); }
   flash(msg) { this.setState({ toast: msg }); clearTimeout(this.tt); this.tt = setTimeout(() => this.setState({ toast: '' }), 2600); }
 
+  // Enter (desktop) or the keyboard's next/go/done key (mobile) moves to the
+  // next input on screen, or runs `submitFn` when it's the last field —
+  // so users don't have to reach for the mouse/scroll to hit the button.
+  keyAdvance = (submitFn) => (e) => {
+    if (e.key !== 'Enter') return;
+    e.preventDefault();
+    const inputs = Array.from(document.querySelectorAll('input'));
+    const next = inputs[inputs.indexOf(e.target) + 1];
+    if (next) next.focus(); else if (submitFn) submitFn();
+  };
+
   toggleFav = async (id) => {
     const wasFav = this.state.favs.indexOf(id) >= 0;
     this.setState(s => ({ favs: wasFav ? s.favs.filter(f => f !== id) : s.favs.concat([id]) }));
@@ -813,6 +824,8 @@ class Component extends DCLogic {
       email: st.email, pw: st.pw, err: st.err, query: st.query, toast: st.toast,
       onEmail: e => this.setState({ email: e.target.value, err: '' }),
       onPw: e => this.setState({ pw: e.target.value, err: '' }),
+      onEmailKeyDown: this.keyAdvance(),
+      onPwKeyDown: this.keyAdvance(this.doLogin),
       onQuery: e => this.setState({ query: e.target.value }),
       clearQuery: () => this.setState({ query: '' }),
       doLogin: this.doLogin,
@@ -820,6 +833,7 @@ class Component extends DCLogic {
       sendReset: this.sendReset,
       forgotValue: st.forgotValue,
       onForgotValue: e => this.setState({ forgotValue: e.target.value }),
+      onForgotKeyDown: this.keyAdvance(this.sendReset),
       doGuest: () => this.setState({ view: 'home', user: null, userId: null, favs: [], err: '', geoAsk: this.state.geoState === 'idle' }),
       goRegister: () => this.go('register'), goForgot: () => this.go('forgot'), goLogin: () => this.go('login'),
       goHome: () => this.go('home'), goRestricted: () => this.go('restricted'), goFavs: () => this.go('favs'),
@@ -839,6 +853,8 @@ class Component extends DCLogic {
       newPw: st.newPw, newPw2: st.newPw2,
       onNewPw: e => this.setState({ newPw: e.target.value, err: '' }),
       onNewPw2: e => this.setState({ newPw2: e.target.value, err: '' }),
+      onNewPwKeyDown: this.keyAdvance(),
+      onNewPw2KeyDown: this.keyAdvance(this.updatePassword),
       submitNewPw: this.updatePassword,
       otherPicked: st.reason === 'อื่น ๆ',
       otherText: st.otherText,
@@ -909,9 +925,11 @@ class Component extends DCLogic {
         { key: 'regEmail', label: 'อีเมล', ph: 'you@example.com', type: 'text' },
         { key: 'regPw', label: 'รหัสผ่าน', ph: 'อย่างน้อย 8 ตัวอักษร', type: 'password' },
         { key: 'regPlate', label: 'ทะเบียนรถ (ไม่บังคับ)', ph: 'ขก 1234 ขอนแก่น', type: 'text' }
-      ].map(f => ({
+      ].map((f, i, arr) => ({
         label: f.label, ph: f.ph, type: f.type, value: st[f.key],
-        onInput: e => this.setState({ [f.key]: e.target.value })
+        onInput: e => this.setState({ [f.key]: e.target.value }),
+        onKeyDown: this.keyAdvance(i === arr.length - 1 ? this.doRegister : undefined),
+        enterHint: i === arr.length - 1 ? 'go' : 'next'
       })),
       roles: ['นักศึกษา', 'บุคลากร', 'ผู้ใช้ทั่วไป'].map(r => ({
         name: r, onPick: () => this.setState({ role: r }),
