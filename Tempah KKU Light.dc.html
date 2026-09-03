@@ -823,8 +823,8 @@ class Component extends DCLogic {
       ? list.slice().sort((a, b) => this.agg(b).free - this.agg(a).free)
       : list.slice().sort((a, b) => this.dist(a) - this.dist(b));
 
-    const open = this.PLACES.filter(p => !p.closed && this.agg(p).free > 0);
-    const nearest = open.slice().sort((a, b) => this.dist(a) - this.dist(b))[0] || this.PLACES[0];
+    const openPlaces = this.PLACES.filter(p => !p.closed);
+    const nearest = openPlaces.slice().sort((a, b) => this.dist(a) - this.dist(b))[0] || this.PLACES[0];
     const nSt = this.status(this.agg(nearest).free, this.agg(nearest).total, nearest.closed);
     const geoLabelMap = { on: 'GPS เปิดอยู่', asking: 'กำลังหาตำแหน่ง…', denied: 'เปิด GPS', idle: 'เปิด GPS', unsupported: 'ไม่รองรับ GPS' };
     const hr = new Date().getHours();
