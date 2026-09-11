@@ -666,7 +666,13 @@ class Component extends DCLogic {
     } catch (e) {}
     // Coming back from the form's "done" link marks the review as finished —
     // a stronger signal than merely having opened the form.
-    if (/[?&]reviewed=1/.test(window.location.search)) this.markReviewed();
+    if (/[?&]reviewed=1/.test(window.location.search)) {
+      this.markReviewed();
+      // Consume the marker rather than leaving it in the address bar: a link
+      // copied or bookmarked from here would mark whoever opens it as having
+      // reviewed, quietly costing real responses.
+      window.history.replaceState({ view: this.state.view }, '', window.location.pathname + '#' + this.state.view);
+    }
     try { if (localStorage.getItem('tpReviewed') === '1') this.setState({ reviewed: true }); } catch (e) {}
   }
   componentWillUnmount() {
