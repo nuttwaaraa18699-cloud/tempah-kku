@@ -469,6 +469,7 @@ a{color:#A73B24;text-decoration:none}a:hover{color:#8c3020}
       <span style="font-size:13px;color:#515556;line-height:1.7;text-align:center;text-wrap:pretty;margin-top:-8px">ช่วยรีวิวการใช้งานให้เราหน่อย สแกน QR หรือแตะลิงก์ด้านล่างก็ได้</span>
       <img src="assets/review-qr.png" alt="QR โค้ดแบบสอบถามรีวิว" style="width:200px;height:200px;max-width:100%;display:block;border-radius:12px;border:1px solid #E6E3DF;background:#FFFFFF">
       <a href="{{ reviewUrl }}" onClick="{{ markReviewed }}" target="_blank" rel="noopener noreferrer" style="width:100%;text-align:center;box-sizing:border-box;background:#A73B24;color:#fff;font-size:15px;font-weight:700;padding:14px;border-radius:12px;text-decoration:none;display:block">เปิดแบบสอบถาม ↗</a>
+      <div onClick="{{ confirmReviewed }}" style="width:100%;box-sizing:border-box;text-align:center;cursor:pointer;font-size:14px;font-weight:600;color:#1F8A4C;padding:13px;border-radius:12px;border:1px solid #BFE3CD;background:#F3FAF6">✓ ตอบแบบสอบถามเสร็จแล้ว</div>
       <span onClick="{{ closeReview }}" style="font-size:13px;color:#8A8F91;cursor:pointer;padding:4px 8px">ไว้ทีหลัง</span>
     </div>
   </div>
@@ -1071,6 +1072,9 @@ class Component extends DCLogic {
       reviewOpen: st.reviewOpen,
       reviewUrl: this.REVIEW_URL,
       markReviewed: this.markReviewed,
+      // For people who scanned the QR on another phone — the app can't see that
+      // submission, so they tell it themselves.
+      confirmReviewed: () => { this.markReviewed(); this.setState({ reviewOpen: false }); this.flash('ขอบคุณสำหรับรีวิว 🙏'); },
       closeReview: () => { this.setState({ reviewOpen: false }); this.flash('ขอบคุณที่ช่วยยืนยันสถานะที่จอด'); }
     };
   }
