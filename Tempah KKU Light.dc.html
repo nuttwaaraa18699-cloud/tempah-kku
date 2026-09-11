@@ -468,7 +468,7 @@ a{color:#A73B24;text-decoration:none}a:hover{color:#8c3020}
       <span style="font-size:17px;font-weight:700;color:#1A1D1F;text-align:center;text-wrap:pretty">จอดได้แล้วใช่ไหม 🎉</span>
       <span style="font-size:13px;color:#515556;line-height:1.7;text-align:center;text-wrap:pretty;margin-top:-8px">ช่วยรีวิวการใช้งานให้เราหน่อย สแกน QR หรือแตะลิงก์ด้านล่างก็ได้</span>
       <img src="assets/review-qr.png" alt="QR โค้ดแบบสอบถามรีวิว" style="width:200px;height:200px;max-width:100%;display:block;border-radius:12px;border:1px solid #E6E3DF;background:#FFFFFF">
-      <a href="{{ reviewUrl }}" target="_blank" rel="noopener noreferrer" style="width:100%;text-align:center;box-sizing:border-box;background:#A73B24;color:#fff;font-size:15px;font-weight:700;padding:14px;border-radius:12px;text-decoration:none;display:block">เปิดแบบสอบถาม ↗</a>
+      <a href="{{ reviewUrl }}" onClick="{{ markReviewed }}" target="_blank" rel="noopener noreferrer" style="width:100%;text-align:center;box-sizing:border-box;background:#A73B24;color:#fff;font-size:15px;font-weight:700;padding:14px;border-radius:12px;text-decoration:none;display:block">เปิดแบบสอบถาม ↗</a>
       <span onClick="{{ closeReview }}" style="font-size:13px;color:#8A8F91;cursor:pointer;padding:4px 8px">ไว้ทีหลัง</span>
     </div>
   </div>
@@ -525,7 +525,7 @@ class Component extends DCLogic {
     user: null, userId: null, role: 'นักศึกษา', favs: [], placeId: 'hs', lotIx: 0,
     reportOpen: false, reason: null, otherText: '', toast: '', tick: 0, prefs: [true, true, false], menuOpen: false,
     geo: null, geoState: 'idle', geoAsk: false, forgotValue: '', newPw: '', newPw2: '',
-    regName: '', regEmail: '', regPw: '', regPlate: '', manualId: '', reviewOpen: false
+    regName: '', regEmail: '', regPw: '', regPlate: '', manualId: '', reviewOpen: false, reviewed: false
   };
 
   REVIEW_URL = 'https://docs.google.com/forms/d/e/1FAIpQLSfSCUykI_PyY0wZ96a-FhhDN85Ixv2B50czyLvkpB6aqYC0wg/viewform';
@@ -663,6 +663,10 @@ class Component extends DCLogic {
       const saved = localStorage.getItem('tpManual');
       if (saved && this.PLACES.some(p => p.id === saved)) this.setState({ manualId: saved });
     } catch (e) {}
+    // Coming back from the form's "done" link marks the review as finished —
+    // a stronger signal than merely having opened the form.
+    if (/[?&]reviewed=1/.test(window.location.search)) this.markReviewed();
+    try { if (localStorage.getItem('tpReviewed') === '1') this.setState({ reviewed: true }); } catch (e) {}
   }
   componentWillUnmount() {
     clearInterval(this.timer); clearTimeout(this.tt); if (this.watch) navigator.geolocation.clearWatch(this.watch);
@@ -715,6 +719,13 @@ class Component extends DCLogic {
     }
     return this.state.geo || this.ME;
   }
+  // Google Forms can't tell us a response was submitted, so "reviewed" is the
+  // best available proxy: the user opened the form, or came back via the
+  // form's post-submit link carrying ?reviewed=1.
+  markReviewed = () => {
+    this.setState({ reviewed: true });
+    try { localStorage.setItem('tpReviewed', '1'); } catch (e) {}
+  };
   gpsLive() { return this.state.geoState === 'on' || this.state.geoState === 'asking'; }
   setManual = (id) => {
     this.setState({ manualId: id });
@@ -1035,9 +1046,13 @@ class Component extends DCLogic {
         border: st.reason === r ? accent : '#DCD9D5',
         bg: st.reason === r ? '#FBF1EE' : '#FAF9F8'
       })),
-      finish: () => { this.navigate('home', { reviewOpen: true }); },
+      finish: () => {
+        if (st.reviewed) { this.navigate('home'); this.flash('ขอบคุณที่ช่วยยืนยันสถานะที่จอด'); return; }
+        this.navigate('home', { reviewOpen: true });
+      },
       reviewOpen: st.reviewOpen,
       reviewUrl: this.REVIEW_URL,
+      markReviewed: this.markReviewed,
       closeReview: () => { this.setState({ reviewOpen: false }); this.flash('ขอบคุณที่ช่วยยืนยันสถานะที่จอด'); }
     };
   }
