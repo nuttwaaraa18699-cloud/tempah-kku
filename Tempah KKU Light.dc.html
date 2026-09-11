@@ -696,11 +696,16 @@ class Component extends DCLogic {
     }
     return this.state.geo || this.ME;
   }
+  gpsLive() { return this.state.geoState === 'on' || this.state.geoState === 'asking'; }
   setManual = (id) => {
     this.setState({ manualId: id });
     try { if (id) localStorage.setItem('tpManual', id); else localStorage.removeItem('tpManual'); } catch (e) {}
     const p = this.PLACES.filter(x => x.id === id)[0];
-    this.flash(p ? 'ตั้งตำแหน่งเป็น ' + p.name + ' แล้ว' : 'กลับไปใช้ตำแหน่งจาก GPS แล้ว');
+    if (p) { this.flash('ตั้งตำแหน่งเป็น ' + p.name + ' แล้ว'); return; }
+    // Handing control back to GPS is only meaningful if GPS is actually on;
+    // otherwise ask for it instead of silently falling back to the default point.
+    if (this.gpsLive()) this.flash('กลับไปใช้ตำแหน่งจาก GPS แล้ว');
+    else this.setState({ geoAsk: true });
   };
   dist(p) {
     const o = this.origin(), R = 6371000, rad = Math.PI / 180;
@@ -758,7 +763,7 @@ class Component extends DCLogic {
     this.navigate('home', {
       user: user.email, userId: user.id,
       role: (user.user_metadata && user.user_metadata.role) || 'นักศึกษา',
-      email: '', pw: '', err: '', geoAsk: this.state.geoState === 'idle'
+      email: '', pw: '', err: '', geoAsk: this.state.geoState === 'idle' && !this.state.manualId
     });
     if (!window.SB) return;
     const { data, error } = await window.SB.from('favorites').select('place_id').eq('user_id', user.id);
@@ -881,7 +886,7 @@ class Component extends DCLogic {
       forgotValue: st.forgotValue,
       onForgotValue: e => this.setState({ forgotValue: e.target.value }),
       onForgotKeyDown: this.keyAdvance(this.sendReset),
-      doGuest: () => this.navigate('home', { user: null, userId: null, favs: [], err: '', geoAsk: this.state.geoState === 'idle' }),
+      doGuest: () => this.navigate('home', { user: null, userId: null, favs: [], err: '', geoAsk: this.state.geoState === 'idle' && !this.state.manualId }),
       goRegister: () => this.go('register'), goForgot: () => this.go('forgot'), goLogin: () => this.go('login'),
       goHome: () => this.go('home'), goRestricted: () => this.go('restricted'), goFavs: () => this.go('favs'),
       logout: this.doLogout,
