@@ -725,6 +725,9 @@ class Component extends DCLogic {
   markReviewed = () => {
     this.setState({ reviewed: true });
     try { localStorage.setItem('tpReviewed', '1'); } catch (e) {}
+    // Logged-in users carry the flag across devices via their auth metadata;
+    // guests only ever get the localStorage copy.
+    if (window.SB && this.state.userId) window.SB.auth.updateUser({ data: { reviewed: true } });
   };
   gpsLive() { return this.state.geoState === 'on' || this.state.geoState === 'asking'; }
   setManual = (id) => {
@@ -796,6 +799,18 @@ class Component extends DCLogic {
       email: '', pw: '', err: '', geoAsk: this.state.geoState === 'idle' && !this.state.manualId
     });
     if (!window.SB) return;
+    // Reconcile the review flag both ways: the account's copy suppresses the
+    // prompt on a new device, and a flag earned here before signing in is
+    // pushed up so it survives a switch of device.
+    const reviewedOnAccount = !!(user.user_metadata && user.user_metadata.reviewed);
+    let reviewedLocally = false;
+    try { reviewedLocally = localStorage.getItem('tpReviewed') === '1'; } catch (e) {}
+    if (reviewedOnAccount) {
+      this.setState({ reviewed: true });
+      try { localStorage.setItem('tpReviewed', '1'); } catch (e) {}
+    } else if (reviewedLocally) {
+      window.SB.auth.updateUser({ data: { reviewed: true } });
+    }
     const { data, error } = await window.SB.from('favorites').select('place_id').eq('user_id', user.id);
     if (error) { this.flash('โหลดที่จอดโปรดไม่สำเร็จ'); return; }
     this.setState({ favs: (data || []).map(r => r.place_id) });
@@ -851,7 +866,10 @@ class Component extends DCLogic {
 
   doLogout = () => {
     if (window.SB) window.SB.auth.signOut();
-    this.navigate('login', { email: '', pw: '', user: null, userId: null, favs: [] });
+    // Drop the local review flag with the session — on a shared device it would
+    // otherwise be read as the next person's, and pushed up to their account.
+    try { localStorage.removeItem('tpReviewed'); } catch (e) {}
+    this.navigate('login', { email: '', pw: '', user: null, userId: null, favs: [], reviewed: false });
   };
 
   card(p, i) {
