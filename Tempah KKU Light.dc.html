@@ -677,7 +677,12 @@ class Component extends DCLogic {
     this.setState(Object.assign({ view, menuOpen: false }, extra || {}));
   };
   onPopState = (e) => {
-    this.setState({ view: (e.state && e.state.view) || 'login', menuOpen: false });
+    // Dismiss anything overlaying the screen too — a modal left open across a
+    // back gesture would float above whichever screen we land on.
+    this.setState({
+      view: (e.state && e.state.view) || 'login',
+      menuOpen: false, reviewOpen: false, reportOpen: false, geoAsk: false
+    });
   };
 
   toggleGeo = () => {
