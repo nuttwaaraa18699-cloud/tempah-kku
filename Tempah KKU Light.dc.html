@@ -868,13 +868,37 @@ class Component extends DCLogic {
       email: s.regEmail.trim(), password: s.regPw,
       options: { data: { name: s.regName.trim(), plate: s.regPlate.trim(), role: s.role } }
     });
-    if (error) { this.setState({ err: error.message }); return; }
+    const taken = s.regEmail.trim();
+    if (error) {
+      if (error.code === 'user_already_exists' || /already registered|already been registered/i.test(error.message || '')) {
+        this.emailTaken(taken); return;
+      }
+      if (error.code === 'over_email_send_rate_limit') {
+        this.setState({ err: 'ขอส่งอีเมลถี่เกินไป กรุณารอสักครู่แล้วลองใหม่อีกครั้ง' }); return;
+      }
+      this.setState({ err: error.message }); return;
+    }
+    // Supabase hides "this email already has an account" rather than saying so,
+    // to stop attackers probing which addresses are registered: it returns a
+    // success shaped like a signup, with the identities list emptied out.
+    if (data.user && Array.isArray(data.user.identities) && data.user.identities.length === 0) {
+      this.emailTaken(taken); return;
+    }
     if (data.session) { this.afterAuth(data.user); return; }
     // A toast disappears before most people finish reading it, and missing this
     // step is indistinguishable from a wrong password at the login screen.
     this.navigate('login', {
-      notice: 'สมัครสำเร็จแล้ว — เราส่งอีเมลยืนยันไปที่ ' + s.regEmail.trim() + ' กรุณากดลิงก์ในอีเมลก่อน แล้วจึงเข้าสู่ระบบ (ถ้าไม่เจอ ลองดูในโฟลเดอร์ Spam)',
-      needConfirm: s.regEmail.trim(), err: ''
+      notice: 'สมัครสำเร็จแล้ว — เราส่งอีเมลยืนยันไปที่ ' + taken + ' กรุณากดลิงก์ในอีเมลก่อน แล้วจึงเข้าสู่ระบบ (ถ้าไม่เจอ ลองดูในโฟลเดอร์ Spam)',
+      needConfirm: taken, err: ''
+    });
+  };
+
+  // Send them to the login screen with the address already filled in — the
+  // thing they actually need is to log in or reset, not to read an error.
+  emailTaken = (email) => {
+    this.navigate('login', {
+      email: email, pw: '', notice: '', needConfirm: '',
+      err: 'อีเมล ' + email + ' เคยสมัครไว้แล้ว — เข้าสู่ระบบด้านล่างได้เลย ถ้าจำรหัสผ่านไม่ได้ ให้กด "ลืมรหัสผ่าน"'
     });
   };
 
