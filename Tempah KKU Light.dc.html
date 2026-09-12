@@ -519,7 +519,7 @@ a{color:#A73B24;text-decoration:none}a:hover{color:#8c3020}
   </sc-if>
 
   <sc-if value="{{ toast }}" hint-placeholder-val="{{ false }}">
-    <div style="position:fixed;left:50%;transform:translateX(-50%);bottom:24px;z-index:80;width:min(560px,calc(100% - 28px));padding:14px 16px;border-radius:14px;font-size:13px;font-weight:600;color:#fff;background:#1A1D1F;box-shadow:0 14px 36px rgba(26,29,31,.3);animation:tpUp .25s ease both">{{ toast }}</div>
+    <div style="position:fixed;left:0;right:0;margin:0 auto;bottom:calc(24px + env(safe-area-inset-bottom, 0px));z-index:80;width:min(560px,calc(100% - 28px));padding:14px 16px;border-radius:14px;font-size:13px;font-weight:600;line-height:1.6;text-wrap:pretty;color:#fff;background:#1A1D1F;box-shadow:0 14px 36px rgba(26,29,31,.3);animation:tpUp .25s ease both">{{ toast }}</div>
   </sc-if>
 
 </div>
