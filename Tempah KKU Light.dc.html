@@ -550,7 +550,10 @@ class Component extends DCLogic {
       lots: [ { n: 'ลานข้างโรงเรียนสาธิต', total: 90, free: 21, type: 'รถยนต์', img: 'assets/satit-lot.jpg' } ] },
     { id: 'hs', name: 'คณะมนุษยศาสตร์และสังคมศาสตร์', cat: 'คณะ', lat: 16.4731, lng: 102.8214,
       lots: [ { n: 'ลานจอดหน้าอาคาร HS.05', total: 140, free: 47, type: 'จักรยานยนต์', img: 'assets/hs05.jpg' },
-              { n: 'หน้าอาคาร HS.02', total: 48, free: 0, type: 'รถยนต์', img: 'assets/hs02.png' },
+              // hs02.png arrived truncated — only the top 5% of the frame was
+              // real picture, so the lot falls back to the no-photo placeholder
+              // until someone supplies the original.
+              { n: 'หน้าอาคาร HS.02', total: 48, free: 0, type: 'รถยนต์' },
               { n: 'หน้าอาคารรัตนพิทยา', total: 55, free: 9, type: 'รถยนต์', img: 'assets/rattana.jpg' },
               { n: 'ลานจอดป่าทไวไลท์', total: 80, free: 31, type: 'จักรยานยนต์', img: 'assets/twilight.jpg' } ] },
     { id: 'sci', name: 'คณะวิทยาศาสตร์', cat: 'คณะ', lat: 16.4756, lng: 102.8196,
@@ -692,14 +695,22 @@ class Component extends DCLogic {
   // instead of leaving the site immediately.
   navigate = (view, extra) => {
     window.history.pushState({ view }, '', '#' + view);
-    this.setState(Object.assign({ view, menuOpen: false }, extra || {}));
+    // Messages belong to the screen that raised them. Clearing them by default
+    // stops one person's "we emailed you at ..." from greeting the next person
+    // who lands on the login screen; callers that mean to carry a message
+    // across pass it in `extra`.
+    this.setState(Object.assign(
+      { view, menuOpen: false, notice: '', needConfirm: '', err: '' },
+      extra || {}
+    ));
   };
   onPopState = (e) => {
     // Dismiss anything overlaying the screen too — a modal left open across a
     // back gesture would float above whichever screen we land on.
     this.setState({
       view: (e.state && e.state.view) || 'login',
-      menuOpen: false, reviewOpen: false, reportOpen: false, geoAsk: false
+      menuOpen: false, reviewOpen: false, reportOpen: false, geoAsk: false,
+      notice: '', needConfirm: '', err: ''
     });
   };
 
@@ -779,7 +790,7 @@ class Component extends DCLogic {
   slots(n, seed) {
     return Array.from({ length: n }).map((_, i) => ({ d: (((i * 37 + seed * 13) % 70) / 10).toFixed(1) + 's' }));
   }
-  go(view) { this.navigate(view, { notice: '', needConfirm: '' }); }
+  go(view) { this.navigate(view); }
   flash(msg) { this.setState({ toast: msg }); clearTimeout(this.tt); this.tt = setTimeout(() => this.setState({ toast: '' }), 2600); }
 
   // Enter (desktop) or the keyboard's next/go/done key (mobile) moves to the
