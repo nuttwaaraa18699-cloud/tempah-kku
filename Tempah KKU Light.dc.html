@@ -386,8 +386,14 @@ a{color:#A73B24;text-decoration:none}a:hover{color:#8c3020}
         <span style="font-size:11.5px;font-weight:600;color:#515556">รหัสผ่าน</span>
         <input value="{{ pw }}" onInput="{{ onPw }}" onKeyDown="{{ onPwKeyDown }}" enterkeyhint="go" type="password" placeholder="••••••••" style="width:100%;background:#F5F3F0;border:1px solid #E6E3DF;border-radius:12px;padding:14px;font-size:15px;color:#1A1D1F;outline:none">
       </div>
+      <sc-if value="{{ notice }}" hint-placeholder-val="{{ false }}">
+        <span style="font-size:12.5px;color:#1F6B43;line-height:1.65;background:#F3FAF6;border:1px solid #BFE3CD;border-radius:12px;padding:12px 13px;text-wrap:pretty">{{ notice }}</span>
+      </sc-if>
       <sc-if value="{{ err }}" hint-placeholder-val="{{ false }}">
-        <span style="font-size:12px;color:#C62828">{{ err }}</span>
+        <span style="font-size:12px;color:#C62828;line-height:1.65;text-wrap:pretty">{{ err }}</span>
+      </sc-if>
+      <sc-if value="{{ needConfirm }}" hint-placeholder-val="{{ false }}">
+        <span onClick="{{ resendConfirm }}" style="font-size:12.5px;font-weight:600;color:#A73B24;cursor:pointer;text-decoration:underline">ส่งอีเมลยืนยันอีกครั้ง</span>
       </sc-if>
       <div onClick="{{ doLogin }}" style="text-align:center;cursor:pointer;background:#A73B24;color:#fff;font-size:16px;font-weight:700;padding:15px;border-radius:12px">Login</div>
       <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;padding-top:2px">
@@ -526,7 +532,8 @@ class Component extends DCLogic {
     user: null, userId: null, role: 'นักศึกษา', favs: [], placeId: 'hs', lotIx: 0,
     reportOpen: false, reason: null, otherText: '', toast: '', tick: 0, prefs: [true, true, false], menuOpen: false,
     geo: null, geoState: 'idle', geoAsk: false, forgotValue: '', newPw: '', newPw2: '',
-    regName: '', regEmail: '', regPw: '', regPlate: '', manualId: '', reviewOpen: false, reviewed: false
+    regName: '', regEmail: '', regPw: '', regPlate: '', manualId: '', reviewOpen: false, reviewed: false,
+    notice: '', needConfirm: ''
   };
 
   REVIEW_URL = 'https://docs.google.com/forms/d/e/1FAIpQLSfSCUykI_PyY0wZ96a-FhhDN85Ixv2B50czyLvkpB6aqYC0wg/viewform';
@@ -772,7 +779,7 @@ class Component extends DCLogic {
   slots(n, seed) {
     return Array.from({ length: n }).map((_, i) => ({ d: (((i * 37 + seed * 13) % 70) / 10).toFixed(1) + 's' }));
   }
-  go(view) { this.navigate(view); }
+  go(view) { this.navigate(view, { notice: '', needConfirm: '' }); }
   flash(msg) { this.setState({ toast: msg }); clearTimeout(this.tt); this.tt = setTimeout(() => this.setState({ toast: '' }), 2600); }
 
   // Enter (desktop) or the keyboard's next/go/done key (mobile) moves to the
@@ -829,8 +836,25 @@ class Component extends DCLogic {
     if (!window.SB) { this.setState({ err: 'ระบบยังไม่ได้เชื่อมต่อฐานข้อมูล (ดู config.js) — ลองใช้ Continue as guest แทน' }); return; }
     this.setState({ err: '' });
     const { data, error } = await window.SB.auth.signInWithPassword({ email: s.email, password: s.pw });
-    if (error) { this.setState({ err: 'อีเมลหรือรหัสผ่านไม่ถูกต้อง' }); return; }
+    if (error) {
+      // Supabase distinguishes "not confirmed yet" from "wrong password";
+      // collapsing both into one message sends people off retyping a
+      // password that was right all along.
+      if (error.code === 'email_not_confirmed') {
+        this.setState({ err: 'อีเมลนี้ยังไม่ได้ยืนยัน — เปิดอีเมลแล้วกดลิงก์ยืนยันก่อน แล้วค่อยเข้าสู่ระบบอีกครั้ง', needConfirm: s.email.trim() });
+      } else {
+        this.setState({ err: 'อีเมลหรือรหัสผ่านไม่ถูกต้อง', needConfirm: '' });
+      }
+      return;
+    }
     this.afterAuth(data.user);
+  };
+
+  resendConfirm = async () => {
+    const email = this.state.needConfirm;
+    if (!email || !window.SB) return;
+    const { error } = await window.SB.auth.resend({ type: 'signup', email: email });
+    this.flash(error ? 'ส่งอีเมลยืนยันไม่สำเร็จ ลองใหม่อีกครั้ง' : 'ส่งอีเมลยืนยันใหม่แล้ว ตรวจสอบกล่องจดหมายและโฟลเดอร์ Spam');
   };
 
   doRegister = async () => {
@@ -845,8 +869,13 @@ class Component extends DCLogic {
       options: { data: { name: s.regName.trim(), plate: s.regPlate.trim(), role: s.role } }
     });
     if (error) { this.setState({ err: error.message }); return; }
-    if (data.session) { this.afterAuth(data.user); }
-    else { this.flash('สมัครสำเร็จ กรุณายืนยันอีเมลก่อนเข้าสู่ระบบ'); this.go('login'); }
+    if (data.session) { this.afterAuth(data.user); return; }
+    // A toast disappears before most people finish reading it, and missing this
+    // step is indistinguishable from a wrong password at the login screen.
+    this.navigate('login', {
+      notice: 'สมัครสำเร็จแล้ว — เราส่งอีเมลยืนยันไปที่ ' + s.regEmail.trim() + ' กรุณากดลิงก์ในอีเมลก่อน แล้วจึงเข้าสู่ระบบ (ถ้าไม่เจอ ลองดูในโฟลเดอร์ Spam)',
+      needConfirm: s.regEmail.trim(), err: ''
+    });
   };
 
   sendReset = async () => {
@@ -929,6 +958,7 @@ class Component extends DCLogic {
       isHome: st.view === 'home', isPlace: st.view === 'place', isFavs: st.view === 'favs',
       isRestricted: st.view === 'restricted', isMe: st.view === 'me',
       email: st.email, pw: st.pw, err: st.err, query: st.query, toast: st.toast,
+      notice: st.notice, needConfirm: st.needConfirm, resendConfirm: this.resendConfirm,
       onEmail: e => this.setState({ email: e.target.value, err: '' }),
       onPw: e => this.setState({ pw: e.target.value, err: '' }),
       onEmailKeyDown: this.keyAdvance(),
