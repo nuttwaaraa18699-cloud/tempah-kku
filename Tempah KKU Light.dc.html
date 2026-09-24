@@ -71,8 +71,7 @@ a{color:#A73B24;text-decoration:none}a:hover{color:#8c3020}
       <div style="display:flex;flex-direction:column;gap:18px;animation:tpUp .3s ease both">
 
         <div style="display:flex;flex-direction:column;gap:4px">
-          <span style="font-size:12px;color:#6B7173">{{ greeting }}</span>
-          <span style="font-size:clamp(22px,6vw,29px);font-weight:700;line-height:1.25;letter-spacing:-.5px;color:#1A1D1F;text-wrap:pretty">วันนี้จะจอดที่ไหนดี</span>
+          <span style="font-size:clamp(22px,6vw,29px);font-weight:700;line-height:1.5;color:#1A1D1F;text-wrap:pretty">วันนี้จะจอดที่ไหนดี</span>
         </div>
 
         <div onClick="{{ openNearest }}" style="cursor:pointer;display:flex;align-items:center;gap:13px;padding:14px 15px;border-radius:18px;background:#FFFFFF;border:1px solid #E6E3DF;box-shadow:0 2px 8px rgba(26,29,31,.05)">
@@ -161,7 +160,7 @@ a{color:#A73B24;text-decoration:none}a:hover{color:#8c3020}
                 <div onClick="{{ c.onStar }}" style="position:absolute;top:9px;right:9px;width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px;cursor:pointer;background:#FFFFFF;color: {{ c.starColor }}">★</div>
                 <div style="position:absolute;left:14px;right:14px;bottom:12px;display:flex;align-items:flex-end;justify-content:space-between;gap:10px">
                   <div style="display:flex;flex-direction:column;gap:3px;min-width:0">
-                    <span style="font-size:15.5px;font-weight:700;color:#fff;letter-spacing:-.2px;text-wrap:pretty">{{ c.name }}</span>
+                    <span style="font-size:15.5px;font-weight:700;color:#fff;line-height:1.45;text-wrap:pretty">{{ c.name }}</span>
                     <span style="font-size:11.5px;color:rgba(255,255,255,.78);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ c.meta }}</span>
                   </div>
                   <span style="flex:none;font-size:11.5px;font-weight:700;padding:6px 12px;border-radius:999px;white-space:nowrap;color:#fff;background: {{ c.statusFg }}">{{ c.statusLabel }}</span>
@@ -187,7 +186,7 @@ a{color:#A73B24;text-decoration:none}a:hover{color:#8c3020}
           <span onClick="{{ starPlace }}" style="font-size:12.5px;font-weight:600;cursor:pointer;white-space:nowrap;color: {{ placeStarColor }}">★ บันทึกเป็นโปรด</span>
         </div>
         <div style="display:flex;flex-direction:column;gap:5px">
-          <span style="font-size:clamp(20px,5.4vw,26px);font-weight:700;letter-spacing:-.4px;line-height:1.25;color:#1A1D1F;text-wrap:pretty">{{ placeName }}</span>
+          <span style="font-size:clamp(20px,5.4vw,26px);font-weight:700;line-height:1.5;color:#1A1D1F;text-wrap:pretty">{{ placeName }}</span>
           <span style="font-size:11.5px;color:#6B7173">{{ placeMeta }}</span>
         </div>
 
@@ -273,7 +272,7 @@ a{color:#A73B24;text-decoration:none}a:hover{color:#8c3020}
 
       <sc-if value="{{ isFavs }}" hint-placeholder-val="{{ false }}">
       <div style="display:flex;flex-direction:column;gap:13px;animation:tpUp .3s ease both">
-        <span style="font-size:clamp(20px,5.4vw,26px);font-weight:700;letter-spacing:-.4px;color:#1A1D1F">ที่จอดโปรด</span>
+        <span style="font-size:clamp(20px,5.4vw,26px);font-weight:700;line-height:1.5;color:#1A1D1F">ที่จอดโปรด</span>
         <span style="font-size:12px;color:#6B7173;margin-top:-6px">รายการนี้จะขึ้นบนสุดของหน้าแรกทุกครั้งที่เปิดเว็บ</span>
         <sc-for list="{{ favCards }}" as="f" hint-placeholder-count="2">
           <div style="display:flex;align-items:center;gap:12px;padding:13px 14px;border-radius:16px;background:#FFFFFF;border:1px solid #E6E3DF">
@@ -293,7 +292,7 @@ a{color:#A73B24;text-decoration:none}a:hover{color:#8c3020}
 
       <sc-if value="{{ isRestricted }}" hint-placeholder-val="{{ false }}">
       <div style="display:flex;flex-direction:column;gap:12px;animation:tpUp .3s ease both">
-        <span style="font-size:clamp(20px,5.4vw,26px);font-weight:700;letter-spacing:-.4px;color:#1A1D1F;text-wrap:pretty">พื้นที่ที่ไม่สามารถเข้าถึงได้</span>
+        <span style="font-size:clamp(20px,5.4vw,26px);font-weight:700;line-height:1.5;color:#1A1D1F;text-wrap:pretty">พื้นที่ที่ไม่สามารถเข้าถึงได้</span>
         <span style="font-size:12px;color:#6B7173;line-height:1.7;margin-top:-4px">พื้นที่ปิด ห้ามจอด หรือสงวนสิทธิ์เฉพาะกลุ่ม ระบบจะไม่แนะนำที่จอดในบริเวณนี้</span>
         <sc-for list="{{ restricted }}" as="r" hint-placeholder-count="6">
           <div style="padding:14px 16px;border-radius:16px;background:#FDF6F4;border:1px solid #F0D9D2;display:flex;flex-direction:column;gap:5px">
@@ -307,7 +306,7 @@ a{color:#A73B24;text-decoration:none}a:hover{color:#8c3020}
 
       <sc-if value="{{ isMe }}" hint-placeholder-val="{{ false }}">
       <div style="display:flex;flex-direction:column;gap:12px;animation:tpUp .3s ease both">
-        <span style="font-size:clamp(20px,5.4vw,26px);font-weight:700;letter-spacing:-.4px;color:#1A1D1F">บัญชีของฉัน</span>
+        <span style="font-size:clamp(20px,5.4vw,26px);font-weight:700;line-height:1.5;color:#1A1D1F">บัญชีของฉัน</span>
         <div style="padding:16px;border-radius:18px;background:#FAF9F8;border:1px solid #E6E3DF;display:flex;align-items:center;gap:14px">
           <div style="width:48px;height:48px;border-radius:50%;background:#A73B24;display:flex;align-items:center;justify-content:center;font-family:Archivo,sans-serif;font-weight:800;font-size:18px;color:#fff">{{ initial }}</div>
           <div style="display:flex;flex-direction:column;gap:3px;min-width:0">
@@ -317,7 +316,7 @@ a{color:#A73B24;text-decoration:none}a:hover{color:#8c3020}
         </div>
         <div onClick="{{ toggleGeo }}" style="padding:15px 16px;border-radius:14px;cursor:pointer;background:#FFFFFF;border:1px solid #E6E3DF;display:flex;align-items:center;justify-content:space-between;gap:12px">
           <div style="display:flex;flex-direction:column;gap:4px;min-width:0">
-            <span style="font-size:13px;color:#1A1D1F;text-wrap:pretty">ติดตามตำแหน่ง GPS เพื่อหาลานจอดที่ใกล้ที่สุด</span>
+            <span style="font-size:13px;color:#1A1D1F;text-wrap:pretty">ติดตามตำแหน่ง GPS</span>
             <span style="display:flex;align-items:center;gap:6px;font-size:11.5px;color:#6B7173">
               <span style="width:7px;height:7px;border-radius:50%;background: {{ geoDot }};box-shadow: {{ geoGlow }};display:inline-block;animation: {{ geoAnim }}"></span>{{ geoStatusText }}
             </span>
@@ -352,10 +351,7 @@ a{color:#A73B24;text-decoration:none}a:hover{color:#8c3020}
 
       <sc-if value="{{ isSuggest }}" hint-placeholder-val="{{ false }}">
       <div style="display:flex;flex-direction:column;gap:14px;animation:tpUp .3s ease both">
-        <div style="display:flex;flex-direction:column;gap:4px">
-          <span style="font-size:clamp(20px,5.4vw,26px);font-weight:700;letter-spacing:-.4px;color:#1A1D1F">เสนอที่จอดรถใหม่</span>
-          <span style="font-size:12.5px;color:#6B7173;line-height:1.7;text-wrap:pretty">รู้จักลานจอดที่ยังไม่มีในแอปใช่ไหม บอกเราได้เลย แอดมินจะตรวจสอบและเพิ่มพิกัดกับรูปให้ก่อนขึ้นแสดงจริง</span>
-        </div>
+        <span style="font-size:clamp(20px,5.4vw,26px);font-weight:700;line-height:1.5;color:#1A1D1F">เพิ่มลานจอดรถ</span>
 
         <sc-if value="{{ mustSignIn }}" hint-placeholder-val="{{ false }}">
           <div style="border:1px dashed #DCD9D5;border-radius:18px;padding:24px;text-align:center;font-size:13px;color:#6B7173;line-height:1.7">ต้องเข้าสู่ระบบก่อนจึงจะเสนอสถานที่ได้<br>เพื่อให้แอดมินติดต่อกลับได้หากมีข้อสงสัย</div>
@@ -409,7 +405,7 @@ a{color:#A73B24;text-decoration:none}a:hover{color:#8c3020}
 
       <sc-if value="{{ isAdminView }}" hint-placeholder-val="{{ false }}">
       <div style="display:flex;flex-direction:column;gap:14px;animation:tpUp .3s ease both">
-        <span style="font-size:clamp(20px,5.4vw,26px);font-weight:700;letter-spacing:-.4px;color:#1A1D1F">จัดการสถานที่</span>
+        <span style="font-size:clamp(20px,5.4vw,26px);font-weight:700;line-height:1.5;color:#1A1D1F">จัดการสถานที่</span>
 
         <div style="display:flex;gap:8px">
           <div onClick="{{ onPendingTab }}" style="flex:1;text-align:center;cursor:pointer;font-size:13.5px;font-weight:700;padding:12px;border-radius:12px;background: {{ pendingTabBg }};color: {{ pendingTabFg }}">รอตรวจ · {{ pendingCount }}</div>
@@ -547,7 +543,7 @@ a{color:#A73B24;text-decoration:none}a:hover{color:#8c3020}
       </div>
       <sc-for list="{{ tabs }}" as="tb" hint-placeholder-count="4">
         <div onClick="{{ tb.onPick }}" style="cursor:pointer;display:flex;align-items:center;gap:12px;padding:13px 12px;border-radius:12px;background: {{ tb.bg }};color: {{ tb.color }}">
-          <span style="font-size:16px;line-height:1;width:20px;text-align:center">{{ tb.icon }}</span>
+          <img src="{{ tb.icon }}" alt="" style="width:20px;height:20px;flex:none;object-fit:contain;display:block">
           <span style="font-size:14px;font-weight:600">{{ tb.name }}</span>
         </div>
       </sc-for>
@@ -606,7 +602,7 @@ a{color:#A73B24;text-decoration:none}a:hover{color:#8c3020}
   <sc-if value="{{ isRegister }}" hint-placeholder-val="{{ false }}">
   <div style="flex:1;display:flex;flex-direction:column;gap:13px;padding:44px 22px 40px;background:linear-gradient(180deg,#A73B24 0%,#C0541C 100%);animation:tpUp .3s ease both">
     <span onClick="{{ goLogin }}" style="font-size:12.5px;color:#FFFFFF;cursor:pointer;white-space:nowrap">← กลับ</span>
-    <span style="font-size:clamp(22px,6vw,28px);font-weight:700;letter-spacing:-.5px;color:#FFFFFF">สมัครสมาชิก</span>
+    <span style="font-size:clamp(22px,6vw,28px);font-weight:700;line-height:1.5;color:#FFFFFF">สมัครสมาชิก</span>
     <div style="padding:18px;border-radius:20px;background:#FFFFFF;border:1px solid #E6E3DF;box-shadow:0 4px 18px rgba(26,29,31,.07);display:flex;flex-direction:column;gap:12px">
       <sc-for list="{{ regFields }}" as="rf" hint-placeholder-count="4">
         <div style="display:flex;flex-direction:column;gap:6px">
@@ -630,7 +626,7 @@ a{color:#A73B24;text-decoration:none}a:hover{color:#8c3020}
   <sc-if value="{{ isForgot }}" hint-placeholder-val="{{ false }}">
   <div style="flex:1;display:flex;flex-direction:column;justify-content:center;gap:15px;padding:44px 22px 40px;background:linear-gradient(180deg,#A73B24 0%,#C0541C 100%);animation:tpUp .3s ease both">
     <span onClick="{{ goLogin }}" style="font-size:12.5px;color:#FFFFFF;cursor:pointer;white-space:nowrap">← กลับ</span>
-    <span style="font-size:clamp(22px,6vw,28px);font-weight:700;letter-spacing:-.5px;color:#FFFFFF">ลืมรหัสผ่าน</span>
+    <span style="font-size:clamp(22px,6vw,28px);font-weight:700;line-height:1.5;color:#FFFFFF">ลืมรหัสผ่าน</span>
     <span style="font-size:13px;color:#FFFFFF;line-height:1.7;margin-top:-6px">กรอกอีเมลที่ลงทะเบียนไว้ ระบบจะส่งลิงก์ตั้งรหัสผ่านใหม่ให้ภายใน 5 นาที</span>
     <div style="padding:18px;border-radius:20px;background:#FFFFFF;border:1px solid #E6E3DF;box-shadow:0 4px 18px rgba(26,29,31,.07);display:flex;flex-direction:column;gap:12px">
       <input value="{{ forgotValue }}" onInput="{{ onForgotValue }}" onKeyDown="{{ onForgotKeyDown }}" enterkeyhint="go" placeholder="you@example.com" style="width:100%;background:#F5F3F0;border:1px solid #E6E3DF;border-radius:12px;padding:14px;font-size:15px;color:#1A1D1F;outline:none">
@@ -641,7 +637,7 @@ a{color:#A73B24;text-decoration:none}a:hover{color:#8c3020}
 
   <sc-if value="{{ isReset }}" hint-placeholder-val="{{ false }}">
   <div style="flex:1;display:flex;flex-direction:column;justify-content:center;gap:15px;padding:44px 22px 40px;background:linear-gradient(180deg,#A73B24 0%,#C0541C 100%);animation:tpUp .3s ease both">
-    <span style="font-size:clamp(22px,6vw,28px);font-weight:700;letter-spacing:-.5px;color:#FFFFFF">ตั้งรหัสผ่านใหม่</span>
+    <span style="font-size:clamp(22px,6vw,28px);font-weight:700;line-height:1.5;color:#FFFFFF">ตั้งรหัสผ่านใหม่</span>
     <span style="font-size:13px;color:#FFFFFF;line-height:1.7;margin-top:-6px">กรอกรหัสผ่านใหม่ของคุณ 2 ครั้งให้ตรงกัน</span>
     <div style="padding:18px;border-radius:20px;background:#FFFFFF;border:1px solid #E6E3DF;box-shadow:0 4px 18px rgba(26,29,31,.07);display:flex;flex-direction:column;gap:12px">
       <div style="display:flex;flex-direction:column;gap:6px">
@@ -1477,7 +1473,6 @@ class Component extends DCLogic {
     const nearest = openPlaces.slice().sort((a, b) => this.dist(a) - this.dist(b))[0] || this.PLACES[0];
     const nSt = this.status(this.agg(nearest).free, this.agg(nearest).total, nearest.closed);
     const geoLabelMap = { on: 'GPS เปิดอยู่', asking: 'กำลังหาตำแหน่ง…', denied: 'เปิด GPS', idle: 'เปิด GPS', unsupported: 'ไม่รองรับ GPS' };
-    const hr = new Date().getHours();
 
     return {
       imgRef: el => { if (el && el.dataset.src && el.getAttribute('src') !== el.dataset.src) el.setAttribute('src', el.dataset.src); },
@@ -1536,7 +1531,6 @@ class Component extends DCLogic {
       otherPicked: st.reason === 'อื่น ๆ',
       otherText: st.otherText,
       onOtherText: e => this.setState({ otherText: e.target.value }),
-      greeting: hr < 11 ? 'สวัสดีตอนเช้า' : (hr < 17 ? 'สวัสดีตอนบ่าย' : 'สวัสดีตอนเย็น'),
       nearestName: nearest.name, nearestDist: 'ห่างจากคุณ ' + this.distText(nearest),
       nearestFree: this.agg(nearest).free, nearBadgeFg: nSt.statusFg, nearBadgeBg: nSt.statusBg,
       nearestMapUrl: this.mapUrl(nearest),
@@ -1579,12 +1573,12 @@ class Component extends DCLogic {
       distText: this.distText(place),
       clock: new Date().toLocaleTimeString('th-TH', { hour: '2-digit', minute: '2-digit', second: '2-digit' }),
       tabs: [
-        { name: 'หน้าแรก', icon: '⌂', view: 'home' },
-        { name: 'ที่จอดโปรด', icon: '★', view: 'favs' },
-        { name: 'พื้นที่ปิด', icon: '⃠', view: 'restricted' },
-        { name: 'เสนอที่จอดใหม่', icon: '＋', view: 'suggest' }
-      ].concat(st.isAdmin ? [{ name: 'อนุมัติสถานที่', icon: '✓', view: 'admin' }] : [])
-       .concat([{ name: 'บัญชี', icon: '☻', view: 'me' }])
+        { name: 'หน้าแรก', icon: 'assets/icons/home.png', view: 'home' },
+        { name: 'ที่จอดโปรด', icon: 'assets/icons/star.png', view: 'favs' },
+        { name: 'พื้นที่ปิด', icon: 'assets/icons/restricted.png', view: 'restricted' },
+        { name: 'เพิ่มลานจอดรถ', icon: 'assets/icons/plus.png', view: 'suggest' }
+      ].concat(st.isAdmin ? [{ name: 'แอดมิน', icon: 'assets/icons/admin.png', view: 'admin' }] : [])
+       .concat([{ name: 'บัญชี', icon: 'assets/icons/account.png', view: 'me' }])
       .map(t => {
         const on = st.view === t.view || (t.view === 'home' && st.view === 'place');
         return { name: t.name, icon: t.icon, color: on ? '#A73B24' : '#1A1D1F',
