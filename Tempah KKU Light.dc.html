@@ -474,8 +474,44 @@ a{color:#A73B24;text-decoration:none}a:hover{color:#8c3020}
                     <span>{{ ap.photoLabel }}</span>
                     <input type="file" accept="image/*" onChange="{{ ap.onPickPhoto }}" style="display:none">
                   </label>
-                  <div onClick="{{ ap.unpublish }}" style="flex:1;text-align:center;cursor:pointer;font-size:12.5px;font-weight:600;color:#515556;padding:11px;border-radius:12px;border:1px solid #DCD9D5">ซ่อนไปแก้</div>
+                  <div onClick="{{ ap.startEdit }}" style="flex:1;text-align:center;cursor:pointer;font-size:12.5px;font-weight:600;color:#515556;padding:11px;border-radius:12px;border:1px solid #DCD9D5">แก้ไข</div>
                   <div onClick="{{ ap.askDelete }}" style="flex:none;cursor:pointer;font-size:12.5px;font-weight:600;color:#C62828;padding:11px 14px;border-radius:12px;border:1px solid #F0D9D2;background:#FDF6F4">ลบ</div>
+                </div>
+                </sc-if>
+
+                <sc-if value="{{ ap.editing }}" hint-placeholder-val="{{ false }}">
+                <div style="display:flex;flex-direction:column;gap:10px;background:#FAF9F8;border:1px solid #E6E3DF;border-radius:12px;padding:12px">
+                  <div style="display:flex;flex-direction:column;gap:5px">
+                    <span style="font-size:11px;font-weight:600;color:#515556">ชื่อสถานที่</span>
+                    <input value="{{ ap.eName }}" onInput="{{ ap.onEName }}" style="width:100%;background:#FFFFFF;border:1px solid #E6E3DF;border-radius:10px;padding:11px;font-size:13.5px;color:#1A1D1F;outline:none">
+                  </div>
+                  <div style="display:flex;flex-direction:column;gap:5px">
+                    <span style="font-size:11px;font-weight:600;color:#515556">รายละเอียด</span>
+                    <textarea value="{{ ap.eDetail }}" onInput="{{ ap.onEDetail }}" rows="2" style="width:100%;background:#FFFFFF;border:1px solid #E6E3DF;border-radius:10px;padding:11px;font-size:13px;font-family:inherit;color:#1A1D1F;outline:none;resize:none"></textarea>
+                  </div>
+                  <div style="display:flex;flex-direction:column;gap:5px">
+                    <span style="font-size:11px;font-weight:600;color:#515556">ประเภทรถ</span>
+                    <div style="display:flex;gap:6px">
+                      <sc-for list="{{ ap.eVehicles }}" as="ev" hint-placeholder-count="3">
+                        <div onClick="{{ ev.onPick }}" style="flex:1;text-align:center;cursor:pointer;font-size:11.5px;font-weight:600;padding:10px 3px;border-radius:10px;white-space:nowrap;border:1px solid {{ ev.border }};color: {{ ev.color }};background: {{ ev.bg }}">{{ ev.name }}</div>
+                      </sc-for>
+                    </div>
+                  </div>
+                  <div style="display:flex;flex-direction:column;gap:5px">
+                    <span style="font-size:11px;font-weight:600;color:#515556">จำนวนช่องจอด</span>
+                    <input value="{{ ap.eSlots }}" onInput="{{ ap.onESlots }}" inputmode="numeric" placeholder="เว้นว่างได้" style="width:100%;background:#FFFFFF;border:1px solid #E6E3DF;border-radius:10px;padding:11px;font-size:13.5px;color:#1A1D1F;outline:none">
+                  </div>
+                  <div style="display:flex;flex-direction:column;gap:5px">
+                    <span style="font-size:11px;font-weight:600;color:#515556">ลิงก์แผนที่หรือพิกัด</span>
+                    <input value="{{ ap.eMaps }}" onInput="{{ ap.onEMaps }}" style="width:100%;background:#FFFFFF;border:1px solid #E6E3DF;border-radius:10px;padding:11px;font-size:13px;color:#1A1D1F;outline:none">
+                    <sc-if value="{{ ap.eHasHint }}" hint-placeholder-val="{{ false }}">
+                      <span style="font-size:11px;font-weight:600;color: {{ ap.eCoordFg }}">{{ ap.eCoordHint }}</span>
+                    </sc-if>
+                  </div>
+                  <div style="display:flex;gap:8px;padding-top:2px">
+                    <div onClick="{{ ap.cancelEdit }}" style="flex:1;text-align:center;cursor:pointer;font-size:12.5px;font-weight:600;color:#515556;padding:11px;border-radius:10px;background:#FFFFFF;border:1px solid #DCD9D5">ยกเลิก</div>
+                    <div onClick="{{ ap.saveEdit }}" style="flex:2;text-align:center;cursor:pointer;font-size:13px;font-weight:700;color:#fff;padding:11px;border-radius:10px;background:#A73B24">บันทึก</div>
+                  </div>
                 </div>
                 </sc-if>
 
@@ -696,7 +732,8 @@ class Component extends DCLogic {
     notice: '', needConfirm: '',
     reqName: '', reqDetail: '', reqVehicle: 'รถยนต์', reqSlots: '', reqErr: '',
     myReqs: [], adminQueue: [], isAdmin: false, adminEdits: {},
-    approvedList: [], adminTab: 'pending', uploadingId: null, confirmDeleteId: null
+    approvedList: [], adminTab: 'pending', uploadingId: null, confirmDeleteId: null,
+    editingId: null, editDraft: {}
   };
 
   REVIEW_URL = 'https://docs.google.com/forms/d/e/1FAIpQLSfSCUykI_PyY0wZ96a-FhhDN85Ixv2B50czyLvkpB6aqYC0wg/viewform';
@@ -1106,6 +1143,49 @@ class Component extends DCLogic {
     this.flash('ย้ายกลับไปรอตรวจสอบแล้ว');
     this.loadAdminQueue();
     this.loadApprovedForAdmin();
+  };
+
+  startEdit = (row) => {
+    this.setState({
+      editingId: row.id, confirmDeleteId: null,
+      editDraft: {
+        name: row.name || '', detail: row.detail || '',
+        vehicle: row.vehicle_type || 'รถยนต์',
+        slots: row.total_slots == null ? '' : String(row.total_slots),
+        maps: row.maps_url || (row.lat != null && row.lng != null ? row.lat + ', ' + row.lng : '')
+      }
+    });
+  };
+  setEditField = (field, value) => {
+    this.setState(s => ({ editDraft: Object.assign({}, s.editDraft, { [field]: value }) }));
+  };
+  cancelEdit = () => this.setState({ editingId: null, editDraft: {} });
+
+  saveEdit = async (id) => {
+    const d = this.state.editDraft;
+    if (!d.name || !d.name.trim()) { this.flash('ชื่อสถานที่ว่างไม่ได้'); return; }
+    const slots = d.slots === '' ? null : parseInt(d.slots, 10);
+    if (slots !== null && (isNaN(slots) || slots < 1)) { this.flash('จำนวนช่องจอดต้องเป็นตัวเลขมากกว่า 0'); return; }
+    const coords = this.parseLatLng(d.maps);
+    // Coordinates are what put the place on the map; letting them be cleared
+    // here would quietly remove an already-published place from the app.
+    if (!coords) {
+      this.flash(this.isShortMapsLink(d.maps)
+        ? 'ลิงก์ย่ออ่านพิกัดไม่ได้ — ใช้ URL เต็มหรือพิกัดตรงๆ'
+        : 'ต้องมีพิกัดที่อ่านได้');
+      return;
+    }
+    if (!window.SB) return;
+    const { error } = await window.SB.from('place_requests').update({
+      name: d.name.trim(), detail: d.detail.trim() || null,
+      vehicle_type: d.vehicle, total_slots: slots,
+      lat: coords.lat, lng: coords.lng, maps_url: d.maps
+    }).eq('id', id);
+    if (error) { this.flash('บันทึกไม่สำเร็จ — บัญชีนี้อาจไม่มีสิทธิ์แอดมิน'); return; }
+    this.flash('บันทึกการแก้ไขแล้ว');
+    this.setState({ editingId: null, editDraft: {} });
+    this.loadApprovedForAdmin();
+    this.loadCommunityPlaces();
   };
 
   loadApprovedForAdmin = async () => {
@@ -1607,11 +1687,37 @@ class Component extends DCLogic {
         uploading: st.uploadingId === r.id,
         onPickPhoto: e => { const fl = e.target.files; if (fl && fl[0]) this.uploadPlacePhoto(r.id, fl[0]); },
         confirming: st.confirmDeleteId === r.id,
-        notConfirming: st.confirmDeleteId !== r.id,
+        notConfirming: st.confirmDeleteId !== r.id && st.editingId !== r.id,
         askDelete: () => this.setState({ confirmDeleteId: r.id }),
         cancelDelete: () => this.setState({ confirmDeleteId: null }),
         doDelete: () => this.deletePlaceRequest(r.id),
-        unpublish: () => this.unpublishPlace(r.id)
+        unpublish: () => this.unpublishPlace(r.id),
+
+        editing: st.editingId === r.id,
+        startEdit: () => this.startEdit(r),
+        cancelEdit: this.cancelEdit,
+        saveEdit: () => this.saveEdit(r.id),
+        eName: st.editDraft.name || '',
+        eDetail: st.editDraft.detail || '',
+        eSlots: st.editDraft.slots || '',
+        eMaps: st.editDraft.maps || '',
+        onEName: e => this.setEditField('name', e.target.value),
+        onEDetail: e => this.setEditField('detail', e.target.value),
+        onESlots: e => this.setEditField('slots', e.target.value),
+        onEMaps: e => this.setEditField('maps', e.target.value),
+        eCoordHint: (() => {
+          const c = this.parseLatLng(st.editDraft.maps);
+          if (c) return '✓ ' + c.lat.toFixed(5) + ', ' + c.lng.toFixed(5);
+          return st.editDraft.maps ? 'ยังอ่านพิกัดไม่ได้' : '';
+        })(),
+        eCoordFg: this.parseLatLng(st.editDraft.maps) ? '#1F8A4C' : '#C62828',
+        eHasHint: !!st.editDraft.maps,
+        eVehicles: this.VEHICLES.map(v => ({
+          name: v, onPick: () => this.setEditField('vehicle', v),
+          border: st.editDraft.vehicle === v ? accent : '#DCD9D5',
+          color: st.editDraft.vehicle === v ? '#A73B24' : '#515556',
+          bg: st.editDraft.vehicle === v ? '#FBF1EE' : '#FFFFFF'
+        }))
       })),
       approvedEmpty: st.approvedList.length === 0,
       sendReport: async () => {
