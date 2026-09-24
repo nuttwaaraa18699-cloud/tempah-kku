@@ -20,7 +20,9 @@
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;500;600;700&family=Archivo:wght@600;700;800;900&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
 *{-webkit-tap-highlight-color:transparent;box-sizing:border-box}
-html,body{margin:0;background:#FFFFFF;font-family:'IBM Plex Sans Thai',system-ui,sans-serif;color:#1A1D1F;-webkit-font-smoothing:antialiased}
+/* Warm cream rather than flat white, taken from kku.ac.th, so the white
+   cards sit on something and the app stops reading as one block of red. */
+html,body{margin:0;background:#F5F0EC;font-family:'IBM Plex Sans Thai',system-ui,sans-serif;color:#1A1D1F;-webkit-font-smoothing:antialiased}
 input,button{font-family:inherit}
 a{color:#A73B24;text-decoration:none}a:hover{color:#8c3020}
 ::-webkit-scrollbar{width:0;height:0}
@@ -35,15 +37,15 @@ a{color:#A73B24;text-decoration:none}a:hover{color:#8c3020}
 </style>
 </helmet>
 
-<div style="min-height:100vh;background:#FFFFFF;display:flex;justify-content:center">
-<div style="width:100%;max-width:640px;min-height:100vh;position:relative;display:flex;flex-direction:column;background:#FFFFFF">
+<div style="min-height:100vh;background:#EDE5DF;display:flex;justify-content:center">
+<div style="width:100%;max-width:640px;min-height:100vh;position:relative;display:flex;flex-direction:column;background:#F5F0EC">
 
   <sc-if value="{{ isAuth }}" hint-placeholder-val="{{ false }}">
   <div style="display:flex;flex-direction:column;flex:1">
 
     <!-- Solid KKU red bar, matching the university's registrar site (#A73B23)
          so the app reads as part of the same family of KKU services. -->
-    <div style="position:sticky;top:0;z-index:40;background:#A73B24;border-bottom:3px solid #E07B2E;padding:13px 16px;display:flex;align-items:center;justify-content:space-between;gap:12px">
+    <div style="position:sticky;top:0;z-index:40;background:linear-gradient(180deg,#5D1809 0%,#A73B24 100%);border-bottom:3px solid #E07B2E;padding:13px 16px;display:flex;align-items:center;justify-content:space-between;gap:12px">
       <div style="display:flex;align-items:center;gap:1px;line-height:1">
         <span style="font-family:Archivo,sans-serif;font-weight:900;font-size:25px;color:#FFFFFF;letter-spacing:-1.5px">T</span>
         <span style="font-family:Archivo,sans-serif;font-weight:800;font-size:19px;letter-spacing:-.6px;color:#FFFFFF">EMPAH</span>
@@ -112,7 +114,7 @@ a{color:#A73B24;text-decoration:none}a:hover{color:#8c3020}
         </sc-if>
 
         <div style="display:flex;flex-direction:column;gap:11px">
-          <div style="display:flex;align-items:center;gap:10px;background:#F5F3F0;border:1px solid #E6E3DF;border-radius:14px;padding:13px 14px">
+          <div style="display:flex;align-items:center;gap:10px;background:#FFFFFF;border:1px solid #E2DCD6;border-radius:14px;padding:13px 14px">
             <span style="font-size:15px;color:#8A8F91">⌕</span>
             <input value="{{ query }}" onInput="{{ onQuery }}" placeholder="ค้นหาคณะ อาคาร หรือลานจอด…" style="flex:1;min-width:0;background:none;border:none;outline:none;color:#1A1D1F;font-size:14.5px">
             <sc-if value="{{ query }}" hint-placeholder-val="{{ false }}">
@@ -965,7 +967,8 @@ class Component extends DCLogic {
 
   renderVals() {
     const st = this.state;
-    const accent = this.props.accent || '#A73B24';
+    const accent = this.props.accent || '#A73B24';   // KKU red, for primary actions
+    const deep = '#5D1809';                          // KKU deep maroon, the second brand tone
     const place = this.PLACES.filter(p => p.id === st.placeId)[0] || this.PLACES[0];
     const lot = place.lots[st.lotIx] || place.lots[0];
     const lotSt = this.status(lot.free, lot.total, place.closed);
@@ -1047,19 +1050,22 @@ class Component extends DCLogic {
       nearestFree: this.agg(nearest).free, nearBadgeFg: nSt.statusFg, nearBadgeBg: nSt.statusBg,
       nearestMapUrl: this.mapUrl(nearest),
       openNearest: () => this.navigate('place', { placeId: nearest.id, lotIx: 0 }),
+      // Category filters take KKU's deep maroon so they read as a different
+      // kind of control from the red action buttons, and unselected pills go
+      // white to stand off the cream page.
       chips: this.CATS.map(c => ({
         name: c, onPick: () => this.setState({ cat: c }),
-        bg: st.cat === c ? accent : '#F5F3F0',
+        bg: st.cat === c ? deep : '#FFFFFF',
         fg: st.cat === c ? '#fff' : '#515556',
-        border: st.cat === c ? accent : '#E6E3DF'
+        border: st.cat === c ? deep : '#E2DCD6'
       })),
       setSortNear: () => this.setState({ sort: 'near' }), setSortFree: () => this.setState({ sort: 'free' }),
-      nearBg: st.sort === 'near' ? accent : '#F5F3F0',
+      nearBg: st.sort === 'near' ? accent : '#FFFFFF',
       nearFg: st.sort === 'near' ? '#fff' : '#515556',
-      nearBorder: st.sort === 'near' ? accent : '#E6E3DF',
-      freeBg: st.sort === 'free' ? accent : '#F5F3F0',
+      nearBorder: st.sort === 'near' ? accent : '#E2DCD6',
+      freeBg: st.sort === 'free' ? accent : '#FFFFFF',
       freeFg: st.sort === 'free' ? '#fff' : '#515556',
-      freeBorder: st.sort === 'free' ? accent : '#E6E3DF',
+      freeBorder: st.sort === 'free' ? accent : '#E2DCD6',
       cards: list.map((p, i) => this.card(p, i)), noCards: list.length === 0,
       favCards: this.PLACES.filter(p => st.favs.indexOf(p.id) >= 0).map((p, i) => this.card(p, i)),
       hasFavs: st.favs.length > 0, noFavs: st.favs.length === 0,
