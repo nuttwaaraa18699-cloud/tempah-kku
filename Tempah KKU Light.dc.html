@@ -348,6 +348,92 @@ a{color:#A73B24;text-decoration:none}a:hover{color:#8c3020}
       </div>
       </sc-if>
 
+      <sc-if value="{{ isSuggest }}" hint-placeholder-val="{{ false }}">
+      <div style="display:flex;flex-direction:column;gap:14px;animation:tpUp .3s ease both">
+        <div style="display:flex;flex-direction:column;gap:4px">
+          <span style="font-size:clamp(20px,5.4vw,26px);font-weight:700;letter-spacing:-.4px;color:#1A1D1F">เสนอที่จอดรถใหม่</span>
+          <span style="font-size:12.5px;color:#6B7173;line-height:1.7;text-wrap:pretty">รู้จักลานจอดที่ยังไม่มีในแอปใช่ไหม บอกเราได้เลย แอดมินจะตรวจสอบและเพิ่มพิกัดกับรูปให้ก่อนขึ้นแสดงจริง</span>
+        </div>
+
+        <sc-if value="{{ mustSignIn }}" hint-placeholder-val="{{ false }}">
+          <div style="border:1px dashed #DCD9D5;border-radius:18px;padding:24px;text-align:center;font-size:13px;color:#6B7173;line-height:1.7">ต้องเข้าสู่ระบบก่อนจึงจะเสนอสถานที่ได้<br>เพื่อให้แอดมินติดต่อกลับได้หากมีข้อสงสัย</div>
+        </sc-if>
+
+        <sc-if value="{{ isAuthed }}" hint-placeholder-val="{{ true }}">
+        <div style="padding:18px;border-radius:20px;background:#FFFFFF;border:1px solid #E6E3DF;box-shadow:0 2px 10px rgba(26,29,31,.06);display:flex;flex-direction:column;gap:12px">
+          <div style="display:flex;flex-direction:column;gap:6px">
+            <span style="font-size:11.5px;font-weight:600;color:#515556">ชื่อสถานที่</span>
+            <input value="{{ reqName }}" onInput="{{ onReqName }}" placeholder="เช่น ลานจอดหลังคณะเภสัชศาสตร์" style="width:100%;background:#F5F3F0;border:1px solid #E6E3DF;border-radius:12px;padding:14px;font-size:15px;color:#1A1D1F;outline:none">
+          </div>
+          <div style="display:flex;flex-direction:column;gap:6px">
+            <span style="font-size:11.5px;font-weight:600;color:#515556">รายละเอียด — อยู่ตรงไหน สังเกตอย่างไร</span>
+            <textarea value="{{ reqDetail }}" onInput="{{ onReqDetail }}" rows="3" placeholder="เช่น อยู่ข้างอาคาร 3 เข้าทางประตูหลัง ติดกับโรงอาหาร" style="width:100%;background:#F5F3F0;border:1px solid #E6E3DF;border-radius:12px;padding:13px;font-size:14px;font-family:inherit;color:#1A1D1F;outline:none;resize:none"></textarea>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:6px">
+            <span style="font-size:11.5px;font-weight:600;color:#515556">ประเภทรถที่จอดได้</span>
+            <div style="display:flex;gap:8px">
+              <sc-for list="{{ vehicles }}" as="vh" hint-placeholder-count="3">
+                <div onClick="{{ vh.onPick }}" style="flex:1;text-align:center;cursor:pointer;font-size:12.5px;font-weight:600;padding:12px 4px;border-radius:12px;white-space:nowrap;border:1px solid {{ vh.border }};color: {{ vh.color }};background: {{ vh.bg }}">{{ vh.name }}</div>
+              </sc-for>
+            </div>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:6px">
+            <span style="font-size:11.5px;font-weight:600;color:#515556">จำนวนช่องจอดโดยประมาณ (ไม่บังคับ)</span>
+            <input value="{{ reqSlots }}" onInput="{{ onReqSlots }}" inputmode="numeric" placeholder="เช่น 40" style="width:100%;background:#F5F3F0;border:1px solid #E6E3DF;border-radius:12px;padding:14px;font-size:15px;color:#1A1D1F;outline:none">
+          </div>
+          <sc-if value="{{ reqErr }}" hint-placeholder-val="{{ false }}">
+            <span style="font-size:12px;color:#C62828;line-height:1.65">{{ reqErr }}</span>
+          </sc-if>
+          <div onClick="{{ submitRequest }}" style="text-align:center;cursor:pointer;background:#A73B24;color:#fff;font-size:15.5px;font-weight:700;padding:15px;border-radius:12px">ส่งคำขอให้แอดมินตรวจสอบ</div>
+        </div>
+        </sc-if>
+
+        <sc-if value="{{ hasMyReqs }}" hint-placeholder-val="{{ false }}">
+          <span style="font-size:12px;font-weight:700;color:#1A1D1F;padding-top:4px">คำขอของคุณ</span>
+          <sc-for list="{{ myReqs }}" as="mr" hint-placeholder-count="2">
+            <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;padding:13px 14px;border-radius:14px;background:#FFFFFF;border:1px solid #E6E3DF">
+              <div style="display:flex;flex-direction:column;gap:3px;min-width:0">
+                <span style="font-size:13.5px;font-weight:600;color:#1A1D1F">{{ mr.name }}</span>
+                <sc-if value="{{ mr.hasNote }}" hint-placeholder-val="{{ false }}">
+                  <span style="font-size:11.5px;color:#6B7173;line-height:1.6">{{ mr.note }}</span>
+                </sc-if>
+              </div>
+              <span style="flex:none;font-size:11.5px;font-weight:700;padding:6px 11px;border-radius:999px;color: {{ mr.statusFg }};background: {{ mr.statusBg }}">{{ mr.statusLabel }}</span>
+            </div>
+          </sc-for>
+        </sc-if>
+      </div>
+      </sc-if>
+
+      <sc-if value="{{ isAdminView }}" hint-placeholder-val="{{ false }}">
+      <div style="display:flex;flex-direction:column;gap:14px;animation:tpUp .3s ease both">
+        <div style="display:flex;flex-direction:column;gap:4px">
+          <span style="font-size:clamp(20px,5.4vw,26px);font-weight:700;letter-spacing:-.4px;color:#1A1D1F">อนุมัติสถานที่</span>
+          <span style="font-size:12.5px;color:#6B7173;line-height:1.7;text-wrap:pretty">ใส่พิกัดจาก Google Maps ก่อนกดอนุมัติ สถานที่จะขึ้นในแอปทันทีโดยไม่ต้อง deploy ใหม่</span>
+        </div>
+
+        <sc-if value="{{ queueEmpty }}" hint-placeholder-val="{{ false }}">
+          <div style="border:1px dashed #DCD9D5;border-radius:18px;padding:28px;text-align:center;font-size:13px;color:#6B7173;line-height:1.7">ยังไม่มีคำขอรอตรวจสอบ</div>
+        </sc-if>
+
+        <sc-for list="{{ adminQueue }}" as="aq" hint-placeholder-count="2">
+          <div style="padding:16px;border-radius:18px;background:#FFFFFF;border:1px solid #E6E3DF;box-shadow:0 2px 10px rgba(26,29,31,.06);display:flex;flex-direction:column;gap:10px">
+            <span style="font-size:15px;font-weight:700;color:#1A1D1F">{{ aq.name }}</span>
+            <span style="font-size:12.5px;color:#515556;line-height:1.65">{{ aq.detail }}</span>
+            <span style="font-size:11.5px;color:#6B7173">{{ aq.vehicle }} · {{ aq.slots }} ช่อง · ส่งเมื่อ {{ aq.when }}</span>
+            <div style="display:flex;gap:8px">
+              <input value="{{ aq.lat }}" onInput="{{ aq.onLat }}" inputmode="decimal" placeholder="lat เช่น 16.4731" style="flex:1;min-width:0;background:#F5F3F0;border:1px solid #E6E3DF;border-radius:12px;padding:12px;font-size:14px;color:#1A1D1F;outline:none">
+              <input value="{{ aq.lng }}" onInput="{{ aq.onLng }}" inputmode="decimal" placeholder="lng เช่น 102.8214" style="flex:1;min-width:0;background:#F5F3F0;border:1px solid #E6E3DF;border-radius:12px;padding:12px;font-size:14px;color:#1A1D1F;outline:none">
+            </div>
+            <div style="display:flex;gap:10px">
+              <div onClick="{{ aq.reject }}" style="flex:1;text-align:center;cursor:pointer;font-size:13.5px;font-weight:600;color:#515556;padding:13px;border-radius:12px;border:1px solid #DCD9D5">ไม่ผ่าน</div>
+              <div onClick="{{ aq.approve }}" style="flex:2;text-align:center;cursor:pointer;background:#1F8A4C;color:#fff;font-size:14.5px;font-weight:700;padding:13px;border-radius:12px">อนุมัติ</div>
+            </div>
+          </div>
+        </sc-for>
+      </div>
+      </sc-if>
+
     </div>
   </div>
   </sc-if>
@@ -475,8 +561,8 @@ a{color:#A73B24;text-decoration:none}a:hover{color:#8c3020}
   </sc-if>
 
   <sc-if value="{{ reviewOpen }}" hint-placeholder-val="{{ false }}">
-  <div style="position:fixed;inset:0;z-index:75;background:rgba(26,29,31,.45);display:flex;align-items:center;justify-content:center;padding:22px">
-    <div style="width:100%;max-width:400px;border-radius:22px;padding:24px;background:#FFFFFF;border:1px solid #E6E3DF;box-shadow:0 18px 60px rgba(26,29,31,.32);display:flex;flex-direction:column;align-items:center;gap:14px;animation:tpUp .22s ease both">
+  <div onClick="{{ closeReview }}" style="position:fixed;inset:0;z-index:75;background:rgba(26,29,31,.45);display:flex;align-items:center;justify-content:center;padding:22px">
+    <div onClick="{{ stop }}" style="width:100%;max-width:400px;border-radius:22px;padding:24px;background:#FFFFFF;border:1px solid #E6E3DF;box-shadow:0 18px 60px rgba(26,29,31,.32);display:flex;flex-direction:column;align-items:center;gap:14px;animation:tpUp .22s ease both">
       <span style="font-size:17px;font-weight:700;color:#1A1D1F;text-align:center;text-wrap:pretty">จอดได้แล้วใช่ไหม 🎉</span>
       <span style="font-size:13px;color:#515556;line-height:1.7;text-align:center;text-wrap:pretty;margin-top:-8px">ช่วยรีวิวการใช้งานให้เราหน่อย สแกน QR หรือแตะลิงก์ด้านล่างก็ได้</span>
       <img src="assets/review-qr.png" alt="QR โค้ดแบบสอบถามรีวิว" style="width:200px;height:200px;max-width:100%;display:block;border-radius:12px;border:1px solid #E6E3DF;background:#FFFFFF">
@@ -488,11 +574,17 @@ a{color:#A73B24;text-decoration:none}a:hover{color:#8c3020}
   </sc-if>
 
   <sc-if value="{{ reportOpen }}" hint-placeholder-val="{{ false }}">
-  <div style="position:fixed;inset:0;z-index:70;background:rgba(26,29,31,.45);display:flex;align-items:flex-end;justify-content:center;padding:0 10px 10px">
-    <div style="width:100%;max-width:620px;border-radius:24px;padding:18px 18px 24px;background:#FFFFFF;border:1px solid #E6E3DF;box-shadow:0 -10px 50px rgba(26,29,31,.3);display:flex;flex-direction:column;gap:10px;animation:tpUp .25s ease both">
-      <div style="width:38px;height:4px;border-radius:99px;background:#DCD9D5;align-self:center;margin-bottom:4px"></div>
-      <span style="font-size:16.5px;font-weight:700;color:#1A1D1F">รายงานปัญหา · {{ lotName }}</span>
-      <span style="font-size:12.5px;color:#515556;margin-top:-6px">ช่วยบอกเราว่าภาพหรือสถานะไม่ตรงกับความจริงอย่างไร</span>
+  <!-- Tapping the dimmed area closes the sheet; the sheet itself swallows the
+       click so choosing a reason doesn't dismiss it. -->
+  <div onClick="{{ closeReport }}" style="position:fixed;inset:0;z-index:70;background:rgba(26,29,31,.45);display:flex;align-items:flex-end;justify-content:center;padding:0 10px 10px">
+    <div onClick="{{ stop }}" ref="{{ sheetRef }}" style="width:100%;max-width:620px;border-radius:24px;padding:18px 18px 24px;background:#FFFFFF;border:1px solid #E6E3DF;box-shadow:0 -10px 50px rgba(26,29,31,.3);display:flex;flex-direction:column;gap:10px;animation:tpUp .25s ease both">
+      <!-- Drag lives on the grab handle and titles only, so a swipe that starts
+           on the reason list or the textarea still behaves normally. -->
+      <div onTouchStart="{{ sheetStart }}" onTouchMove="{{ sheetMove }}" onTouchEnd="{{ sheetEnd }}" onMouseDown="{{ sheetStart }}" style="display:flex;flex-direction:column;gap:10px;cursor:grab;touch-action:none;padding-bottom:2px">
+        <div style="width:38px;height:4px;border-radius:99px;background:#DCD9D5;align-self:center;margin-bottom:4px"></div>
+        <span style="font-size:16.5px;font-weight:700;color:#1A1D1F">รายงานปัญหา · {{ lotName }}</span>
+        <span style="font-size:12.5px;color:#515556;margin-top:-6px">ช่วยบอกเราว่าภาพหรือสถานะไม่ตรงกับความจริงอย่างไร</span>
+      </div>
       <sc-for list="{{ reasons }}" as="rs" hint-placeholder-count="5">
         <div onClick="{{ rs.onPick }}" style="cursor:pointer;border-radius:12px;padding:13px 14px;font-size:13.5px;font-weight:600;color:#1A1D1F;border:1px solid {{ rs.border }};background: {{ rs.bg }}">{{ rs.name }}</div>
       </sc-for>
@@ -539,7 +631,9 @@ class Component extends DCLogic {
     reportOpen: false, reason: null, otherText: '', toast: '', tick: 0, prefs: [true, true, false], menuOpen: false,
     geo: null, geoState: 'idle', geoAsk: false, forgotValue: '', newPw: '', newPw2: '',
     regName: '', regEmail: '', regPw: '', regPlate: '', manualId: '', reviewOpen: false, reviewed: false,
-    notice: '', needConfirm: ''
+    notice: '', needConfirm: '',
+    reqName: '', reqDetail: '', reqVehicle: 'รถยนต์', reqSlots: '', reqErr: '',
+    myReqs: [], adminQueue: [], isAdmin: false, adminEdits: {}
   };
 
   REVIEW_URL = 'https://docs.google.com/forms/d/e/1FAIpQLSfSCUykI_PyY0wZ96a-FhhDN85Ixv2B50czyLvkpB6aqYC0wg/viewform';
@@ -656,7 +750,7 @@ class Component extends DCLogic {
   ];
 
   REASONS = ['กล้องไม่ทำงาน / ภาพค้าง', 'ภาพไม่ตรงกับความจริง', 'ที่จอดถูกปิดกั้น / มีสิ่งกีดขวาง', 'สถานะว่างแต่จอดไม่ได้', 'อื่น ๆ'];
-  CATS = ['ทั้งหมด', 'คณะ', 'อาคาร–สำนักงาน', 'โรงอาหาร', 'อาคารจอดรถ', 'จุดเยี่ยมชม', 'โรงพยาบาล', 'กีฬา–หอพัก'];
+  CATS = ['ทั้งหมด', 'คณะ', 'อาคาร–สำนักงาน', 'โรงอาหาร', 'อาคารจอดรถ', 'จุดเยี่ยมชม', 'โรงพยาบาล', 'กีฬา–หอพัก', 'จากผู้ใช้'];
   PREFS = ['แจ้งเตือนเมื่อที่จอดโปรดมีที่ว่าง', 'ซ่อนพื้นที่ที่เข้าไม่ได้ออกจากผลค้นหา', 'แสดงเฉพาะลานจักรยานยนต์'];
 
   componentDidMount() {
@@ -690,6 +784,8 @@ class Component extends DCLogic {
       window.history.replaceState({ view: this.state.view }, '', window.location.pathname + '#' + this.state.view);
     }
     try { if (localStorage.getItem('tpReviewed') === '1') this.setState({ reviewed: true }); } catch (e) {}
+    // Approved places are public, so guests get them too.
+    this.loadCommunityPlaces();
   }
   componentWillUnmount() {
     clearInterval(this.timer); clearTimeout(this.tt); if (this.watch) navigator.geolocation.clearWatch(this.watch);
@@ -760,6 +856,137 @@ class Component extends DCLogic {
     // guests only ever get the localStorage copy.
     if (window.SB && this.state.userId) window.SB.auth.updateUser({ data: { reviewed: true } });
   };
+  // Drag-to-dismiss for the report sheet. The element is moved directly rather
+  // than through state so the finger tracks at frame rate instead of forcing a
+  // full re-render per move.
+  sheetRef = (el) => { this.sheetEl = el; };
+  sheetStart = (e) => {
+    const p = e.touches ? e.touches[0] : e;
+    this.dragFrom = p.clientY; this.dragBy = 0; this.dragging = true;
+    if (!e.touches) {
+      // A mouse can leave the handle mid-drag, so follow it on the window.
+      window.addEventListener('mousemove', this.sheetMove);
+      window.addEventListener('mouseup', this.sheetEnd);
+    }
+    if (!this.sheetEl) return;
+    // tpUp ends on `transform:none` and fills forwards, which would override
+    // anything set inline — so the entrance animation has to be cleared first.
+    this.sheetEl.style.animation = 'none';
+    this.sheetEl.style.transition = 'none';
+  };
+  sheetMove = (e) => {
+    if (!this.dragging || !this.sheetEl) return;
+    const p = e.touches ? e.touches[0] : e;
+    this.dragBy = Math.max(0, p.clientY - this.dragFrom);
+    this.sheetEl.style.transform = 'translateY(' + this.dragBy + 'px)';
+  };
+  sheetEnd = () => {
+    window.removeEventListener('mousemove', this.sheetMove);
+    window.removeEventListener('mouseup', this.sheetEnd);
+    if (!this.dragging || !this.sheetEl) return;
+    this.dragging = false;
+    this.sheetEl.style.transition = 'transform .22s ease';
+    if (this.dragBy > 90) {
+      this.sheetEl.style.transform = 'translateY(110%)';
+      setTimeout(() => this.setState({ reportOpen: false }), 200);
+    } else {
+      this.sheetEl.style.transform = 'translateY(0)';
+    }
+    this.dragBy = 0;
+  };
+
+  // --- user-suggested parking places ------------------------------------
+  VEHICLES = ['รถยนต์', 'จักรยานยนต์', 'ทั้งสองแบบ'];
+
+  // Approved suggestions join the built-in list. Only ones the admin gave
+  // coordinates to: without them every distance would come out NaN and the
+  // "nearest" ranking would break for the whole app.
+  loadCommunityPlaces = async () => {
+    if (!window.SB) return;
+    const { data, error } = await window.SB.from('place_requests')
+      .select('id,name,detail,vehicle_type,total_slots,lat,lng')
+      .eq('status', 'approved');
+    if (error || !data) return;
+    let added = 0;
+    data.forEach(r => {
+      if (r.lat == null || r.lng == null) return;
+      const id = 'req' + r.id;
+      if (this.PLACES.some(p => p.id === id)) return;
+      const total = r.total_slots || 20;
+      this.PLACES.push({
+        id: id, name: r.name, cat: 'จากผู้ใช้', lat: r.lat, lng: r.lng, community: true,
+        lots: [{ n: r.detail || r.name, total: total, free: Math.round(total * 0.4), type: r.vehicle_type || 'รถยนต์' }]
+      });
+      added++;
+    });
+    if (added) this.setState(s => ({ tick: s.tick + 1 }));
+  };
+
+  loadMyRequests = async () => {
+    if (!window.SB || !this.state.userId) { this.setState({ myReqs: [] }); return; }
+    const { data } = await window.SB.from('place_requests')
+      .select('id,name,status,admin_note,created_at')
+      .eq('user_id', this.state.userId).order('created_at', { ascending: false });
+    this.setState({ myReqs: data || [] });
+  };
+
+  checkAdmin = async (userId) => {
+    if (!window.SB || !userId) { this.setState({ isAdmin: false }); return; }
+    const { data } = await window.SB.from('admins').select('user_id').eq('user_id', userId);
+    this.setState({ isAdmin: !!(data && data.length) });
+  };
+
+  loadAdminQueue = async () => {
+    if (!window.SB || !this.state.isAdmin) return;
+    const { data } = await window.SB.from('place_requests')
+      .select('*').eq('status', 'pending').order('created_at', { ascending: true });
+    this.setState({ adminQueue: data || [] });
+  };
+
+  submitRequest = async () => {
+    const s = this.state;
+    if (!s.userId) { this.setState({ reqErr: 'ต้องเข้าสู่ระบบก่อนจึงจะเสนอสถานที่ได้' }); return; }
+    if (!s.reqName.trim()) { this.setState({ reqErr: 'กรุณากรอกชื่อสถานที่' }); return; }
+    const slots = parseInt(s.reqSlots, 10);
+    if (s.reqSlots && (isNaN(slots) || slots < 1)) { this.setState({ reqErr: 'จำนวนช่องจอดต้องเป็นตัวเลขมากกว่า 0' }); return; }
+    if (!window.SB) { this.setState({ reqErr: 'ระบบยังไม่ได้เชื่อมต่อฐานข้อมูล' }); return; }
+    this.setState({ reqErr: '' });
+    const { error } = await window.SB.from('place_requests').insert({
+      user_id: s.userId, name: s.reqName.trim(), detail: s.reqDetail.trim() || null,
+      vehicle_type: s.reqVehicle, total_slots: isNaN(slots) ? null : slots
+    });
+    if (error) { this.setState({ reqErr: 'ส่งคำขอไม่สำเร็จ ลองใหม่อีกครั้ง' }); return; }
+    this.setState({ reqName: '', reqDetail: '', reqSlots: '', reqVehicle: 'รถยนต์' });
+    this.flash('ส่งคำขอแล้ว รอแอดมินตรวจสอบ');
+    this.loadMyRequests();
+  };
+
+  setAdminEdit = (id, field, value) => {
+    this.setState(s => {
+      const next = Object.assign({}, s.adminEdits);
+      next[id] = Object.assign({}, next[id], { [field]: value });
+      return { adminEdits: next };
+    });
+  };
+
+  reviewRequest = async (id, status) => {
+    if (!window.SB) return;
+    const edit = this.state.adminEdits[id] || {};
+    const patch = { status: status, reviewed_by: this.state.userId, reviewed_at: new Date().toISOString() };
+    if (status === 'approved') {
+      const lat = parseFloat(edit.lat), lng = parseFloat(edit.lng);
+      // An approved place with no coordinates would never surface in the app,
+      // so treat the pair as required rather than approving into a void.
+      if (isNaN(lat) || isNaN(lng)) { this.flash('ใส่พิกัด lat/lng ก่อนอนุมัติ'); return; }
+      patch.lat = lat; patch.lng = lng;
+    }
+    const { error } = await window.SB.from('place_requests').update(patch).eq('id', id);
+    if (error) { this.flash('บันทึกไม่สำเร็จ — บัญชีนี้อาจไม่มีสิทธิ์แอดมิน'); return; }
+    this.flash(status === 'approved' ? 'อนุมัติแล้ว สถานที่จะขึ้นในแอป' : 'ปฏิเสธคำขอแล้ว');
+    this.loadAdminQueue();
+    if (status === 'approved') this.loadCommunityPlaces();
+  };
+
   gpsLive() { return this.state.geoState === 'on' || this.state.geoState === 'asking'; }
   setManual = (id) => {
     this.setState({ manualId: id });
@@ -796,7 +1023,11 @@ class Component extends DCLogic {
   slots(n, seed) {
     return Array.from({ length: n }).map((_, i) => ({ d: (((i * 37 + seed * 13) % 70) / 10).toFixed(1) + 's' }));
   }
-  go(view) { this.navigate(view); }
+  go(view) {
+    this.navigate(view);
+    if (view === 'admin') this.loadAdminQueue();
+    if (view === 'suggest') this.loadMyRequests();
+  }
   flash(msg) { this.setState({ toast: msg }); clearTimeout(this.tt); this.tt = setTimeout(() => this.setState({ toast: '' }), 2600); }
 
   // Enter (desktop) or the keyboard's next/go/done key (mobile) moves to the
@@ -842,6 +1073,8 @@ class Component extends DCLogic {
     } else if (reviewedLocally) {
       window.SB.auth.updateUser({ data: { reviewed: true } });
     }
+    this.checkAdmin(user.id);
+    this.loadMyRequests();
     const { data, error } = await window.SB.from('favorites').select('place_id').eq('user_id', user.id);
     if (error) { this.flash('โหลดที่จอดโปรดไม่สำเร็จ'); return; }
     this.setState({ favs: (data || []).map(r => r.place_id) });
@@ -946,7 +1179,10 @@ class Component extends DCLogic {
     // Drop the local review flag with the session — on a shared device it would
     // otherwise be read as the next person's, and pushed up to their account.
     try { localStorage.removeItem('tpReviewed'); } catch (e) {}
-    this.navigate('login', { email: '', pw: '', user: null, userId: null, favs: [], reviewed: false });
+    this.navigate('login', {
+      email: '', pw: '', user: null, userId: null, favs: [], reviewed: false,
+      isAdmin: false, myReqs: [], adminQueue: [], adminEdits: {}
+    });
   };
 
   card(p, i) {
@@ -996,7 +1232,8 @@ class Component extends DCLogic {
       stop: e => { if (e && e.stopPropagation) e.stopPropagation(); },
       isLogin: st.view === 'login', isRegister: st.view === 'register', isForgot: st.view === 'forgot',
       isReset: st.view === 'reset',
-      isAuth: ['home', 'place', 'favs', 'restricted', 'me'].indexOf(st.view) >= 0,
+      isAuth: ['home', 'place', 'favs', 'restricted', 'me', 'suggest', 'admin'].indexOf(st.view) >= 0,
+      isSuggest: st.view === 'suggest', isAdminView: st.view === 'admin',
       isHome: st.view === 'home', isPlace: st.view === 'place', isFavs: st.view === 'favs',
       isRestricted: st.view === 'restricted', isMe: st.view === 'me',
       email: st.email, pw: st.pw, err: st.err, query: st.query, toast: st.toast,
@@ -1093,8 +1330,10 @@ class Component extends DCLogic {
         { name: 'หน้าแรก', icon: '⌂', view: 'home' },
         { name: 'ที่จอดโปรด', icon: '★', view: 'favs' },
         { name: 'พื้นที่ปิด', icon: '⃠', view: 'restricted' },
-        { name: 'บัญชี', icon: '☻', view: 'me' }
-      ].map(t => {
+        { name: 'เสนอที่จอดใหม่', icon: '＋', view: 'suggest' }
+      ].concat(st.isAdmin ? [{ name: 'อนุมัติสถานที่', icon: '✓', view: 'admin' }] : [])
+       .concat([{ name: 'บัญชี', icon: '☻', view: 'me' }])
+      .map(t => {
         const on = st.view === t.view || (t.view === 'home' && st.view === 'place');
         return { name: t.name, icon: t.icon, color: on ? '#A73B24' : '#1A1D1F',
           bg: on ? '#FBF1EE' : 'transparent', onPick: () => this.go(t.view) };
@@ -1130,6 +1369,48 @@ class Component extends DCLogic {
       reportOpen: st.reportOpen,
       openReport: () => this.setState({ reportOpen: true, reason: null, otherText: '' }),
       closeReport: () => this.setState({ reportOpen: false }),
+      sheetRef: this.sheetRef,
+      sheetStart: this.sheetStart,
+      sheetMove: this.sheetMove,
+      sheetEnd: this.sheetEnd,
+
+      reqName: st.reqName, reqDetail: st.reqDetail, reqSlots: st.reqSlots, reqErr: st.reqErr,
+      onReqName: e => this.setState({ reqName: e.target.value, reqErr: '' }),
+      onReqDetail: e => this.setState({ reqDetail: e.target.value, reqErr: '' }),
+      onReqSlots: e => this.setState({ reqSlots: e.target.value, reqErr: '' }),
+      vehicles: this.VEHICLES.map(v => ({
+        name: v, onPick: () => this.setState({ reqVehicle: v }),
+        border: st.reqVehicle === v ? accent : '#DCD9D5',
+        color: st.reqVehicle === v ? '#A73B24' : '#515556',
+        bg: st.reqVehicle === v ? '#FBF1EE' : '#FFFFFF'
+      })),
+      submitRequest: this.submitRequest,
+      mustSignIn: !st.userId, isAuthed: !!st.userId,
+      myReqs: st.myReqs.map(r => ({
+        name: r.name,
+        note: r.admin_note || '',
+        hasNote: !!r.admin_note,
+        statusLabel: { pending: 'รอตรวจสอบ', approved: 'อนุมัติแล้ว', rejected: 'ไม่ผ่าน' }[r.status] || r.status,
+        statusFg: { pending: '#B96A0C', approved: '#1F8A4C', rejected: '#C62828' }[r.status] || '#515556',
+        statusBg: { pending: '#FCF3E6', approved: '#EAF7EF', rejected: '#FDECEC' }[r.status] || '#F5F3F0'
+      })),
+      hasMyReqs: st.myReqs.length > 0,
+
+      isAdminUser: st.isAdmin,
+      adminQueue: st.adminQueue.map(r => ({
+        name: r.name,
+        detail: r.detail || '—',
+        vehicle: r.vehicle_type || '—',
+        slots: r.total_slots == null ? '—' : String(r.total_slots),
+        when: new Date(r.created_at).toLocaleDateString('th-TH'),
+        lat: (st.adminEdits[r.id] || {}).lat || '',
+        lng: (st.adminEdits[r.id] || {}).lng || '',
+        onLat: e => this.setAdminEdit(r.id, 'lat', e.target.value),
+        onLng: e => this.setAdminEdit(r.id, 'lng', e.target.value),
+        approve: () => this.reviewRequest(r.id, 'approved'),
+        reject: () => this.reviewRequest(r.id, 'rejected')
+      })),
+      queueEmpty: st.adminQueue.length === 0,
       sendReport: async () => {
         if (!st.reason) { this.flash('กรุณาเลือกปัญหาที่พบก่อนส่งรายงาน'); return; }
         if (st.reason === 'อื่น ๆ' && !this.state.otherText.trim()) { this.flash('กรุณาระบุปัญหาอื่น ๆ ก่อนส่งรายงาน'); return; }
