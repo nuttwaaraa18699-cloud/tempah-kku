@@ -43,9 +43,9 @@ a{color:#A73B24;text-decoration:none}a:hover{color:#8c3020}
   <sc-if value="{{ isAuth }}" hint-placeholder-val="{{ false }}">
   <div style="display:flex;flex-direction:column;flex:1">
 
-    <!-- Solid KKU red bar, matching the university's registrar site (#A73B23)
-         so the app reads as part of the same family of KKU services. -->
-    <div style="position:sticky;top:0;z-index:40;background:linear-gradient(180deg,#5D1809 0%,#A73B24 100%);border-bottom:3px solid #E07B2E;padding:13px 16px;display:flex;align-items:center;justify-content:space-between;gap:12px">
+    <!-- Starts on KKU red so the brand still reads, then warms toward orange.
+         #C0541C is as bright as this can go while white text stays at 4.6:1. -->
+    <div style="position:sticky;top:0;z-index:40;background:linear-gradient(180deg,#A73B24 0%,#C0541C 100%);border-bottom:1px solid #EBE8E4;padding:13px 16px;display:flex;align-items:center;justify-content:space-between;gap:12px">
       <div style="display:flex;align-items:center;gap:1px;line-height:1">
         <span style="font-family:Archivo,sans-serif;font-weight:900;font-size:25px;color:#FFFFFF;letter-spacing:-1.5px">T</span>
         <span style="font-family:Archivo,sans-serif;font-weight:800;font-size:19px;letter-spacing:-.6px;color:#FFFFFF">EMPAH</span>
