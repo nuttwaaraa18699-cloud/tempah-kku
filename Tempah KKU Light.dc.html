@@ -407,30 +407,92 @@ a{color:#A73B24;text-decoration:none}a:hover{color:#8c3020}
 
       <sc-if value="{{ isAdminView }}" hint-placeholder-val="{{ false }}">
       <div style="display:flex;flex-direction:column;gap:14px;animation:tpUp .3s ease both">
-        <div style="display:flex;flex-direction:column;gap:4px">
-          <span style="font-size:clamp(20px,5.4vw,26px);font-weight:700;letter-spacing:-.4px;color:#1A1D1F">อนุมัติสถานที่</span>
-          <span style="font-size:12.5px;color:#6B7173;line-height:1.7;text-wrap:pretty">ใส่พิกัดจาก Google Maps ก่อนกดอนุมัติ สถานที่จะขึ้นในแอปทันทีโดยไม่ต้อง deploy ใหม่</span>
+        <span style="font-size:clamp(20px,5.4vw,26px);font-weight:700;letter-spacing:-.4px;color:#1A1D1F">จัดการสถานที่</span>
+
+        <div style="display:flex;gap:8px">
+          <div onClick="{{ onPendingTab }}" style="flex:1;text-align:center;cursor:pointer;font-size:13.5px;font-weight:700;padding:12px;border-radius:12px;background: {{ pendingTabBg }};color: {{ pendingTabFg }}">รอตรวจ · {{ pendingCount }}</div>
+          <div onClick="{{ onLiveTab }}" style="flex:1;text-align:center;cursor:pointer;font-size:13.5px;font-weight:700;padding:12px;border-radius:12px;background: {{ liveTabBg }};color: {{ liveTabFg }}">เผยแพร่ · {{ liveCount }}</div>
         </div>
 
-        <sc-if value="{{ queueEmpty }}" hint-placeholder-val="{{ false }}">
-          <div style="border:1px dashed #DCD9D5;border-radius:18px;padding:28px;text-align:center;font-size:13px;color:#6B7173;line-height:1.7">ยังไม่มีคำขอรอตรวจสอบ</div>
+        <sc-if value="{{ pendingTab }}" hint-placeholder-val="{{ true }}">
+        <div style="display:flex;flex-direction:column;gap:12px">
+          <sc-if value="{{ queueEmpty }}" hint-placeholder-val="{{ false }}">
+            <div style="border:1px dashed #DCD9D5;border-radius:18px;padding:28px;text-align:center;font-size:13px;color:#6B7173">ไม่มีคำขอรอตรวจ</div>
+          </sc-if>
+
+          <sc-for list="{{ adminQueue }}" as="aq" hint-placeholder-count="2">
+            <div style="border-radius:18px;overflow:hidden;background:#FFFFFF;border:1px solid #E6E3DF;box-shadow:0 2px 10px rgba(26,29,31,.06)">
+              <sc-if value="{{ aq.hasPhoto }}" hint-placeholder-val="{{ false }}">
+                <img src="{{ aq.photo }}" alt="" style="display:block;width:100%;height:130px;object-fit:cover">
+              </sc-if>
+              <div style="padding:14px;display:flex;flex-direction:column;gap:10px">
+                <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:10px">
+                  <span style="font-size:15px;font-weight:700;color:#1A1D1F;line-height:1.4">{{ aq.name }}</span>
+                  <span style="flex:none;font-size:11px;color:#6B7173">{{ aq.when }}</span>
+                </div>
+                <span style="font-size:12.5px;color:#515556;line-height:1.6">{{ aq.detail }}</span>
+                <span style="font-size:11.5px;color:#6B7173">{{ aq.meta }}</span>
+
+                <input value="{{ aq.maps }}" onInput="{{ aq.onMaps }}" placeholder="วางลิงก์ Google Maps หรือพิกัด" style="width:100%;background:#F5F3F0;border:1px solid #E6E3DF;border-radius:12px;padding:12px;font-size:13.5px;color:#1A1D1F;outline:none">
+                <sc-if value="{{ aq.hasHint }}" hint-placeholder-val="{{ false }}">
+                  <span style="font-size:11.5px;font-weight:600;color: {{ aq.coordHintFg }};line-height:1.5;margin-top:-4px">{{ aq.coordHint }}</span>
+                </sc-if>
+
+                <label style="display:block;text-align:center;cursor:pointer;font-size:12.5px;font-weight:600;color:#515556;padding:11px;border-radius:12px;border:1px dashed #DCD9D5;background:#FAF9F8">
+                  <span>{{ aq.photoLabel }}</span>
+                  <input type="file" accept="image/*" onChange="{{ aq.onPickPhoto }}" style="display:none">
+                </label>
+
+                <div style="display:flex;gap:10px">
+                  <div onClick="{{ aq.reject }}" style="flex:1;text-align:center;cursor:pointer;font-size:13.5px;font-weight:600;color:#515556;padding:13px;border-radius:12px;border:1px solid #DCD9D5">ไม่ผ่าน</div>
+                  <div onClick="{{ aq.approve }}" style="flex:2;text-align:center;cursor:pointer;background:#1F8A4C;color:#fff;font-size:14.5px;font-weight:700;padding:13px;border-radius:12px">อนุมัติ</div>
+                </div>
+              </div>
+            </div>
+          </sc-for>
+        </div>
         </sc-if>
 
-        <sc-for list="{{ adminQueue }}" as="aq" hint-placeholder-count="2">
-          <div style="padding:16px;border-radius:18px;background:#FFFFFF;border:1px solid #E6E3DF;box-shadow:0 2px 10px rgba(26,29,31,.06);display:flex;flex-direction:column;gap:10px">
-            <span style="font-size:15px;font-weight:700;color:#1A1D1F">{{ aq.name }}</span>
-            <span style="font-size:12.5px;color:#515556;line-height:1.65">{{ aq.detail }}</span>
-            <span style="font-size:11.5px;color:#6B7173">{{ aq.vehicle }} · {{ aq.slots }} ช่อง · ส่งเมื่อ {{ aq.when }}</span>
-            <div style="display:flex;gap:8px">
-              <input value="{{ aq.lat }}" onInput="{{ aq.onLat }}" inputmode="decimal" placeholder="lat เช่น 16.4731" style="flex:1;min-width:0;background:#F5F3F0;border:1px solid #E6E3DF;border-radius:12px;padding:12px;font-size:14px;color:#1A1D1F;outline:none">
-              <input value="{{ aq.lng }}" onInput="{{ aq.onLng }}" inputmode="decimal" placeholder="lng เช่น 102.8214" style="flex:1;min-width:0;background:#F5F3F0;border:1px solid #E6E3DF;border-radius:12px;padding:12px;font-size:14px;color:#1A1D1F;outline:none">
+        <sc-if value="{{ liveTab }}" hint-placeholder-val="{{ false }}">
+        <div style="display:flex;flex-direction:column;gap:12px">
+          <sc-if value="{{ approvedEmpty }}" hint-placeholder-val="{{ false }}">
+            <div style="border:1px dashed #DCD9D5;border-radius:18px;padding:28px;text-align:center;font-size:13px;color:#6B7173">ยังไม่มีสถานที่ที่เผยแพร่</div>
+          </sc-if>
+
+          <sc-for list="{{ approvedList }}" as="ap" hint-placeholder-count="2">
+            <div style="border-radius:18px;overflow:hidden;background:#FFFFFF;border:1px solid #E6E3DF;box-shadow:0 2px 10px rgba(26,29,31,.06)">
+              <sc-if value="{{ ap.hasPhoto }}" hint-placeholder-val="{{ false }}">
+                <img src="{{ ap.photo }}" alt="" style="display:block;width:100%;height:120px;object-fit:cover">
+              </sc-if>
+              <div style="padding:14px;display:flex;flex-direction:column;gap:10px">
+                <span style="font-size:15px;font-weight:700;color:#1A1D1F;line-height:1.4">{{ ap.name }}</span>
+                <span style="font-size:11.5px;color:#6B7173">{{ ap.meta }}</span>
+
+                <sc-if value="{{ ap.notConfirming }}" hint-placeholder-val="{{ true }}">
+                <div style="display:flex;gap:8px">
+                  <label style="flex:1;text-align:center;cursor:pointer;font-size:12.5px;font-weight:600;color:#515556;padding:11px;border-radius:12px;border:1px solid #DCD9D5">
+                    <span>{{ ap.photoLabel }}</span>
+                    <input type="file" accept="image/*" onChange="{{ ap.onPickPhoto }}" style="display:none">
+                  </label>
+                  <div onClick="{{ ap.unpublish }}" style="flex:1;text-align:center;cursor:pointer;font-size:12.5px;font-weight:600;color:#515556;padding:11px;border-radius:12px;border:1px solid #DCD9D5">ซ่อนไปแก้</div>
+                  <div onClick="{{ ap.askDelete }}" style="flex:none;cursor:pointer;font-size:12.5px;font-weight:600;color:#C62828;padding:11px 14px;border-radius:12px;border:1px solid #F0D9D2;background:#FDF6F4">ลบ</div>
+                </div>
+                </sc-if>
+
+                <sc-if value="{{ ap.confirming }}" hint-placeholder-val="{{ false }}">
+                <div style="display:flex;flex-direction:column;gap:8px;background:#FDECEC;border:1px solid #F5C6C6;border-radius:12px;padding:12px">
+                  <span style="font-size:12.5px;color:#C62828;line-height:1.6">ลบถาวร ผู้ใช้จะไม่เห็นสถานที่นี้อีก</span>
+                  <div style="display:flex;gap:8px">
+                    <div onClick="{{ ap.cancelDelete }}" style="flex:1;text-align:center;cursor:pointer;font-size:12.5px;font-weight:600;color:#515556;padding:11px;border-radius:10px;background:#FFFFFF;border:1px solid #DCD9D5">ยกเลิก</div>
+                    <div onClick="{{ ap.doDelete }}" style="flex:1;text-align:center;cursor:pointer;font-size:12.5px;font-weight:700;color:#fff;padding:11px;border-radius:10px;background:#C62828">ยืนยันลบ</div>
+                  </div>
+                </div>
+                </sc-if>
+              </div>
             </div>
-            <div style="display:flex;gap:10px">
-              <div onClick="{{ aq.reject }}" style="flex:1;text-align:center;cursor:pointer;font-size:13.5px;font-weight:600;color:#515556;padding:13px;border-radius:12px;border:1px solid #DCD9D5">ไม่ผ่าน</div>
-              <div onClick="{{ aq.approve }}" style="flex:2;text-align:center;cursor:pointer;background:#1F8A4C;color:#fff;font-size:14.5px;font-weight:700;padding:13px;border-radius:12px">อนุมัติ</div>
-            </div>
-          </div>
-        </sc-for>
+          </sc-for>
+        </div>
+        </sc-if>
       </div>
       </sc-if>
 
@@ -633,7 +695,8 @@ class Component extends DCLogic {
     regName: '', regEmail: '', regPw: '', regPlate: '', manualId: '', reviewOpen: false, reviewed: false,
     notice: '', needConfirm: '',
     reqName: '', reqDetail: '', reqVehicle: 'รถยนต์', reqSlots: '', reqErr: '',
-    myReqs: [], adminQueue: [], isAdmin: false, adminEdits: {}
+    myReqs: [], adminQueue: [], isAdmin: false, adminEdits: {},
+    approvedList: [], adminTab: 'pending', uploadingId: null, confirmDeleteId: null
   };
 
   REVIEW_URL = 'https://docs.google.com/forms/d/e/1FAIpQLSfSCUykI_PyY0wZ96a-FhhDN85Ixv2B50czyLvkpB6aqYC0wg/viewform';
@@ -668,7 +731,7 @@ class Component extends DCLogic {
       lots: [ { n: 'ลานหน้าตึกเพียรวิจิตร', total: 95, free: 28, type: 'รถยนต์', img: 'assets/eng-pian.jpg' },
               { n: 'ลานจักรยานยนต์ EN', total: 220, free: 74, type: 'จักรยานยนต์', img: 'assets/eng-moto.jpg' } ] },
     { id: 'ams', name: 'คณะเทคนิคการแพทย์', cat: 'คณะ', lat: 16.4699, lng: 102.8264,
-      lots: [ { n: 'ลานรวม AMS-PH', total: 110, free: 33, type: 'รถยนต์', img: 'assets/ams-ph.jpg' } ] },
+      lots: [ { n: 'ลานจอดหลังคณะเทคนิคการแพทย์ (ติดลานจอดเภสัชฯ)', total: 110, free: 33, type: 'รถยนต์ + จักรยานยนต์', img: 'assets/ams-ph.jpg' } ] },
     { id: 'ph', name: 'คณะสาธารณสุขศาสตร์', cat: 'คณะ', lat: 16.4693, lng: 102.8259,
       lots: [ { n: 'ลานจักรยานยนต์ PH', total: 130, free: 44, type: 'จักรยานยนต์', img: 'assets/ph-moto.jpg' } ] },
     { id: 'vet', name: 'คณะสัตวแพทยศาสตร์', cat: 'คณะ', lat: 16.4772, lng: 102.8291,
@@ -904,22 +967,30 @@ class Component extends DCLogic {
   loadCommunityPlaces = async () => {
     if (!window.SB) return;
     const { data, error } = await window.SB.from('place_requests')
-      .select('id,name,detail,vehicle_type,total_slots,lat,lng')
+      .select('id,name,detail,vehicle_type,total_slots,lat,lng,photo_url')
       .eq('status', 'approved');
     if (error || !data) return;
-    let added = 0;
+    let changed = 0;
     data.forEach(r => {
       if (r.lat == null || r.lng == null) return;
       const id = 'req' + r.id;
-      if (this.PLACES.some(p => p.id === id)) return;
       const total = r.total_slots || 20;
-      this.PLACES.push({
-        id: id, name: r.name, cat: 'จากผู้ใช้', lat: r.lat, lng: r.lng, community: true,
-        lots: [{ n: r.detail || r.name, total: total, free: Math.round(total * 0.4), type: r.vehicle_type || 'รถยนต์' }]
-      });
-      added++;
+      const lot = {
+        n: r.detail || r.name, total: total, free: Math.round(total * 0.4),
+        type: r.vehicle_type === 'ทั้งสองแบบ' ? 'รถยนต์ + จักรยานยนต์' : (r.vehicle_type || 'รถยนต์')
+      };
+      if (r.photo_url) lot.img = r.photo_url;
+      const existing = this.PLACES.filter(p => p.id === id)[0];
+      if (existing) {
+        // Keep the simulated free count rather than resetting it on every load.
+        lot.free = existing.lots[0] ? existing.lots[0].free : lot.free;
+        existing.name = r.name; existing.lat = r.lat; existing.lng = r.lng; existing.lots = [lot];
+      } else {
+        this.PLACES.push({ id: id, name: r.name, cat: 'จากผู้ใช้', lat: r.lat, lng: r.lng, community: true, lots: [lot] });
+      }
+      changed++;
     });
-    if (added) this.setState(s => ({ tick: s.tick + 1 }));
+    if (changed) this.setState(s => ({ tick: s.tick + 1 }));
   };
 
   loadMyRequests = async () => {
@@ -961,6 +1032,89 @@ class Component extends DCLogic {
     this.loadMyRequests();
   };
 
+  // Pulls a lat/lng out of whatever the admin pasted. Google hands out several
+  // shapes depending on how you share, and the plain "16.47, 102.82" you get
+  // from long-pressing a point is the most common one of all.
+  parseLatLng = (text) => {
+    const s = (text || '').trim();
+    if (!s) return null;
+    const pats = [
+      /@(-?\d+\.\d+),(-?\d+\.\d+)/,          // .../@16.4731,102.8214,17z/...
+      /[?&]q=(-?\d+\.\d+),\s*(-?\d+\.\d+)/,  // ...?q=16.4731,102.8214
+      /[?&]ll=(-?\d+\.\d+),\s*(-?\d+\.\d+)/,
+      /!3d(-?\d+\.\d+)!4d(-?\d+\.\d+)/,      // buried in a place URL
+      /^(-?\d+\.\d+)\s*,\s*(-?\d+\.\d+)$/    // pasted coordinates on their own
+    ];
+    for (const re of pats) {
+      const m = s.match(re);
+      if (m) {
+        const lat = parseFloat(m[1]), lng = parseFloat(m[2]);
+        if (Math.abs(lat) <= 90 && Math.abs(lng) <= 180) return { lat, lng };
+      }
+    }
+    return null;
+  };
+
+  // A shortened maps.app.goo.gl link hides the coordinates behind a redirect
+  // that the browser is not allowed to follow, so it has to be called out
+  // rather than silently failing to parse.
+  isShortMapsLink = (text) => /goo\.gl|maps\.app\./i.test(text || '');
+
+  uploadPlacePhoto = async (id, file) => {
+    if (!window.SB || !file) return;
+    if (!/^image\//.test(file.type)) { this.flash('ไฟล์ที่เลือกไม่ใช่รูปภาพ'); return; }
+    if (file.size > 5 * 1024 * 1024) { this.flash('รูปใหญ่เกิน 5MB ลองย่อก่อน'); return; }
+    this.setState({ uploadingId: id });
+    const ext = (file.name.split('.').pop() || 'jpg').toLowerCase();
+    const path = 'req' + id + '-' + Date.now() + '.' + ext;
+    const up = await window.SB.storage.from('place-photos').upload(path, file, { upsert: true });
+    if (up.error) {
+      this.setState({ uploadingId: null });
+      this.flash('อัปโหลดรูปไม่สำเร็จ — บัญชีนี้อาจไม่มีสิทธิ์แอดมิน');
+      return;
+    }
+    const { data } = window.SB.storage.from('place-photos').getPublicUrl(path);
+    const url = data && data.publicUrl;
+    const { error } = await window.SB.from('place_requests').update({ photo_url: url }).eq('id', id);
+    this.setState({ uploadingId: null });
+    if (error) { this.flash('บันทึกรูปไม่สำเร็จ'); return; }
+    this.flash('อัปโหลดรูปแล้ว');
+    this.loadAdminQueue();
+    this.loadApprovedForAdmin();
+  };
+
+  deletePlaceRequest = async (id) => {
+    if (!window.SB) return;
+    const { error } = await window.SB.from('place_requests').delete().eq('id', id);
+    if (error) { this.flash('ลบไม่สำเร็จ — บัญชีนี้อาจไม่มีสิทธิ์แอดมิน'); return; }
+    // Drop it from the in-memory list too, otherwise it lingers until reload.
+    const ix = this.PLACES.findIndex(p => p.id === 'req' + id);
+    if (ix >= 0) this.PLACES.splice(ix, 1);
+    this.flash('ลบสถานที่แล้ว');
+    this.setState({ confirmDeleteId: null });
+    this.loadAdminQueue();
+    this.loadApprovedForAdmin();
+  };
+
+  unpublishPlace = async (id) => {
+    if (!window.SB) return;
+    const { error } = await window.SB.from('place_requests')
+      .update({ status: 'pending', reviewed_at: null }).eq('id', id);
+    if (error) { this.flash('แก้ไขไม่สำเร็จ'); return; }
+    const ix = this.PLACES.findIndex(p => p.id === 'req' + id);
+    if (ix >= 0) this.PLACES.splice(ix, 1);
+    this.flash('ย้ายกลับไปรอตรวจสอบแล้ว');
+    this.loadAdminQueue();
+    this.loadApprovedForAdmin();
+  };
+
+  loadApprovedForAdmin = async () => {
+    if (!window.SB || !this.state.isAdmin) return;
+    const { data } = await window.SB.from('place_requests')
+      .select('*').eq('status', 'approved').order('reviewed_at', { ascending: false });
+    this.setState({ approvedList: data || [] });
+  };
+
   setAdminEdit = (id, field, value) => {
     this.setState(s => {
       const next = Object.assign({}, s.adminEdits);
@@ -974,16 +1128,24 @@ class Component extends DCLogic {
     const edit = this.state.adminEdits[id] || {};
     const patch = { status: status, reviewed_by: this.state.userId, reviewed_at: new Date().toISOString() };
     if (status === 'approved') {
-      const lat = parseFloat(edit.lat), lng = parseFloat(edit.lng);
+      const row = (this.state.adminQueue.concat(this.state.approvedList)).filter(r => r.id === id)[0] || {};
+      const pasted = edit.maps != null ? edit.maps : (row.maps_url || '');
+      const coords = this.parseLatLng(pasted);
       // An approved place with no coordinates would never surface in the app,
-      // so treat the pair as required rather than approving into a void.
-      if (isNaN(lat) || isNaN(lng)) { this.flash('ใส่พิกัด lat/lng ก่อนอนุมัติ'); return; }
-      patch.lat = lat; patch.lng = lng;
+      // so treat them as required rather than approving into a void.
+      if (!coords) {
+        this.flash(this.isShortMapsLink(pasted)
+          ? 'ลิงก์ย่อแบบนี้อ่านพิกัดไม่ได้ — เปิดลิงก์แล้วคัดลอก URL เต็ม หรือวางพิกัดตรงๆ'
+          : 'วางลิงก์แผนที่หรือพิกัดก่อนอนุมัติ');
+        return;
+      }
+      patch.lat = coords.lat; patch.lng = coords.lng; patch.maps_url = pasted;
     }
     const { error } = await window.SB.from('place_requests').update(patch).eq('id', id);
     if (error) { this.flash('บันทึกไม่สำเร็จ — บัญชีนี้อาจไม่มีสิทธิ์แอดมิน'); return; }
-    this.flash(status === 'approved' ? 'อนุมัติแล้ว สถานที่จะขึ้นในแอป' : 'ปฏิเสธคำขอแล้ว');
+    this.flash(status === 'approved' ? 'อนุมัติแล้ว สถานที่ขึ้นในแอปทันที' : 'ปฏิเสธคำขอแล้ว');
     this.loadAdminQueue();
+    this.loadApprovedForAdmin();
     if (status === 'approved') this.loadCommunityPlaces();
   };
 
@@ -1025,7 +1187,7 @@ class Component extends DCLogic {
   }
   go(view) {
     this.navigate(view);
-    if (view === 'admin') this.loadAdminQueue();
+    if (view === 'admin') { this.loadAdminQueue(); this.loadApprovedForAdmin(); }
     if (view === 'suggest') this.loadMyRequests();
   }
   flash(msg) { this.setState({ toast: msg }); clearTimeout(this.tt); this.tt = setTimeout(() => this.setState({ toast: '' }), 2600); }
@@ -1397,20 +1559,61 @@ class Component extends DCLogic {
       hasMyReqs: st.myReqs.length > 0,
 
       isAdminUser: st.isAdmin,
-      adminQueue: st.adminQueue.map(r => ({
-        name: r.name,
-        detail: r.detail || '—',
-        vehicle: r.vehicle_type || '—',
-        slots: r.total_slots == null ? '—' : String(r.total_slots),
-        when: new Date(r.created_at).toLocaleDateString('th-TH'),
-        lat: (st.adminEdits[r.id] || {}).lat || '',
-        lng: (st.adminEdits[r.id] || {}).lng || '',
-        onLat: e => this.setAdminEdit(r.id, 'lat', e.target.value),
-        onLng: e => this.setAdminEdit(r.id, 'lng', e.target.value),
-        approve: () => this.reviewRequest(r.id, 'approved'),
-        reject: () => this.reviewRequest(r.id, 'rejected')
-      })),
+      onPendingTab: () => this.setState({ adminTab: 'pending' }),
+      onLiveTab: () => { this.setState({ adminTab: 'live' }); this.loadApprovedForAdmin(); },
+      pendingTab: st.adminTab === 'pending', liveTab: st.adminTab === 'live',
+      pendingTabBg: st.adminTab === 'pending' ? accent : '#F5F3F0',
+      pendingTabFg: st.adminTab === 'pending' ? '#fff' : '#515556',
+      liveTabBg: st.adminTab === 'live' ? accent : '#F5F3F0',
+      liveTabFg: st.adminTab === 'live' ? '#fff' : '#515556',
+      pendingCount: String(st.adminQueue.length),
+      liveCount: String(st.approvedList.length),
+
+      adminQueue: st.adminQueue.map(r => {
+        const pasted = (st.adminEdits[r.id] || {}).maps;
+        const value = pasted != null ? pasted : (r.maps_url || '');
+        const coords = this.parseLatLng(value);
+        return {
+          name: r.name,
+          detail: r.detail || 'ไม่ได้ระบุรายละเอียด',
+          meta: (r.vehicle_type || '—') + ' · ' + (r.total_slots == null ? 'ไม่ระบุจำนวน' : r.total_slots + ' ช่อง'),
+          when: new Date(r.created_at).toLocaleDateString('th-TH', { day: 'numeric', month: 'short' }),
+          maps: value,
+          onMaps: e => this.setAdminEdit(r.id, 'maps', e.target.value),
+          coordOk: !!coords,
+          coordHint: coords ? '✓ ' + coords.lat.toFixed(5) + ', ' + coords.lng.toFixed(5)
+            : (value ? (this.isShortMapsLink(value) ? 'ลิงก์ย่ออ่านไม่ได้ — เปิดลิงก์แล้วคัดลอก URL เต็ม' : 'ยังอ่านพิกัดไม่ได้') : ''),
+          coordHintFg: coords ? '#1F8A4C' : '#C62828',
+          hasHint: !!value,
+          photo: r.photo_url || '',
+          hasPhoto: !!r.photo_url,
+          noPhotoYet: !r.photo_url,
+          photoLabel: st.uploadingId === r.id ? 'กำลังอัปโหลด…' : (r.photo_url ? 'เปลี่ยนรูป' : '＋ เพิ่มรูปลานจอด'),
+          uploading: st.uploadingId === r.id,
+          onPickPhoto: e => { const fl = e.target.files; if (fl && fl[0]) this.uploadPlacePhoto(r.id, fl[0]); },
+          approve: () => this.reviewRequest(r.id, 'approved'),
+          reject: () => this.reviewRequest(r.id, 'rejected')
+        };
+      }),
       queueEmpty: st.adminQueue.length === 0,
+
+      approvedList: st.approvedList.map(r => ({
+        name: r.name,
+        meta: (r.vehicle_type || '—') + ' · ' + (r.total_slots == null ? 'ไม่ระบุจำนวน' : r.total_slots + ' ช่อง'),
+        photo: r.photo_url || '',
+        hasPhoto: !!r.photo_url,
+        noPhoto: !r.photo_url,
+        photoLabel: st.uploadingId === r.id ? 'กำลังอัปโหลด…' : (r.photo_url ? 'เปลี่ยนรูป' : 'เพิ่มรูป'),
+        uploading: st.uploadingId === r.id,
+        onPickPhoto: e => { const fl = e.target.files; if (fl && fl[0]) this.uploadPlacePhoto(r.id, fl[0]); },
+        confirming: st.confirmDeleteId === r.id,
+        notConfirming: st.confirmDeleteId !== r.id,
+        askDelete: () => this.setState({ confirmDeleteId: r.id }),
+        cancelDelete: () => this.setState({ confirmDeleteId: null }),
+        doDelete: () => this.deletePlaceRequest(r.id),
+        unpublish: () => this.unpublishPlace(r.id)
+      })),
+      approvedEmpty: st.approvedList.length === 0,
       sendReport: async () => {
         if (!st.reason) { this.flash('กรุณาเลือกปัญหาที่พบก่อนส่งรายงาน'); return; }
         if (st.reason === 'อื่น ๆ' && !this.state.otherText.trim()) { this.flash('กรุณาระบุปัญหาอื่น ๆ ก่อนส่งรายงาน'); return; }
