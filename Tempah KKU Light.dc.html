@@ -69,7 +69,7 @@ a{color:#A73B24;text-decoration:none}a:hover{color:#8c3020}
       <div style="display:flex;flex-direction:column;gap:18px;animation:tpUp .3s ease both">
 
         <div style="display:flex;flex-direction:column;gap:4px">
-          <span style="font-size:12px;color:#8A8F91">{{ greeting }}</span>
+          <span style="font-size:12px;color:#6B7173">{{ greeting }}</span>
           <span style="font-size:clamp(22px,6vw,29px);font-weight:700;line-height:1.25;letter-spacing:-.5px;color:#1A1D1F;text-wrap:pretty">วันนี้จะจอดที่ไหนดี</span>
         </div>
 
@@ -79,7 +79,7 @@ a{color:#A73B24;text-decoration:none}a:hover{color:#8c3020}
             <span style="font-size:8.5px;color:#515556">ว่าง</span>
           </div>
           <div style="flex:1;display:flex;flex-direction:column;gap:3px;min-width:0">
-            <span style="font-size:11.5px;color:#8A8F91">ใกล้คุณที่สุดตอนนี้</span>
+            <span style="font-size:11.5px;color:#6B7173">ใกล้คุณที่สุดตอนนี้</span>
             <span style="font-size:14.5px;font-weight:600;color:#1A1D1F;text-wrap:pretty">{{ nearestName }}</span>
             <span style="font-size:11.5px;color:#515556">{{ nearestDist }} · แตะเพื่อดูภาพสด</span>
           </div>
@@ -115,10 +115,10 @@ a{color:#A73B24;text-decoration:none}a:hover{color:#8c3020}
 
         <div style="display:flex;flex-direction:column;gap:11px">
           <div style="display:flex;align-items:center;gap:10px;background:#F5F3F0;border:1px solid #E6E3DF;border-radius:14px;padding:13px 14px">
-            <span style="font-size:15px;color:#8A8F91">⌕</span>
+            <span style="font-size:15px;color:#6B7173">⌕</span>
             <input value="{{ query }}" onInput="{{ onQuery }}" placeholder="ค้นหาคณะ อาคาร หรือลานจอด…" style="flex:1;min-width:0;background:none;border:none;outline:none;color:#1A1D1F;font-size:14.5px">
             <sc-if value="{{ query }}" hint-placeholder-val="{{ false }}">
-              <span onClick="{{ clearQuery }}" style="font-size:13px;color:#8A8F91;cursor:pointer">✕</span>
+              <span onClick="{{ clearQuery }}" style="font-size:13px;color:#6B7173;cursor:pointer">✕</span>
             </sc-if>
           </div>
           <div style="display:flex;gap:7px;overflow-x:auto;padding-bottom:2px">
@@ -172,7 +172,7 @@ a{color:#A73B24;text-decoration:none}a:hover{color:#8c3020}
             </div>
           </sc-for>
           <sc-if value="{{ noCards }}" hint-placeholder-val="{{ false }}">
-            <div style="border:1px dashed #DCD9D5;border-radius:18px;padding:28px;text-align:center;font-size:13px;color:#8A8F91">ไม่พบสถานที่ที่ตรงกับคำค้น</div>
+            <div style="border:1px dashed #DCD9D5;border-radius:18px;padding:28px;text-align:center;font-size:13px;color:#6B7173">ไม่พบสถานที่ที่ตรงกับคำค้น</div>
           </sc-if>
         </div>
       </div>
@@ -186,7 +186,7 @@ a{color:#A73B24;text-decoration:none}a:hover{color:#8c3020}
         </div>
         <div style="display:flex;flex-direction:column;gap:5px">
           <span style="font-size:clamp(20px,5.4vw,26px);font-weight:700;letter-spacing:-.4px;line-height:1.25;color:#1A1D1F;text-wrap:pretty">{{ placeName }}</span>
-          <span style="font-size:11.5px;color:#8A8F91">{{ placeMeta }}</span>
+          <span style="font-size:11.5px;color:#6B7173">{{ placeMeta }}</span>
         </div>
 
         <div style="display:flex;gap:9px;overflow-x:auto;padding-bottom:4px">
@@ -265,14 +265,14 @@ a{color:#A73B24;text-decoration:none}a:hover{color:#8c3020}
             </div>
           </div>
         </div>
-        <div style="font-size:11px;color:#8A8F91;line-height:1.65">ภาพจากกล้องของมหาวิทยาลัย (ในต้นแบบนี้เป็นภาพจำลอง) อัปเดตทุก 30 วินาที · เก็บภาพ 24 ชม. แล้วลบอัตโนมัติ</div>
+        <div style="font-size:11px;color:#6B7173;line-height:1.65">ภาพจากกล้องของมหาวิทยาลัย (ในต้นแบบนี้เป็นภาพจำลอง) อัปเดตทุก 30 วินาที · เก็บภาพ 24 ชม. แล้วลบอัตโนมัติ</div>
       </div>
       </sc-if>
 
       <sc-if value="{{ isFavs }}" hint-placeholder-val="{{ false }}">
       <div style="display:flex;flex-direction:column;gap:13px;animation:tpUp .3s ease both">
         <span style="font-size:clamp(20px,5.4vw,26px);font-weight:700;letter-spacing:-.4px;color:#1A1D1F">ที่จอดโปรด</span>
-        <span style="font-size:12px;color:#8A8F91;margin-top:-6px">รายการนี้จะขึ้นบนสุดของหน้าแรกทุกครั้งที่เปิดเว็บ</span>
+        <span style="font-size:12px;color:#6B7173;margin-top:-6px">รายการนี้จะขึ้นบนสุดของหน้าแรกทุกครั้งที่เปิดเว็บ</span>
         <sc-for list="{{ favCards }}" as="f" hint-placeholder-count="2">
           <div style="display:flex;align-items:center;gap:12px;padding:13px 14px;border-radius:16px;background:#FFFFFF;border:1px solid #E6E3DF">
             <span onClick="{{ f.onStar }}" style="font-size:17px;color:#E8A82B;cursor:pointer">★</span>
@@ -284,7 +284,7 @@ a{color:#A73B24;text-decoration:none}a:hover{color:#8c3020}
           </div>
         </sc-for>
         <sc-if value="{{ noFavs }}" hint-placeholder-val="{{ false }}">
-          <div style="border:1px dashed #DCD9D5;border-radius:18px;padding:28px;text-align:center;font-size:13px;color:#8A8F91;line-height:1.7">ยังไม่มีที่จอดโปรด<br>กดดาว ★ บนการ์ดเพื่อปักหมุดไว้บนสุด</div>
+          <div style="border:1px dashed #DCD9D5;border-radius:18px;padding:28px;text-align:center;font-size:13px;color:#6B7173;line-height:1.7">ยังไม่มีที่จอดโปรด<br>กดดาว ★ บนการ์ดเพื่อปักหมุดไว้บนสุด</div>
         </sc-if>
       </div>
       </sc-if>
@@ -292,7 +292,7 @@ a{color:#A73B24;text-decoration:none}a:hover{color:#8c3020}
       <sc-if value="{{ isRestricted }}" hint-placeholder-val="{{ false }}">
       <div style="display:flex;flex-direction:column;gap:12px;animation:tpUp .3s ease both">
         <span style="font-size:clamp(20px,5.4vw,26px);font-weight:700;letter-spacing:-.4px;color:#1A1D1F;text-wrap:pretty">พื้นที่ที่ไม่สามารถเข้าถึงได้</span>
-        <span style="font-size:12px;color:#8A8F91;line-height:1.7;margin-top:-4px">พื้นที่ปิด ห้ามจอด หรือสงวนสิทธิ์เฉพาะกลุ่ม ระบบจะไม่แนะนำที่จอดในบริเวณนี้</span>
+        <span style="font-size:12px;color:#6B7173;line-height:1.7;margin-top:-4px">พื้นที่ปิด ห้ามจอด หรือสงวนสิทธิ์เฉพาะกลุ่ม ระบบจะไม่แนะนำที่จอดในบริเวณนี้</span>
         <sc-for list="{{ restricted }}" as="r" hint-placeholder-count="6">
           <div style="padding:14px 16px;border-radius:16px;background:#FDF6F4;border:1px solid #F0D9D2;display:flex;flex-direction:column;gap:5px">
             <span style="font-size:13.5px;font-weight:600;color:#1A1D1F;text-wrap:pretty">{{ r.name }}</span>
@@ -310,13 +310,13 @@ a{color:#A73B24;text-decoration:none}a:hover{color:#8c3020}
           <div style="width:48px;height:48px;border-radius:50%;background:#A73B24;display:flex;align-items:center;justify-content:center;font-family:Archivo,sans-serif;font-weight:800;font-size:18px;color:#fff">{{ initial }}</div>
           <div style="display:flex;flex-direction:column;gap:3px;min-width:0">
             <span style="font-size:14px;font-weight:600;color:#1A1D1F;overflow:hidden;text-overflow:ellipsis">{{ userLabel }}</span>
-            <span style="font-size:11px;color:#8A8F91">{{ roleLabel }}</span>
+            <span style="font-size:11px;color:#6B7173">{{ roleLabel }}</span>
           </div>
         </div>
         <div onClick="{{ toggleGeo }}" style="padding:15px 16px;border-radius:14px;cursor:pointer;background:#FFFFFF;border:1px solid #E6E3DF;display:flex;align-items:center;justify-content:space-between;gap:12px">
           <div style="display:flex;flex-direction:column;gap:4px;min-width:0">
             <span style="font-size:13px;color:#1A1D1F;text-wrap:pretty">ติดตามตำแหน่ง GPS เพื่อหาลานจอดที่ใกล้ที่สุด</span>
-            <span style="display:flex;align-items:center;gap:6px;font-size:11.5px;color:#8A8F91">
+            <span style="display:flex;align-items:center;gap:6px;font-size:11.5px;color:#6B7173">
               <span style="width:7px;height:7px;border-radius:50%;background: {{ geoDot }};box-shadow: {{ geoGlow }};display:inline-block;animation: {{ geoAnim }}"></span>{{ geoStatusText }}
             </span>
           </div>
@@ -327,7 +327,7 @@ a{color:#A73B24;text-decoration:none}a:hover{color:#8c3020}
         <div style="padding:15px 16px;border-radius:14px;background:#FFFFFF;border:1px solid #E6E3DF;display:flex;flex-direction:column;gap:10px">
           <div style="display:flex;flex-direction:column;gap:4px">
             <span style="font-size:13px;color:#1A1D1F;text-wrap:pretty">ตั้งตำแหน่งของคุณเอง</span>
-            <span style="font-size:11.5px;color:#8A8F91;line-height:1.6;text-wrap:pretty">{{ manualStatusText }}</span>
+            <span style="font-size:11.5px;color:#6B7173;line-height:1.6;text-wrap:pretty">{{ manualStatusText }}</span>
           </div>
           <select value="{{ manualId }}" onChange="{{ onManualPick }}" style="width:100%;background:#F5F3F0;border:1px solid #E6E3DF;border-radius:12px;padding:13px;font-size:14px;font-family:inherit;color:#1A1D1F;outline:none">
             <option value="">ใช้ตำแหน่งจาก GPS (อัตโนมัติ)</option>
@@ -356,7 +356,7 @@ a{color:#A73B24;text-decoration:none}a:hover{color:#8c3020}
   <div onClick="{{ closeMenu }}" style="position:fixed;inset:0;z-index:90;background:rgba(26,29,31,.42);display:flex;justify-content:flex-end;align-items:flex-start;padding:14px">
     <div style="width:min(280px,86vw);background:#FFFFFF;border-radius:20px;border:1px solid #E6E3DF;box-shadow:0 20px 50px rgba(26,29,31,.3);padding:10px;display:flex;flex-direction:column;gap:4px;animation:tpUp .2s ease both">
       <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 10px 10px">
-        <span style="font-size:11px;font-weight:700;letter-spacing:1px;color:#8A8F91">เมนู</span>
+        <span style="font-size:11px;font-weight:700;letter-spacing:1px;color:#6B7173">เมนู</span>
         <span onClick="{{ closeMenu }}" style="font-size:15px;color:#515556;cursor:pointer">✕</span>
       </div>
       <sc-for list="{{ tabs }}" as="tb" hint-placeholder-count="4">
@@ -482,7 +482,7 @@ a{color:#A73B24;text-decoration:none}a:hover{color:#8c3020}
       <img src="assets/review-qr.png" alt="QR โค้ดแบบสอบถามรีวิว" style="width:200px;height:200px;max-width:100%;display:block;border-radius:12px;border:1px solid #E6E3DF;background:#FFFFFF">
       <a href="{{ reviewUrl }}" onClick="{{ markReviewed }}" target="_blank" rel="noopener noreferrer" style="width:100%;text-align:center;box-sizing:border-box;background:#A73B24;color:#fff;font-size:15px;font-weight:700;padding:14px;border-radius:12px;text-decoration:none;display:block">เปิดแบบสอบถาม ↗</a>
       <div onClick="{{ confirmReviewed }}" style="width:100%;box-sizing:border-box;text-align:center;cursor:pointer;font-size:14px;font-weight:600;color:#1F8A4C;padding:13px;border-radius:12px;border:1px solid #BFE3CD;background:#F3FAF6">✓ ตอบแบบสอบถามเสร็จแล้ว</div>
-      <span onClick="{{ closeReview }}" style="font-size:13px;color:#8A8F91;cursor:pointer;padding:4px 8px">ไว้ทีหลัง</span>
+      <span onClick="{{ closeReview }}" style="font-size:13px;color:#6B7173;cursor:pointer;padding:4px 8px">ไว้ทีหลัง</span>
     </div>
   </div>
   </sc-if>
