@@ -20,9 +20,7 @@
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;500;600;700&family=Archivo:wght@600;700;800;900&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
 *{-webkit-tap-highlight-color:transparent;box-sizing:border-box}
-/* Warm cream rather than flat white, taken from kku.ac.th, so the white
-   cards sit on something and the app stops reading as one block of red. */
-html,body{margin:0;background:#F5F0EC;font-family:'IBM Plex Sans Thai',system-ui,sans-serif;color:#1A1D1F;-webkit-font-smoothing:antialiased}
+html,body{margin:0;background:#FFFFFF;font-family:'IBM Plex Sans Thai',system-ui,sans-serif;color:#1A1D1F;-webkit-font-smoothing:antialiased}
 input,button{font-family:inherit}
 a{color:#A73B24;text-decoration:none}a:hover{color:#8c3020}
 ::-webkit-scrollbar{width:0;height:0}
@@ -37,8 +35,8 @@ a{color:#A73B24;text-decoration:none}a:hover{color:#8c3020}
 </style>
 </helmet>
 
-<div style="min-height:100vh;background:#EDE5DF;display:flex;justify-content:center">
-<div style="width:100%;max-width:640px;min-height:100vh;position:relative;display:flex;flex-direction:column;background:#F5F0EC">
+<div style="min-height:100vh;background:#FFFFFF;display:flex;justify-content:center">
+<div style="width:100%;max-width:640px;min-height:100vh;position:relative;display:flex;flex-direction:column;background:#FFFFFF">
 
   <sc-if value="{{ isAuth }}" hint-placeholder-val="{{ false }}">
   <div style="display:flex;flex-direction:column;flex:1">
@@ -114,7 +112,7 @@ a{color:#A73B24;text-decoration:none}a:hover{color:#8c3020}
         </sc-if>
 
         <div style="display:flex;flex-direction:column;gap:11px">
-          <div style="display:flex;align-items:center;gap:10px;background:#FFFFFF;border:1px solid #E2DCD6;border-radius:14px;padding:13px 14px">
+          <div style="display:flex;align-items:center;gap:10px;background:#F5F3F0;border:1px solid #E6E3DF;border-radius:14px;padding:13px 14px">
             <span style="font-size:15px;color:#8A8F91">⌕</span>
             <input value="{{ query }}" onInput="{{ onQuery }}" placeholder="ค้นหาคณะ อาคาร หรือลานจอด…" style="flex:1;min-width:0;background:none;border:none;outline:none;color:#1A1D1F;font-size:14.5px">
             <sc-if value="{{ query }}" hint-placeholder-val="{{ false }}">
@@ -1051,21 +1049,20 @@ class Component extends DCLogic {
       nearestMapUrl: this.mapUrl(nearest),
       openNearest: () => this.navigate('place', { placeId: nearest.id, lotIx: 0 }),
       // Category filters take KKU's deep maroon so they read as a different
-      // kind of control from the red action buttons, and unselected pills go
-      // white to stand off the cream page.
+      // kind of control from the red action buttons.
       chips: this.CATS.map(c => ({
         name: c, onPick: () => this.setState({ cat: c }),
-        bg: st.cat === c ? deep : '#FFFFFF',
+        bg: st.cat === c ? deep : '#F5F3F0',
         fg: st.cat === c ? '#fff' : '#515556',
-        border: st.cat === c ? deep : '#E2DCD6'
+        border: st.cat === c ? deep : '#E6E3DF'
       })),
       setSortNear: () => this.setState({ sort: 'near' }), setSortFree: () => this.setState({ sort: 'free' }),
-      nearBg: st.sort === 'near' ? accent : '#FFFFFF',
+      nearBg: st.sort === 'near' ? accent : '#F5F3F0',
       nearFg: st.sort === 'near' ? '#fff' : '#515556',
-      nearBorder: st.sort === 'near' ? accent : '#E2DCD6',
-      freeBg: st.sort === 'free' ? accent : '#FFFFFF',
+      nearBorder: st.sort === 'near' ? accent : '#E6E3DF',
+      freeBg: st.sort === 'free' ? accent : '#F5F3F0',
       freeFg: st.sort === 'free' ? '#fff' : '#515556',
-      freeBorder: st.sort === 'free' ? accent : '#E2DCD6',
+      freeBorder: st.sort === 'free' ? accent : '#E6E3DF',
       cards: list.map((p, i) => this.card(p, i)), noCards: list.length === 0,
       favCards: this.PLACES.filter(p => st.favs.indexOf(p.id) >= 0).map((p, i) => this.card(p, i)),
       hasFavs: st.favs.length > 0, noFavs: st.favs.length === 0,
