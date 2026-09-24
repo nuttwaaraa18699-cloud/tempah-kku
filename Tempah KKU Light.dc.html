@@ -261,7 +261,7 @@ a{color:#A73B24;text-decoration:none}a:hover{color:#8c3020}
 
             <div style="display:flex;gap:10px">
               <div onClick="{{ openReport }}" style="flex:1;text-align:center;cursor:pointer;font-size:14.5px;font-weight:700;padding:15px 0;border-radius:14px;color:#fff;background:#C62828">รายงานปัญหา</div>
-              <div onClick="{{ finish }}" style="flex:1;text-align:center;cursor:pointer;font-size:14.5px;font-weight:700;padding:15px 0;border-radius:14px;color:#fff;background:#1F8A4C">เสร็จสิ้น</div>
+              <div onClick="{{ finish }}" style="flex:1;text-align:center;cursor:pointer;font-size:14.5px;font-weight:700;padding:15px 0;border-radius:14px;color:#fff;background:#17733F">เสร็จสิ้น</div>
             </div>
           </div>
         </div>
@@ -445,7 +445,7 @@ a{color:#A73B24;text-decoration:none}a:hover{color:#8c3020}
 
                 <div style="display:flex;gap:10px">
                   <div onClick="{{ aq.reject }}" style="flex:1;text-align:center;cursor:pointer;font-size:13.5px;font-weight:600;color:#515556;padding:13px;border-radius:12px;border:1px solid #DCD9D5">ไม่ผ่าน</div>
-                  <div onClick="{{ aq.approve }}" style="flex:2;text-align:center;cursor:pointer;background:#1F8A4C;color:#fff;font-size:14.5px;font-weight:700;padding:13px;border-radius:12px">อนุมัติ</div>
+                  <div onClick="{{ aq.approve }}" style="flex:2;text-align:center;cursor:pointer;background:#17733F;color:#fff;font-size:14.5px;font-weight:700;padding:13px;border-radius:12px">อนุมัติ</div>
                 </div>
               </div>
             </div>
@@ -665,7 +665,7 @@ a{color:#A73B24;text-decoration:none}a:hover{color:#8c3020}
       <span style="font-size:13px;color:#515556;line-height:1.7;text-align:center;text-wrap:pretty;margin-top:-8px">ช่วยรีวิวการใช้งานให้เราหน่อย สแกน QR หรือแตะลิงก์ด้านล่างก็ได้</span>
       <img src="assets/review-qr.png" alt="QR โค้ดแบบสอบถามรีวิว" style="width:200px;height:200px;max-width:100%;display:block;border-radius:12px;border:1px solid #E6E3DF;background:#FFFFFF">
       <a href="{{ reviewUrl }}" onClick="{{ markReviewed }}" target="_blank" rel="noopener noreferrer" style="width:100%;text-align:center;box-sizing:border-box;background:#A73B24;color:#fff;font-size:15px;font-weight:700;padding:14px;border-radius:12px;text-decoration:none;display:block">เปิดแบบสอบถาม ↗</a>
-      <div onClick="{{ confirmReviewed }}" style="width:100%;box-sizing:border-box;text-align:center;cursor:pointer;font-size:14px;font-weight:600;color:#1F8A4C;padding:13px;border-radius:12px;border:1px solid #BFE3CD;background:#F3FAF6">✓ ตอบแบบสอบถามเสร็จแล้ว</div>
+      <div onClick="{{ confirmReviewed }}" style="width:100%;box-sizing:border-box;text-align:center;cursor:pointer;font-size:14px;font-weight:600;color:#17733F;padding:13px;border-radius:12px;border:1px solid #BFE3CD;background:#F3FAF6">✓ ตอบแบบสอบถามเสร็จแล้ว</div>
       <span onClick="{{ closeReview }}" style="font-size:13px;color:#6B7173;cursor:pointer;padding:4px 8px">ไว้ทีหลัง</span>
     </div>
   </div>
@@ -1257,7 +1257,7 @@ class Component extends DCLogic {
     if (closed) return { statusLabel: 'ปิดปรับปรุง', statusFg: '#6B7173', statusBg: '#F1F0EE' };
     if (free === 0) return { statusLabel: 'เต็ม', statusFg: '#C62828', statusBg: '#FDECEC' };
     if (free / total <= 0.3) return { statusLabel: 'ใกล้เต็ม', statusFg: '#B96A0C', statusBg: '#FCF3E6' };
-    return { statusLabel: 'ว่าง', statusFg: '#1F8A4C', statusBg: '#EAF7EF' };
+    return { statusLabel: 'ว่าง', statusFg: '#17733F', statusBg: '#EAF7EF' };
   }
   agg(p) {
     return { free: p.lots.reduce((a, l) => a + l.free, 0), total: p.lots.reduce((a, l) => a + l.total, 0) };
@@ -1423,7 +1423,11 @@ class Component extends DCLogic {
     try { localStorage.removeItem('tpReviewed'); } catch (e) {}
     this.navigate('login', {
       email: '', pw: '', user: null, userId: null, favs: [], reviewed: false,
-      isAdmin: false, myReqs: [], adminQueue: [], adminEdits: {}
+      // Everything admin-shaped goes with the session — on a shared phone the
+      // next person should not inherit the previous admin's review queue.
+      isAdmin: false, myReqs: [], adminQueue: [], adminEdits: {},
+      approvedList: [], adminTab: 'pending', uploadingId: null,
+      confirmDeleteId: null, editingId: null, editDraft: {}
     });
   };
 
@@ -1449,6 +1453,10 @@ class Component extends DCLogic {
     const st = this.state;
     const accent = this.props.accent || '#A73B24';   // KKU red, for primary actions
     const deep = '#5D1809';                          // KKU deep maroon, the second brand tone
+    // The admin screen is reachable by typing #admin, so the guard has to be on
+    // the view itself, not just on whether the menu offers it. Writes are
+    // refused by RLS regardless; this stops the console from being shown at all.
+    const view = (st.view === 'admin' && !st.isAdmin) ? 'home' : st.view;
     const place = this.PLACES.filter(p => p.id === st.placeId)[0] || this.PLACES[0];
     const lot = place.lots[st.lotIx] || place.lots[0];
     const lotSt = this.status(lot.free, lot.total, place.closed);
@@ -1472,12 +1480,12 @@ class Component extends DCLogic {
     return {
       imgRef: el => { if (el && el.dataset.src && el.getAttribute('src') !== el.dataset.src) el.setAttribute('src', el.dataset.src); },
       stop: e => { if (e && e.stopPropagation) e.stopPropagation(); },
-      isLogin: st.view === 'login', isRegister: st.view === 'register', isForgot: st.view === 'forgot',
-      isReset: st.view === 'reset',
-      isAuth: ['home', 'place', 'favs', 'restricted', 'me', 'suggest', 'admin'].indexOf(st.view) >= 0,
-      isSuggest: st.view === 'suggest', isAdminView: st.view === 'admin',
-      isHome: st.view === 'home', isPlace: st.view === 'place', isFavs: st.view === 'favs',
-      isRestricted: st.view === 'restricted', isMe: st.view === 'me',
+      isLogin: view === 'login', isRegister: view === 'register', isForgot: view === 'forgot',
+      isReset: view === 'reset',
+      isAuth: ['home', 'place', 'favs', 'restricted', 'me', 'suggest', 'admin'].indexOf(view) >= 0,
+      isSuggest: view === 'suggest', isAdminView: view === 'admin',
+      isHome: view === 'home', isPlace: view === 'place', isFavs: view === 'favs',
+      isRestricted: view === 'restricted', isMe: view === 'me',
       email: st.email, pw: st.pw, err: st.err, query: st.query, toast: st.toast,
       notice: st.notice, needConfirm: st.needConfirm, resendConfirm: this.resendConfirm,
       onEmail: e => this.setState({ email: e.target.value, err: '' }),
@@ -1508,7 +1516,7 @@ class Component extends DCLogic {
       geoGlow: st.manualId ? '0 0 0 3px rgba(255,201,107,.28)' : (st.geoState === 'on' ? '0 0 0 3px rgba(91,224,140,.28)' : 'none'),
       geoAnim: st.manualId ? 'none' : (st.geoState === 'on' ? 'tpBlink 1.1s steps(1,end) infinite' : (st.geoState === 'asking' ? 'tpBlink .45s steps(1,end) infinite' : 'tpPulse 2.4s ease-in-out infinite')),
       geoStatusText: st.manualId ? 'ปิดไว้ · กำลังใช้ตำแหน่งที่คุณเลือกเอง' : ({ on: 'GPS เปิดอยู่ · กำลังติดตามตำแหน่ง', asking: 'กำลังขอตำแหน่ง…', denied: 'ปิดอยู่ · ไม่ได้รับอนุญาต', unsupported: 'อุปกรณ์นี้ไม่รองรับ GPS' }[st.geoState] || 'ปิดอยู่ · แตะเพื่อเปิด'),
-      geoSwitchBg: (!st.manualId && st.geoState === 'on') ? '#1F8A4C' : '#DCD9D5',
+      geoSwitchBg: (!st.manualId && st.geoState === 'on') ? '#17733F' : '#DCD9D5',
       geoSwitchJustify: (!st.manualId && st.geoState === 'on') ? 'flex-end' : 'flex-start',
       manualId: st.manualId,
       manualOn: !!st.manualId,
@@ -1587,7 +1595,7 @@ class Component extends DCLogic {
       userLabel: st.user ? st.user : 'ผู้เยี่ยมชม (guest)',
       roleLabel: st.user ? st.role + ' · มหาวิทยาลัยขอนแก่น' : 'ยังไม่เข้าสู่ระบบ — บันทึกที่จอดโปรดไม่ได้',
       prefs: this.PREFS.map((p, i) => ({
-        name: p, track: st.prefs[i] ? '#1F8A4C' : '#DCD9D5',
+        name: p, track: st.prefs[i] ? '#17733F' : '#DCD9D5',
         justify: st.prefs[i] ? 'flex-end' : 'flex-start',
         onToggle: () => this.setState(s => { const n = s.prefs.slice(); n[i] = !n[i]; return { prefs: n }; })
       })),
@@ -1633,7 +1641,7 @@ class Component extends DCLogic {
         note: r.admin_note || '',
         hasNote: !!r.admin_note,
         statusLabel: { pending: 'รอตรวจสอบ', approved: 'อนุมัติแล้ว', rejected: 'ไม่ผ่าน' }[r.status] || r.status,
-        statusFg: { pending: '#B96A0C', approved: '#1F8A4C', rejected: '#C62828' }[r.status] || '#515556',
+        statusFg: { pending: '#8A5008', approved: '#17733F', rejected: '#C62828' }[r.status] || '#515556',
         statusBg: { pending: '#FCF3E6', approved: '#EAF7EF', rejected: '#FDECEC' }[r.status] || '#F5F3F0'
       })),
       hasMyReqs: st.myReqs.length > 0,
@@ -1663,7 +1671,7 @@ class Component extends DCLogic {
           coordOk: !!coords,
           coordHint: coords ? '✓ ' + coords.lat.toFixed(5) + ', ' + coords.lng.toFixed(5)
             : (value ? (this.isShortMapsLink(value) ? 'ลิงก์ย่ออ่านไม่ได้ — เปิดลิงก์แล้วคัดลอก URL เต็ม' : 'ยังอ่านพิกัดไม่ได้') : ''),
-          coordHintFg: coords ? '#1F8A4C' : '#C62828',
+          coordHintFg: coords ? '#17733F' : '#C62828',
           hasHint: !!value,
           photo: r.photo_url || '',
           hasPhoto: !!r.photo_url,
@@ -1710,7 +1718,7 @@ class Component extends DCLogic {
           if (c) return '✓ ' + c.lat.toFixed(5) + ', ' + c.lng.toFixed(5);
           return st.editDraft.maps ? 'ยังอ่านพิกัดไม่ได้' : '';
         })(),
-        eCoordFg: this.parseLatLng(st.editDraft.maps) ? '#1F8A4C' : '#C62828',
+        eCoordFg: this.parseLatLng(st.editDraft.maps) ? '#17733F' : '#C62828',
         eHasHint: !!st.editDraft.maps,
         eVehicles: this.VEHICLES.map(v => ({
           name: v, onPick: () => this.setEditField('vehicle', v),
