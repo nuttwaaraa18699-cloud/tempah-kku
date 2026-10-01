@@ -150,7 +150,9 @@ a{color:#A73B24;text-decoration:none}a:hover{color:#8c3020}
                 <div onClick="{{ c.onOpen }}" style="cursor:pointer;display:flex;align-items:center;gap:12px;padding:10px 11px;border-radius:16px;background:#FFFFFF;border:1px solid #E6E3DF;box-shadow:0 1px 6px rgba(26,29,31,.05)">
                   <div style="flex:none;position:relative;width:62px;height:62px;border-radius:13px;overflow:hidden;background:#EFEDEA">
                     <sc-if value="{{ c.hasImg }}" hint-placeholder-val="{{ true }}">
-                      <img src="assets/hs05.jpg" data-src="{{ c.img }}" ref="{{ imgRef }}" alt="" style="display:block;width:100%;height:62px;object-fit:cover">
+                      <!-- Thirty-odd of these load at once on a 375px screen
+                           where six are visible. Defer the rest. -->
+                      <img data-src="{{ c.img }}" ref="{{ imgRef }}" alt="" decoding="async" style="display:block;width:100%;height:62px;object-fit:cover">
                     </sc-if>
                     <sc-if value="{{ c.noImg }}" hint-placeholder-val="{{ false }}">
                       <div style="position:absolute;inset:0;background:#EFEDEA">
@@ -202,7 +204,7 @@ a{color:#A73B24;text-decoration:none}a:hover{color:#8c3020}
           <sc-for list="{{ lots }}" as="l" hint-placeholder-count="4">
             <div onClick="{{ l.onPick }}" style="flex:none;width:138px;cursor:pointer;border-radius:14px;overflow:hidden;border:1.5px solid {{ l.border }};background:#FAF9F8">
               <sc-if value="{{ l.hasImg }}" hint-placeholder-val="{{ true }}">
-                <img src="assets/kkbs-moto.jpg" data-src="{{ l.img }}" ref="{{ imgRef }}" alt="" style="display:block;width:100%;height:64px;object-fit:cover;opacity: {{ l.dim }}">
+                <img data-src="{{ l.img }}" ref="{{ imgRef }}" alt="" decoding="async" style="display:block;width:100%;height:64px;object-fit:cover;opacity: {{ l.dim }}">
               </sc-if>
               <sc-if value="{{ l.noImg }}" hint-placeholder-val="{{ false }}">
                 <div style="height:64px;background:#EFEDEA;position:relative;overflow:hidden;opacity: {{ l.dim }}">
@@ -224,7 +226,7 @@ a{color:#A73B24;text-decoration:none}a:hover{color:#8c3020}
         <div style="border-radius:20px;overflow:hidden;background:#FFFFFF;border:1px solid #E6E3DF;box-shadow:0 2px 10px rgba(26,29,31,.06)">
           <div style="position:relative;background:#EFEDEA;overflow:hidden">
             <sc-if value="{{ lotHasImg }}" hint-placeholder-val="{{ true }}">
-              <img src="assets/hs05.jpg" data-src="{{ lotImg }}" ref="{{ imgRef }}" alt="" style="display:block;width:100%;height:clamp(250px,60vw,350px);object-fit:cover;animation:tpKen 26s ease-in-out infinite">
+              <img data-src="{{ lotImg }}" ref="{{ imgRef }}" alt="" style="display:block;width:100%;height:clamp(250px,60vw,350px);object-fit:cover;animation:tpKen 26s ease-in-out infinite">
             </sc-if>
             <sc-if value="{{ lotNoImg }}" hint-placeholder-val="{{ false }}">
               <div style="position:relative;height:clamp(250px,60vw,350px);background:#EFEDEA;overflow:hidden">
@@ -265,7 +267,7 @@ a{color:#A73B24;text-decoration:none}a:hover{color:#8c3020}
             </div>
 
             <div style="border-radius:14px;overflow:hidden;border:1px solid #E6E3DF">
-              <iframe src="{{ embedUrl }}" title="แผนที่" loading="lazy" style="display:block;width:100%;height:190px;border:0"></iframe>
+              <iframe data-src="{{ embedUrl }}" ref="{{ nowRef }}" title="แผนที่" style="display:block;width:100%;height:190px;border:0"></iframe>
             </div>
 
             <div style="display:flex;gap:10px">
@@ -432,7 +434,7 @@ a{color:#A73B24;text-decoration:none}a:hover{color:#8c3020}
           <sc-for list="{{ adminQueue }}" as="aq" hint-placeholder-count="2">
             <div style="border-radius:18px;overflow:hidden;background:#FFFFFF;border:1px solid #E6E3DF;box-shadow:0 2px 10px rgba(26,29,31,.06)">
               <sc-if value="{{ aq.hasPhoto }}" hint-placeholder-val="{{ false }}">
-                <img src="{{ aq.photo }}" alt="" style="display:block;width:100%;height:130px;object-fit:cover">
+                <img data-src="{{ aq.photo }}" ref="{{ imgRef }}" alt="" decoding="async" style="display:block;width:100%;height:130px;object-fit:cover">
               </sc-if>
               <div style="padding:14px;display:flex;flex-direction:column;gap:10px">
                 <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:10px">
@@ -471,7 +473,7 @@ a{color:#A73B24;text-decoration:none}a:hover{color:#8c3020}
           <sc-for list="{{ approvedList }}" as="ap" hint-placeholder-count="2">
             <div style="border-radius:18px;overflow:hidden;background:#FFFFFF;border:1px solid #E6E3DF;box-shadow:0 2px 10px rgba(26,29,31,.06)">
               <sc-if value="{{ ap.hasPhoto }}" hint-placeholder-val="{{ false }}">
-                <img src="{{ ap.photo }}" alt="" style="display:block;width:100%;height:120px;object-fit:cover">
+                <img data-src="{{ ap.photo }}" ref="{{ imgRef }}" alt="" decoding="async" style="display:block;width:100%;height:120px;object-fit:cover">
               </sc-if>
               <div style="padding:14px;display:flex;flex-direction:column;gap:10px">
                 <span style="font-size:15px;font-weight:700;color:#1A1D1F;line-height:1.4">{{ ap.name }}</span>
@@ -554,7 +556,7 @@ a{color:#A73B24;text-decoration:none}a:hover{color:#8c3020}
       </div>
       <sc-for list="{{ tabs }}" as="tb" hint-placeholder-count="4">
         <div onClick="{{ tb.onPick }}" style="cursor:pointer;display:flex;align-items:center;gap:12px;padding:13px 12px;border-radius:12px;background: {{ tb.bg }};color: {{ tb.color }}">
-          <img src="{{ tb.icon }}" alt="" style="width:20px;height:20px;flex:none;object-fit:contain;display:block">
+          <img data-src="{{ tb.icon }}" ref="{{ nowRef }}" alt="" style="width:20px;height:20px;flex:none;object-fit:contain;display:block">
           <span style="font-size:14px;font-weight:600">{{ tb.name }}</span>
         </div>
       </sc-for>
@@ -1325,6 +1327,25 @@ class Component extends DCLogic {
   agg(p) {
     return { free: p.lots.reduce((a, l) => a + l.free, 0), total: p.lots.reduce((a, l) => a + l.total, 0) };
   }
+  nowRef = (el) => {
+    if (el && el.dataset.src && el.getAttribute('src') !== el.dataset.src) el.setAttribute('src', el.dataset.src);
+  };
+
+  lazyRef = (el) => {
+    if (!el || !el.dataset.src || el.getAttribute('src') === el.dataset.src) return;
+    if (!window.IntersectionObserver) { this.nowRef(el); return; }
+    if (!this.io) {
+      this.io = new IntersectionObserver(entries => {
+        entries.forEach(e => {
+          if (!e.isIntersecting) return;
+          this.nowRef(e.target);
+          this.io.unobserve(e.target);
+        });
+      }, { rootMargin: '400px 0px' });   // a screenful of warning, so nothing pops in
+    }
+    this.io.observe(el);
+  };
+
   slots(n, seed) {
     return Array.from({ length: n }).map((_, i) => ({ d: (((i * 37 + seed * 13) % 70) / 10).toFixed(1) + 's' }));
   }
@@ -1583,7 +1604,13 @@ class Component extends DCLogic {
     const geoLabelMap = { on: 'GPS เปิดอยู่', asking: 'กำลังหาตำแหน่ง…', denied: 'เปิด GPS', idle: 'เปิด GPS', unsupported: 'ไม่รองรับ GPS' };
 
     return {
-      imgRef: el => { if (el && el.dataset.src && el.getAttribute('src') !== el.dataset.src) el.setAttribute('src', el.dataset.src); },
+      // Holds the picture back until it is nearly on screen. The home list is
+      // ~38 rows deep and used to pull every photo at once — close to 2MB on a
+      // phone to show the six rows that fit. The browser's own loading="lazy"
+      // is no use here: these elements get their src from script after mount,
+      // and it never reconsiders them, so they simply never load.
+      imgRef: this.lazyRef,
+      nowRef: this.nowRef,
       stop: e => { if (e && e.stopPropagation) e.stopPropagation(); },
       isLogin: view === 'login', isRegister: view === 'register', isForgot: view === 'forgot',
       isReset: view === 'reset',
