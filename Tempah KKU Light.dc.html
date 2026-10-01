@@ -116,7 +116,7 @@ a{color:#A73B24;text-decoration:none}a:hover{color:#8c3020}
 
         <div style="display:flex;flex-direction:column;gap:11px">
           <div style="display:flex;align-items:center;gap:10px;background:#F5F3F0;border:1px solid #E6E3DF;border-radius:14px;padding:13px 14px">
-            <span style="font-size:15px;color:#6B7173">⌕</span>
+            <span style="font-size:15px;color:#5E6466">⌕</span>
             <input value="{{ query }}" onInput="{{ onQuery }}" placeholder="ค้นหาคณะ อาคาร หรือลานจอด…" style="flex:1;min-width:0;background:none;border:none;outline:none;color:#1A1D1F;font-size:14.5px">
             <sc-if value="{{ query }}" hint-placeholder-val="{{ false }}">
               <span onClick="{{ clearQuery }}" style="font-size:13px;color:#6B7173;cursor:pointer">✕</span>
@@ -133,43 +133,51 @@ a{color:#A73B24;text-decoration:none}a:hover{color:#8c3020}
           </div>
         </div>
 
-        <div style="display:flex;flex-direction:column;gap:14px">
-          <sc-for list="{{ cards }}" as="c" hint-placeholder-count="4">
-            <div style="border-radius:20px;overflow:hidden;background:#FFFFFF;border:1px solid #E6E3DF;box-shadow:0 2px 10px rgba(26,29,31,.06)">
-              <div onClick="{{ c.onOpen }}" style="position:relative;height:170px;background:#EFEDEA;cursor:pointer;overflow:hidden">
-                <sc-if value="{{ c.hasImg }}" hint-placeholder-val="{{ true }}">
-                  <img src="assets/hs05.jpg" data-src="{{ c.img }}" ref="{{ imgRef }}" alt="" style="display:block;width:100%;height:170px;object-fit:cover;animation:tpKen 22s ease-in-out infinite">
-                </sc-if>
-                <sc-if value="{{ c.noImg }}" hint-placeholder-val="{{ false }}">
-                  <div style="position:absolute;inset:0;background:#EFEDEA">
-                    <div style="position:absolute;left:0;right:0;bottom:0;height:62%;background:repeating-linear-gradient(90deg,#E2DFDB 0 1px,transparent 1px 46px),#E9E6E2"></div>
-                    <div style="position:absolute;left:8%;right:8%;top:34%;display:grid;grid-template-columns:repeat(8,1fr);gap:5px">
-                      <sc-for list="{{ c.slots }}" as="sl" hint-placeholder-count="16">
-                        <span style="height:16px;border-radius:3px;background:#DCD9D5;animation:tpSlot 7s ease-in-out infinite alternate;animation-delay: {{ sl.d }}"></span>
-                      </sc-for>
+        <div style="display:flex;flex-direction:column;gap:9px">
+          <sc-for list="{{ cards }}" as="c" hint-placeholder-count="6">
+            <div>
+              <!-- Testers asked for the list to be split into zones. The header
+                   rows ride in the same flat list as the places so the runtime
+                   never has to nest one sc-for inside another. -->
+              <sc-if value="{{ c.isZone }}" hint-placeholder-val="{{ false }}">
+                <div style="display:flex;align-items:center;gap:10px;padding:9px 2px 3px">
+                  <span style="font-size:12.5px;font-weight:700;color:#5D1809;white-space:nowrap">{{ c.zoneName }}</span>
+                  <span style="flex:1;height:1px;background:#E6E3DF"></span>
+                  <span style="font-size:11.5px;color:#6B7173;white-space:nowrap">{{ c.zoneCount }}</span>
+                </div>
+              </sc-if>
+              <sc-if value="{{ c.isPlace }}" hint-placeholder-val="{{ true }}">
+                <div onClick="{{ c.onOpen }}" style="cursor:pointer;display:flex;align-items:center;gap:12px;padding:10px 11px;border-radius:16px;background:#FFFFFF;border:1px solid #E6E3DF;box-shadow:0 1px 6px rgba(26,29,31,.05)">
+                  <div style="flex:none;position:relative;width:62px;height:62px;border-radius:13px;overflow:hidden;background:#EFEDEA">
+                    <sc-if value="{{ c.hasImg }}" hint-placeholder-val="{{ true }}">
+                      <img src="assets/hs05.jpg" data-src="{{ c.img }}" ref="{{ imgRef }}" alt="" style="display:block;width:100%;height:62px;object-fit:cover">
+                    </sc-if>
+                    <sc-if value="{{ c.noImg }}" hint-placeholder-val="{{ false }}">
+                      <div style="position:absolute;inset:0;background:#EFEDEA">
+                        <div style="position:absolute;left:0;right:0;bottom:0;height:58%;background:repeating-linear-gradient(90deg,#E2DFDB 0 1px,transparent 1px 15px),#E9E6E2"></div>
+                        <div style="position:absolute;left:12%;right:12%;top:26%;display:grid;grid-template-columns:repeat(4,1fr);gap:3px">
+                          <sc-for list="{{ c.slots }}" as="sl" hint-placeholder-count="8">
+                            <span style="height:8px;border-radius:2px;background:#DCD9D5;animation:tpSlot 7s ease-in-out infinite alternate;animation-delay: {{ sl.d }}"></span>
+                          </sc-for>
+                        </div>
+                      </div>
+                    </sc-if>
+                    <span style="position:absolute;top:4px;left:4px;width:6px;height:6px;border-radius:50%;background:#C62828;animation:tpPulse 1.4s infinite"></span>
+                  </div>
+                  <div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:3px">
+                    <span style="font-size:13.5px;font-weight:600;color:#1A1D1F;line-height:1.5;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ c.name }}</span>
+                    <span style="font-size:11px;color:#6B7173;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ c.rowMeta }}</span>
+                    <span style="font-size:11px;font-weight:600;color: {{ c.statusInk }};white-space:nowrap">{{ c.statusLabel }}</span>
+                  </div>
+                  <div style="flex:none;display:flex;flex-direction:column;align-items:center;gap:5px">
+                    <div style="width:44px;height:38px;border-radius:12px;display:flex;flex-direction:column;align-items:center;justify-content:center;background: {{ c.statusBg }};border:1px solid {{ c.statusFg }}">
+                      <span style="font-family:'IBM Plex Mono',monospace;font-size:15px;font-weight:700;line-height:1.2;color: {{ c.statusInk }}">{{ c.free }}</span>
+                      <span style="font-size:8.5px;color:#4F5558">ว่าง</span>
                     </div>
-                    <span style="position:absolute;bottom:14%;width:34px;height:14px;border-radius:3px;background:#515556;animation:tpCar 9s linear infinite;animation-delay: {{ c.carDelay }}"></span>
+                    <span onClick="{{ c.onStar }}" style="font-size:15px;line-height:1;cursor:pointer;color: {{ c.starColor }}">★</span>
                   </div>
-                </sc-if>
-                <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(26,29,31,.86) 0%,rgba(26,29,31,0) 58%)"></div>
-                <div style="position:absolute;top:0;left:0;right:0;height:16px;background:linear-gradient(rgba(255,255,255,.3),transparent);animation:tpScan 6s linear infinite"></div>
-                <div style="position:absolute;top:11px;left:11px;display:flex;align-items:center;gap:5px;padding:5px 9px;border-radius:999px;background:#FFFFFF;white-space:nowrap">
-                  <span style="width:6px;height:6px;border-radius:50%;background:#C62828;display:inline-block;animation:tpPulse 1.4s infinite"></span>
-                  <span style="font-family:Archivo,sans-serif;font-size:9.5px;font-weight:800;letter-spacing:1.2px;color:#1A1D1F">LIVE</span>
                 </div>
-                <div onClick="{{ c.onStar }}" style="position:absolute;top:9px;right:9px;width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px;cursor:pointer;background:#FFFFFF;color: {{ c.starColor }}">★</div>
-                <div style="position:absolute;left:14px;right:14px;bottom:12px;display:flex;align-items:flex-end;justify-content:space-between;gap:10px">
-                  <div style="display:flex;flex-direction:column;gap:3px;min-width:0">
-                    <span style="font-size:15.5px;font-weight:700;color:#fff;line-height:1.45;text-wrap:pretty">{{ c.name }}</span>
-                    <span style="font-size:11.5px;color:rgba(255,255,255,.78);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ c.meta }}</span>
-                  </div>
-                  <span style="flex:none;font-size:11.5px;font-weight:700;padding:6px 12px;border-radius:999px;white-space:nowrap;color:#fff;background: {{ c.statusFg }}">{{ c.statusLabel }}</span>
-                </div>
-              </div>
-              <div style="padding:12px 14px;display:flex;align-items:center;gap:11px">
-                <span style="flex:1;font-size:12.5px;color:#515556;white-space:nowrap">{{ c.freeText }}</span>
-                <a href="{{ c.mapUrl }}" target="_blank" style="flex:none;font-size:11.5px;font-weight:600;color:#1A1D1F;background:#F5F3F0;border:1px solid #DCD9D5;border-radius:10px;padding:8px 12px;white-space:nowrap">นำทาง ↗</a>
-              </div>
+              </sc-if>
             </div>
           </sc-for>
           <sc-if value="{{ noCards }}" hint-placeholder-val="{{ false }}">
@@ -207,7 +215,7 @@ a{color:#A73B24;text-decoration:none}a:hover{color:#8c3020}
               </sc-if>
               <div style="padding:8px 10px 9px;display:flex;flex-direction:column;gap:3px">
                 <span style="font-size:11.5px;font-weight:600;color:#1A1D1F;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ l.n }}</span>
-                <span style="font-size:11px;font-weight:600;color: {{ l.statusFg }}">ว่าง {{ l.free }} ช่อง</span>
+                <span style="font-size:11px;font-weight:600;color: {{ l.statusInk }}">ว่าง {{ l.free }} ช่อง</span>
               </div>
             </div>
           </sc-for>
@@ -249,7 +257,7 @@ a{color:#A73B24;text-decoration:none}a:hover{color:#8c3020}
               <div style="flex:1;display:flex;flex-direction:column;gap:6px;min-width:0">
                 <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
                   <span style="font-size:15px;font-weight:700;color:#1A1D1F">{{ lotName }}</span>
-                  <span style="font-size:11px;font-weight:700;padding:4px 10px;border-radius:999px;white-space:nowrap;color:#fff;background: {{ lotStatusFg }}">{{ lotStatusLabel }}</span>
+                  <span style="font-size:11px;font-weight:700;padding:4px 10px;border-radius:999px;white-space:nowrap;color:#fff;background: {{ lotStatusInk }}">{{ lotStatusLabel }}</span>
                 </div>
                 <span style="font-size:12px;color:#515556">{{ lotFree }} จาก {{ lotTotal }} ช่อง · {{ lotType }}</span>
                 <span style="font-size:12px;color:#515556">ระยะจากคุณ {{ distText }}</span>
@@ -276,7 +284,7 @@ a{color:#A73B24;text-decoration:none}a:hover{color:#8c3020}
         <span style="font-size:12px;color:#6B7173;margin-top:-6px">รายการนี้จะขึ้นบนสุดของหน้าแรกทุกครั้งที่เปิดเว็บ</span>
         <sc-for list="{{ favCards }}" as="f" hint-placeholder-count="2">
           <div style="display:flex;align-items:center;gap:12px;padding:13px 14px;border-radius:16px;background:#FFFFFF;border:1px solid #E6E3DF">
-            <span onClick="{{ f.onStar }}" style="font-size:17px;color:#E8A82B;cursor:pointer">★</span>
+            <span onClick="{{ f.onStar }}" style="font-size:17px;color:#9C6B0A;cursor:pointer">★</span>
             <div onClick="{{ f.onOpen }}" style="flex:1;display:flex;flex-direction:column;gap:3px;min-width:0;cursor:pointer">
               <span style="font-size:14px;font-weight:600;color:#1A1D1F;text-wrap:pretty">{{ f.name }}</span>
               <span style="font-size:11.5px;color:#515556">{{ f.freeText }} · {{ f.distText }}</span>
@@ -852,6 +860,56 @@ class Component extends DCLogic {
 
   REASONS = ['กล้องไม่ทำงาน / ภาพค้าง', 'ภาพไม่ตรงกับความจริง', 'ที่จอดถูกปิดกั้น / มีสิ่งกีดขวาง', 'สถานะว่างแต่จอดไม่ได้', 'อื่น ๆ'];
   CATS = ['ทั้งหมด', 'คณะ', 'อาคาร–สำนักงาน', 'โรงอาหาร', 'อาคารจอดรถ', 'จุดเยี่ยมชม', 'โรงพยาบาล', 'กีฬา–หอพัก', 'จากผู้ใช้'];
+
+  // Zones are geographic, not academic: someone standing at สัตวแพทย์ wants the
+  // lots around them, not the other health-science faculties a kilometre away.
+  ZONES = [
+    'โซนใต้ · คณะสายสังคม',
+    'โซนกลาง · สำนักงาน–หอสมุด',
+    'โซนตะวันตก · วิทย์–เทคโนโลยี',
+    'โซนเหนือ · หอพัก–บึงสีฐาน',
+    'โซนตะวันออก · สายสุขภาพ'
+  ];
+  ZONE_OF = {
+    kkbs: 0, edu: 0, satit: 0, hs: 0, parking1: 0,
+    library: 1, phimol: 1, complex: 1, siri: 1, kaen: 1, jaturamuk: 1, gym: 1, vet: 1,
+    sci: 2, cc: 2, compcenter: 2, eng: 2, arch: 2, fa: 2, museum: 2, agri: 2, tech: 2,
+    sciencepark: 2, agripark: 2,
+    law: 3, sala: 3, bungsithan: 3, artgallery: 3, gjcc: 3, nongwaeng: 3, rongchai: 3, dorm: 3,
+    ams: 4, ph: 4, dent: 4, heart: 4, srinagarind: 4
+  };
+
+  // Places the community adds have no zone of their own, so they inherit the
+  // zone of the nearest place that does.
+  zoneOf(p) {
+    const ix = this.ZONE_OF[p.id];
+    if (ix != null) return this.ZONES[ix];
+    let best = null, bestD = Infinity;
+    this.PLACES.forEach(o => {
+      if (this.ZONE_OF[o.id] == null) return;
+      const d = Math.pow(o.lat - p.lat, 2) + Math.pow(o.lng - p.lng, 2);
+      if (d < bestD) { bestD = d; best = o; }
+    });
+    return best ? this.ZONES[this.ZONE_OF[best.id]] : this.ZONES[1];
+  }
+
+  // Groups the filtered places by zone, keeping whichever order the sort
+  // buttons asked for: a zone sits wherever its best member would have sat, so
+  // the first row on screen is still the single best match overall.
+  groupByZone(list) {
+    const out = [], seen = {};
+    list.forEach(p => {
+      const z = this.zoneOf(p);
+      if (!seen[z]) { seen[z] = []; out.push(z); }
+      seen[z].push(p);
+    });
+    const rows = [];
+    out.forEach(z => {
+      rows.push({ zone: z, count: seen[z].length });
+      seen[z].forEach(p => rows.push(p));
+    });
+    return rows;
+  }
   PREFS = ['แจ้งเตือนเมื่อที่จอดโปรดมีที่ว่าง', 'ซ่อนพื้นที่ที่เข้าไม่ได้ออกจากผลค้นหา', 'แสดงเฉพาะลานจักรยานยนต์'];
 
   componentDidMount() {
@@ -1254,11 +1312,14 @@ class Component extends DCLogic {
     return 'https://www.google.com/maps/dir/?api=1&origin=' + o.lat + ',' + o.lng + '&destination=' + q + '&travelmode=driving';
   }
   embedUrl(p) { return 'https://maps.google.com/maps?q=' + encodeURIComponent(p.name + ' มหาวิทยาลัยขอนแก่น') + '&z=17&output=embed'; }
+  // statusFg is sized for a filled pill or a border, where it only has to beat
+  // 3:1. statusInk is the same hue pushed dark enough to carry small text on
+  // white or on its own tint, which is what the compact rows need.
   status(free, total, closed) {
-    if (closed) return { statusLabel: 'ปิดปรับปรุง', statusFg: '#6B7173', statusBg: '#F1F0EE' };
-    if (free === 0) return { statusLabel: 'เต็ม', statusFg: '#C62828', statusBg: '#FDECEC' };
-    if (free / total <= 0.3) return { statusLabel: 'ใกล้เต็ม', statusFg: '#B96A0C', statusBg: '#FCF3E6' };
-    return { statusLabel: 'ว่าง', statusFg: '#17733F', statusBg: '#EAF7EF' };
+    if (closed) return { statusLabel: 'ปิดปรับปรุง', statusFg: '#6B7173', statusBg: '#F1F0EE', statusInk: '#4F5558' };
+    if (free === 0) return { statusLabel: 'เต็ม', statusFg: '#C62828', statusBg: '#FDECEC', statusInk: '#A31818' };
+    if (free / total <= 0.3) return { statusLabel: 'ใกล้เต็ม', statusFg: '#B96A0C', statusBg: '#FCF3E6', statusInk: '#7F4700' };
+    return { statusLabel: 'ว่าง', statusFg: '#17733F', statusBg: '#EAF7EF', statusInk: '#136034' };
   }
   agg(p) {
     return { free: p.lots.reduce((a, l) => a + l.free, 0), total: p.lots.reduce((a, l) => a + l.total, 0) };
@@ -1432,19 +1493,39 @@ class Component extends DCLogic {
     });
   };
 
+  // A zone header shares the places' list, so it has to answer every binding
+  // the place branch reads — otherwise a missing key leaves a stray graphic or
+  // an empty box behind the hidden branch.
+  blankRow() {
+    return {
+      isPlace: false, isZone: false, zoneName: '', zoneCount: '',
+      id: '', name: '', short: '', free: '', total: '', freeText: '', meta: '', rowMeta: '',
+      distText: '', hasImg: false, noImg: false, img: '', slots: [], carDelay: '0s',
+      mapUrl: '#', starColor: '#6B7173', statusFg: '#515556', statusBg: '#F5F3F0',
+      statusInk: '#4F5558', statusLabel: '', onOpen: () => {}, onStar: () => {}
+    };
+  }
+
   card(p, i) {
     const a = this.agg(p), s = this.status(a.free, a.total, p.closed);
     const img = p.lots.filter(l => l.img)[0];
     const short = p.name.split(/[·(]/)[0].trim();
     return Object.assign({}, s, {
+      isPlace: true, isZone: false, zoneName: '', zoneCount: '',
       id: p.id, name: p.name, short: short, free: a.free, total: a.total,
       freeText: p.closed ? 'ปิดปรับปรุง — ยังจอดไม่ได้' : 'ว่าง ' + a.free + ' จาก ' + a.total + ' ช่อง',
       meta: p.cat + ' · ' + this.distText(p) + ' · ' + p.lots.length + ' ลานจอด',
+      // The row is one line narrower than the old card, so the category is
+      // dropped here — the zone header above already says where this is.
+      rowMeta: this.distText(p) + ' · ' + p.lots.length + ' ลานจอด · ' + a.total + ' ช่อง',
       distText: this.distText(p),
       hasImg: !!img, noImg: !img, img: img ? img.img : '',
-      slots: this.slots(16, i + 1), carDelay: ((i % 5) * 1.4).toFixed(1) + 's',
+      slots: this.slots(8, i + 1), carDelay: ((i % 5) * 1.4).toFixed(1) + 's',
       mapUrl: this.mapUrl(p),
-      starColor: this.state.favs.indexOf(p.id) >= 0 ? '#E8A82B' : '#C9C6C2',
+      // The compact row puts this star on plain white instead of a white chip
+      // over a photo, so the old near-white grey no longer registered as a
+      // control. This matches the star on the place screen.
+      starColor: this.state.favs.indexOf(p.id) >= 0 ? '#9C6B0A' : '#6B7173',
       onOpen: () => this.navigate('place', { placeId: p.id, lotIx: 0 }),
       onStar: e => { if (e && e.stopPropagation) e.stopPropagation(); this.toggleFav(p.id); }
     });
@@ -1553,18 +1634,24 @@ class Component extends DCLogic {
       freeBg: st.sort === 'free' ? accent : '#F5F3F0',
       freeFg: st.sort === 'free' ? '#fff' : '#515556',
       freeBorder: st.sort === 'free' ? accent : '#E6E3DF',
-      cards: list.map((p, i) => this.card(p, i)), noCards: list.length === 0,
+      // A search narrows the list to a handful, where zone headers are more
+      // noise than help, so they only appear when the user is browsing.
+      cards: (q === '' ? this.groupByZone(list) : list).map((row, i) => row.zone
+        ? Object.assign(this.blankRow(), { isZone: true, zoneName: row.zone, zoneCount: row.count + ' จุด' })
+        : this.card(row, i)),
+      noCards: list.length === 0,
       favCards: this.PLACES.filter(p => st.favs.indexOf(p.id) >= 0).map((p, i) => this.card(p, i)),
       hasFavs: st.favs.length > 0, noFavs: st.favs.length === 0,
       restricted: this.RESTRICTED,
       placeName: place.name,
       placeMeta: place.cat + ' · ' + place.lots.length + ' ลานจอด · ห่างจากคุณ ' + this.distText(place),
-      placeStarColor: st.favs.indexOf(place.id) >= 0 ? '#E8A82B' : '#8A8F91',
+      placeStarColor: st.favs.indexOf(place.id) >= 0 ? '#9C6B0A' : '#6B7173',
       starPlace: () => this.toggleFav(place.id),
       lots: place.lots.map((l, i) => {
         const s = this.status(l.free, l.total, place.closed);
         return { n: l.n, free: l.free, img: l.img || '', hasImg: !!l.img, noImg: !l.img,
-          slots: this.slots(12, i + 2), statusFg: s.statusFg, dim: i === st.lotIx ? '1' : '.55',
+          slots: this.slots(12, i + 2), statusFg: s.statusFg, statusInk: s.statusInk,
+          dim: i === st.lotIx ? '1' : '.55',
           border: i === st.lotIx ? accent : '#E6E3DF',
           onPick: () => this.setState({ lotIx: i }) };
       }),
@@ -1572,6 +1659,7 @@ class Component extends DCLogic {
       lotImg: lot.img || '', lotHasImg: !!lot.img, lotNoImg: !lot.img,
       lotSlots: this.slots(24, st.lotIx + 3),
       lotStatusLabel: lotSt.statusLabel, lotStatusFg: lotSt.statusFg, lotStatusBg: lotSt.statusBg,
+      lotStatusInk: lotSt.statusInk,
       lotMapUrl: this.mapUrl(place, lot.n), embedUrl: this.embedUrl(place),
       distText: this.distText(place),
       clock: new Date().toLocaleTimeString('th-TH', { hour: '2-digit', minute: '2-digit', second: '2-digit' }),
