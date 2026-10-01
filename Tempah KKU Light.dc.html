@@ -1089,11 +1089,12 @@ class Component extends DCLogic {
     if (changed) this.setState(s => ({ tick: s.tick + 1 }));
   };
 
-  loadMyRequests = async () => {
-    if (!window.SB || !this.state.userId) { this.setState({ myReqs: [] }); return; }
+  loadMyRequests = async (forUserId) => {
+    const uid = forUserId || this.state.userId;
+    if (!window.SB || !uid) { this.setState({ myReqs: [] }); return; }
     const { data } = await window.SB.from('place_requests')
       .select('id,name,status,admin_note,created_at')
-      .eq('user_id', this.state.userId).order('created_at', { ascending: false });
+      .eq('user_id', uid).order('created_at', { ascending: false });
     this.setState({ myReqs: data || [] });
   };
 
@@ -1348,13 +1349,24 @@ class Component extends DCLogic {
   toggleFav = async (id) => {
     const wasFav = this.state.favs.indexOf(id) >= 0;
     this.setState(s => ({ favs: wasFav ? s.favs.filter(f => f !== id) : s.favs.concat([id]) }));
-    if (!window.SB || !this.state.userId) return;
+    if (!window.SB) return;
+    // A guest has nowhere to save to. The star used to light up and then vanish
+    // at the next sign-in with nothing said, which reads as the feature being
+    // broken; signing in now carries these up instead (see afterAuth).
+    if (!this.state.userId) {
+      if (!wasFav) this.flash('ยังไม่ได้เข้าสู่ระบบ · เข้าสู่ระบบแล้วดาวจะถูกบันทึกให้');
+      return;
+    }
+    // insert, not upsert: upsert compiles to ON CONFLICT DO UPDATE, and the
+    // table has no update policy, so re-starring something the server already
+    // holds was refused outright. There is nothing to update anyway — a row
+    // that is already there is the state we wanted.
     const { error } = wasFav
       ? await window.SB.from('favorites').delete().eq('user_id', this.state.userId).eq('place_id', id)
-      : await window.SB.from('favorites').upsert({ user_id: this.state.userId, place_id: id });
-    if (error) {
+      : await window.SB.from('favorites').insert({ user_id: this.state.userId, place_id: id });
+    if (error && error.code !== '23505') {
       this.setState(s => ({ favs: wasFav ? s.favs.concat([id]) : s.favs.filter(f => f !== id) }));
-      this.flash('บันทึกที่จอดโปรดไม่สำเร็จ ลองใหม่อีกครั้ง');
+      this.flash('บันทึกที่จอดโปรดไม่สำเร็จ (' + (error.code || 'ไม่ทราบสาเหตุ') + ')');
     }
   };
 
@@ -1378,10 +1390,22 @@ class Component extends DCLogic {
       window.SB.auth.updateUser({ data: { reviewed: true } });
     }
     this.checkAdmin(user.id);
-    this.loadMyRequests();
+    // Pass the id rather than reading it back out of state: navigate() queued
+    // it a moment ago and there is no guarantee it has landed yet.
+    this.loadMyRequests(user.id);
+    // Whatever was starred before signing in is still sitting in state. Keep it
+    // and push it up, instead of replacing it with the account's list and
+    // losing the work silently.
+    const pending = this.state.favs.slice();
     const { data, error } = await window.SB.from('favorites').select('place_id').eq('user_id', user.id);
     if (error) { this.flash('โหลดที่จอดโปรดไม่สำเร็จ'); return; }
-    this.setState({ favs: (data || []).map(r => r.place_id) });
+    const saved = (data || []).map(r => r.place_id);
+    const extra = pending.filter(id => saved.indexOf(id) < 0);
+    this.setState({ favs: saved.concat(extra) });
+    if (!extra.length) return;
+    const { error: upErr } = await window.SB.from('favorites')
+      .insert(extra.map(id => ({ user_id: user.id, place_id: id })));
+    if (upErr && upErr.code !== '23505') this.flash('บันทึกที่จอดโปรดที่ปักไว้ก่อนเข้าสู่ระบบไม่สำเร็จ');
   };
 
   doLogin = async () => {

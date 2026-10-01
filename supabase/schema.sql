@@ -26,7 +26,10 @@ create table if not exists public.reports (
 alter table public.favorites enable row level security;
 alter table public.reports enable row level security;
 
--- Favorites: a user can only see/add/remove their own.
+-- Favorites: a user can only see/add/remove their own. There is deliberately no
+-- update policy — a favourite is just the pair (user, place), so it is only ever
+-- added or removed. That means the app must insert rather than upsert: an upsert
+-- compiles to ON CONFLICT DO UPDATE, which this policy set refuses.
 create policy "favorites_select_own" on public.favorites
   for select using (auth.uid() = user_id);
 create policy "favorites_insert_own" on public.favorites
